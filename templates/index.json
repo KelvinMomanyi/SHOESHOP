@@ -105,6 +105,40 @@
         "spread_6"
       ]
     },
+    "story": {
+      "type": "scroll-story",
+      "settings": {
+        "heading": "A shop you can scroll through"
+      },
+      "blocks": {
+        "chapter_1": {
+          "type": "chapter",
+          "settings": {
+            "title": "Drop one",
+            "text": "Use this chapter to turn product detail into a browsable editorial beat."
+          }
+        },
+        "chapter_2": {
+          "type": "chapter",
+          "settings": {
+            "title": "Materials",
+            "text": "Show craft, fit, sourcing, and the small decisions that make a product worth buying."
+          }
+        },
+        "chapter_3": {
+          "type": "chapter",
+          "settings": {
+            "title": "Pairings",
+            "text": "Move customers from inspiration into clear product discovery."
+          }
+        }
+      },
+      "block_order": [
+        "chapter_1",
+        "chapter_2",
+        "chapter_3"
+      ]
+    },
     "alexandra_loader": {
       "type": "alexandra-loader",
       "settings": {
@@ -154,40 +188,6 @@
         "alexandra_3",
         "alexandra_4",
         "alexandra_5"
-      ]
-    },
-    "story": {
-      "type": "scroll-story",
-      "settings": {
-        "heading": "A shop you can scroll through"
-      },
-      "blocks": {
-        "chapter_1": {
-          "type": "chapter",
-          "settings": {
-            "title": "Drop one",
-            "text": "Use this chapter to turn product detail into a browsable editorial beat."
-          }
-        },
-        "chapter_2": {
-          "type": "chapter",
-          "settings": {
-            "title": "Materials",
-            "text": "Show craft, fit, sourcing, and the small decisions that make a product worth buying."
-          }
-        },
-        "chapter_3": {
-          "type": "chapter",
-          "settings": {
-            "title": "Pairings",
-            "text": "Move customers from inspiration into clear product discovery."
-          }
-        }
-      },
-      "block_order": [
-        "chapter_1",
-        "chapter_2",
-        "chapter_3"
       ]
     },
     "collections": {
@@ -297,8 +297,8 @@
     "hero",
     "featured_products",
     "image_spread",
-    "alexandra_loader",
     "story",
+    "alexandra_loader",
     "collections",
     "hover_preview",
     "stacked"
