@@ -331,6 +331,70 @@
     window.addEventListener('resize', requestUpdate);
   };
 
+  const initFeaturedProductStacks = () => {
+    const stacks = document.querySelectorAll('[data-featured-product-stack]');
+    if (!stacks.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+    const lerp = (start, end, progress) => start + (end - start) * progress;
+    const easeEdge = (progress) => {
+      if (progress <= 0.08) return clamp(progress / 0.08, 0, 1);
+      if (progress >= 0.96) return clamp((1.04 - progress) / 0.08, 0, 1);
+      return 1;
+    };
+    let ticking = false;
+
+    const update = () => {
+      const height = window.innerHeight;
+      const width = window.innerWidth;
+      const isMobile = width < 750;
+      const stagger = isMobile ? 0.62 : 0.55;
+
+      stacks.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const scrollable = Math.max(section.offsetHeight - height, 1);
+        const progress = clamp(-rect.top / scrollable, 0, 1);
+        const cards = Array.from(section.querySelectorAll('[data-featured-product-card]'));
+        if (!cards.length) return;
+
+        const timelineLength = Math.max((cards.length - 1) * stagger + 1, 1);
+        const timelinePosition = progress * timelineLength;
+        section.style.setProperty('--featured-stack-progress', progress.toFixed(4));
+        section.classList.toggle('is-in-view', rect.bottom > 0 && rect.top < height);
+
+        cards.forEach((card, index) => {
+          const cardProgress = clamp(timelinePosition - index * stagger, 0, 1);
+          const rotateFrom = Number(card.dataset.rotateFrom || 0);
+          const rotateTo = Number(card.dataset.rotateTo || 0);
+          const travelStart = height * (isMobile ? 1.12 : 1.22);
+          const travelEnd = -height * (isMobile ? 0.86 : 0.76);
+          const y = lerp(travelStart, travelEnd, cardProgress);
+          const scale = lerp(isMobile ? 1.04 : 1.12, 0.92, cardProgress);
+          const rotate = lerp(rotateFrom, rotateTo, cardProgress);
+          const opacity = easeEdge(cardProgress);
+
+          card.style.zIndex = String(index + 1);
+          card.style.opacity = opacity.toFixed(3);
+          card.style.transform = `translate(-50%, -50%) translateY(${y.toFixed(2)}px) rotate(${rotate.toFixed(2)}deg) scale(${scale.toFixed(4)})`;
+          card.style.pointerEvents = opacity > 0.92 && cardProgress > 0.08 && cardProgress < 0.92 ? 'auto' : 'none';
+        });
+      });
+
+      ticking = false;
+    };
+
+    const requestUpdate = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
+
+    update();
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+  };
+
   const initPredictiveSearch = () => {
     document.querySelectorAll('[data-predictive-search]').forEach((form) => {
       const input = form.querySelector('input[type="search"]');
@@ -540,6 +604,7 @@
     initScrollHero();
     initImageSpread();
     initAlexandraLoader();
+    initFeaturedProductStacks();
     initPredictiveSearch();
     initAddressToggles();
   });

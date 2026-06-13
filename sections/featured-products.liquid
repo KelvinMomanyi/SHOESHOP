@@ -1,30 +1,69 @@
 {%- liquid
   assign collection = section.settings.collection
   assign product_limit = section.settings.products_to_show
+  assign stack_count = 4
+  if collection.products != blank
+    assign stack_count = collection.products.size
+    if stack_count > product_limit
+      assign stack_count = product_limit
+    endif
+  endif
+  assign scroll_length = stack_count | times: 85 | plus: 140
 -%}
 
-<section class="featured-products section-band">
-  <div class="page-width">
-    <div class="section-heading reveal-item">
-      {%- if section.settings.kicker != blank -%}
-        <p class="eyebrow">{{ section.settings.kicker }}</p>
-      {%- endif -%}
-      <h2>{{ section.settings.heading }}</h2>
-      {%- if section.settings.text != blank -%}
-        <p>{{ section.settings.text }}</p>
-      {%- endif -%}
+<section
+  class="featured-products featured-products--stack section-{{ section.id }}"
+  data-featured-product-stack
+  style="--featured-stack-height: {{ scroll_length }}svh; --featured-stack-count: {{ stack_count }};"
+>
+  <div class="featured-products__stack-stage">
+    <div class="featured-products__stack-intro page-width">
+      <div class="section-heading">
+        {%- if section.settings.kicker != blank -%}
+          <p class="eyebrow">{{ section.settings.kicker }}</p>
+        {%- endif -%}
+        <h2>{{ section.settings.heading }}</h2>
+        {%- if section.settings.text != blank -%}
+          <p>{{ section.settings.text }}</p>
+        {%- endif -%}
+      </div>
     </div>
 
-    <div class="product-grid product-grid--stagger">
+    <div class="featured-products__stack-deck" data-featured-product-deck>
       {%- if collection.products != blank -%}
         {%- for product in collection.products limit: product_limit -%}
-          {%- render 'product-card', product: product, collection: collection, loading: 'lazy' -%}
+          <div
+            class="featured-products__stack-card"
+            data-featured-product-card
+            data-rotate-from="{% cycle '11', '-9', '8', '-12', '10', '-7', '9', '-10', '6', '-8', '12', '-6' %}"
+            data-rotate-to="{% cycle '-3', '4', '-5', '3', '-4', '5', '-2', '4', '-5', '3', '-4', '2' %}"
+            style="--stack-index: {{ forloop.index0 }};"
+          >
+            {%- render 'product-card', product: product, collection: collection, loading: 'lazy' -%}
+          </div>
         {%- endfor -%}
       {%- else -%}
         {%- for i in (1..4) -%}
-          {%- render 'product-card', product: blank -%}
+          <div
+            class="featured-products__stack-card"
+            data-featured-product-card
+            data-rotate-from="{% cycle '11', '-9', '8', '-12' %}"
+            data-rotate-to="{% cycle '-3', '4', '-5', '3' %}"
+            style="--stack-index: {{ forloop.index0 }};"
+          >
+            {%- render 'product-card', product: blank -%}
+          </div>
         {%- endfor -%}
       {%- endif -%}
+    </div>
+
+    <div class="featured-products__stack-progress" aria-hidden="true">
+      {%- if section.settings.kicker != blank -%}
+        <span>{{ section.settings.kicker }}</span>
+      {%- else -%}
+        <span>{{ section.settings.heading }}</span>
+      {%- endif -%}
+      <i data-featured-product-progress></i>
     </div>
   </div>
 </section>
@@ -49,7 +88,7 @@
       "type": "textarea",
       "id": "text",
       "label": "Text",
-      "default": "A staggered product grid inspired by the rotating image reveals in the Scroll studies."
+      "default": "A scroll-stacked product sequence inspired by the card reveals in the Next Stack study."
     },
     {
       "type": "collection",
