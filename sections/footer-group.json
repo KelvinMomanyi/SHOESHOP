@@ -1,0 +1,24 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Dispatches from the shop floor",
+        "text": "New products, limited edits, and useful notes."
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "menu": "footer",
+        "show_localization": true
+      }
+    }
+  },
+  "order": [
+    "newsletter",
+    "footer"
+  ]
+}

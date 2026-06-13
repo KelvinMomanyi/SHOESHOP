@@ -1,0 +1,28 @@
+{%- liquid
+  assign target = product.selected_or_first_available_variant | default: product
+  assign compare_at_price = target.compare_at_price
+  assign price = target.price | default: 1999
+  assign available = target.available | default: false
+-%}
+
+<div class="price{% if compare_at_price > price %} price--on-sale{% endif %}{% unless available %} price--sold-out{% endunless %}" data-price-wrapper>
+  <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+  <span class="price__regular" data-product-price>{{ price | money }}</span>
+
+  <span class="price__compare{% unless compare_at_price > price %} hidden{% endunless %}" data-compare-price>
+    <span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>
+    <s>{{ compare_at_price | money }}</s>
+  </span>
+
+  {%- if target.unit_price_measurement -%}
+    <span class="price__unit" data-unit-price>
+      {{ target.unit_price | money }}/
+      {%- if target.unit_price_measurement.reference_value != 1 -%}
+        {{ target.unit_price_measurement.reference_value }}
+      {%- endif -%}
+      {{ target.unit_price_measurement.reference_unit }}
+    </span>
+  {%- else -%}
+    <span class="price__unit hidden" data-unit-price></span>
+  {%- endif -%}
+</div>

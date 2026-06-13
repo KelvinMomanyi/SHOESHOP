@@ -1,0 +1,157 @@
+<section class="hover-preview">
+  <div class="hover-preview__inner page-width" data-hover-preview data-follow-preview>
+    {%- if section.settings.show_heading and section.settings.heading != blank -%}
+      <div class="hover-preview__heading reveal-item">
+        {%- if section.settings.kicker != blank -%}
+          <p class="eyebrow">{{ section.settings.kicker }}</p>
+        {%- endif -%}
+        <h2>{{ section.settings.heading }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="hover-preview__rows">
+      {%- for block in section.blocks -%}
+        <a class="hover-row reveal-item" href="{{ block.settings.link | default: routes.all_products_collection_url }}" data-preview-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+          <strong>{{ block.settings.title | default: 'Featured project' }}</strong>
+          <span>{{ block.settings.caption | default: 'Shop now' }}</span>
+        </a>
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          <a class="hover-row reveal-item" href="{{ routes.all_products_collection_url }}" data-preview-index="{{ forloop.index0 }}">
+            <strong>Featured project</strong>
+            <span>Shop now</span>
+          </a>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="hover-preview__thumbnail" aria-hidden="true" data-floating-preview>
+      <div class="hover-preview__track" data-preview-track>
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign fallback_index = forloop.index0 | modulo: 3
+          assign fallback_asset = 'scroll-hero-01.png'
+          if fallback_index == 1
+            assign fallback_asset = 'scroll-hero-02.png'
+          elsif fallback_index == 2
+            assign fallback_asset = 'scroll-hero-03.png'
+          endif
+        -%}
+        <div class="hover-preview__image" data-preview-image="{{ forloop.index0 }}">
+          {%- if block.settings.image != blank -%}
+            {%- render 'responsive-image',
+              image: block.settings.image,
+              class: 'hover-preview__img',
+              sizes: '(min-width: 990px) 400px, 80vw',
+              alt: block.settings.title
+            -%}
+          {%- else -%}
+            <img
+              src="{{ fallback_asset | asset_url }}"
+              width="768"
+              height="1344"
+              loading="lazy"
+              alt="{{ block.settings.title | default: 'Featured project' | escape }}"
+              class="hover-preview__img"
+            >
+          {%- endif -%}
+        </div>
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          {%- liquid
+            assign fallback_index = forloop.index0 | modulo: 3
+            assign fallback_asset = 'scroll-hero-01.png'
+            if fallback_index == 1
+              assign fallback_asset = 'scroll-hero-02.png'
+            elsif fallback_index == 2
+              assign fallback_asset = 'scroll-hero-03.png'
+            endif
+          -%}
+          <div class="hover-preview__image" data-preview-image="{{ forloop.index0 }}">
+            <img
+              src="{{ fallback_asset | asset_url }}"
+              width="768"
+              height="1344"
+              loading="lazy"
+              alt="Featured project"
+              class="hover-preview__img"
+            >
+          </div>
+        {%- endfor -%}
+      {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hover preview",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Point of view"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Built for cinematic browsing"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show heading",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Campaign title"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption",
+          "default": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Preview image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hover preview",
+      "blocks": [
+        {
+          "type": "row"
+        },
+        {
+          "type": "row"
+        },
+        {
+          "type": "row"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,41 @@
+<section class="customer-page section-band">
+  <div class="page-width customer-auth">
+    <div class="section-heading">
+      <p class="eyebrow">{{ shop.name }}</p>
+      <h1>{{ 'customer.login.title' | t }}</h1>
+    </div>
+
+    {%- form 'customer_login', class: 'customer-form' -%}
+      {{ form.errors | default_errors }}
+      <label>
+        <span>{{ 'customer.login.email' | t }}</span>
+        <input class="field__input" type="email" name="customer[email]" autocomplete="email" required>
+      </label>
+      <label>
+        <span>{{ 'customer.login.password' | t }}</span>
+        <input class="field__input" type="password" name="customer[password]" autocomplete="current-password" required>
+      </label>
+      <button class="button" type="submit">{{ 'customer.login.submit' | t }}</button>
+      <a class="text-link" href="#recover">{{ 'customer.login.forgot_password' | t }}</a>
+      <a class="text-link" href="{{ routes.account_register_url }}">{{ 'customer.login.create_account' | t }}</a>
+    {%- endform -%}
+
+    <div id="recover" class="customer-recover">
+      <h2>{{ 'customer.login.forgot_password' | t }}</h2>
+      {%- form 'recover_customer_password', class: 'customer-form' -%}
+        {{ form.errors | default_errors }}
+        <label>
+          <span>{{ 'customer.login.email' | t }}</span>
+          <input class="field__input" type="email" name="email" autocomplete="email" required>
+        </label>
+        <button class="button button--secondary" type="submit">Submit</button>
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Customer login"
+}
+{% endschema %}

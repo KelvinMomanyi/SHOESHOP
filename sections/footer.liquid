@@ -1,0 +1,87 @@
+{%- liquid
+  assign menu = linklists[section.settings.menu]
+-%}
+
+<footer class="site-footer">
+  <div class="site-footer__inner page-width">
+    <div class="site-footer__brand">
+      <a href="{{ routes.root_url }}">{{ shop.name }}</a>
+      {%- if shop.description != blank -%}
+        <p>{{ shop.description }}</p>
+      {%- else -%}
+        <p>{{ section.settings.text }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="site-footer__nav">
+      {%- if menu.links != blank -%}
+        <nav aria-label="Footer">
+          <ul role="list">
+            {%- for link in menu.links -%}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+    </div>
+
+    <div class="site-footer__meta">
+      <div class="site-footer__social">
+        {%- if settings.social_instagram_link != blank -%}
+          <a href="{{ settings.social_instagram_link }}" rel="noopener" target="_blank">Instagram</a>
+        {%- endif -%}
+        {%- if settings.social_tiktok_link != blank -%}
+          <a href="{{ settings.social_tiktok_link }}" rel="noopener" target="_blank">TikTok</a>
+        {%- endif -%}
+        {%- if settings.social_youtube_link != blank -%}
+          <a href="{{ settings.social_youtube_link }}" rel="noopener" target="_blank">YouTube</a>
+        {%- endif -%}
+        {%- if settings.social_pinterest_link != blank -%}
+          <a href="{{ settings.social_pinterest_link }}" rel="noopener" target="_blank">Pinterest</a>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_localization -%}
+        {%- render 'localization-form', id: 'FooterLocalization' -%}
+      {%- endif -%}
+    </div>
+
+    {%- if settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+      <ul class="site-footer__payments" role="list" aria-label="Payment methods">
+        {%- for type in shop.enabled_payment_types -%}
+          <li>{{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    <div class="site-footer__bottom">
+      <small>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ powered_by_link }}</small>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Fallback text",
+      "default": "A modern editorial commerce experience."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "footer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_localization",
+      "label": "Show country and language selectors",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

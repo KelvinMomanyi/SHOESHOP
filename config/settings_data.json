@@ -1,0 +1,16 @@
+{
+  "current": {
+    "color_background": "#f6f4ef",
+    "color_foreground": "#111111",
+    "color_muted": "#67645d",
+    "color_surface": "#ffffff",
+    "color_border": "#d8d4cb",
+    "color_accent": "#a6bd2f",
+    "color_accent_2": "#e56b48",
+    "color_button": "#111111",
+    "color_button_text": "#ffffff",
+    "page_width": 1360,
+    "enable_scroll_reveal": true,
+    "show_payment_icons": true
+  }
+}

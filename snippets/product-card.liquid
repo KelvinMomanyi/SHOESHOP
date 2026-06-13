@@ -1,0 +1,55 @@
+{%- liquid
+  assign card_product = product
+  assign card_collection = collection
+  assign image = card_product.featured_media.preview_image | default: card_product.featured_image
+-%}
+
+{%- if card_product != blank -%}
+  <article class="product-card reveal-item">
+    <a class="product-card__media media-frame" href="{{ card_product.url | within: card_collection }}" aria-label="{{ card_product.title | escape }}">
+      {%- render 'responsive-image',
+        image: image,
+        class: 'product-card__image media-frame__image',
+        sizes: '(min-width: 990px) 25vw, (min-width: 700px) 50vw, 100vw',
+        loading: loading
+      -%}
+      {%- if card_product.compare_at_price > card_product.price and card_product.available -%}
+        <span class="badge product-card__badge">Sale</span>
+      {%- elsif card_product.available == false -%}
+        <span class="badge product-card__badge">Sold out</span>
+      {%- endif -%}
+    </a>
+
+    <div class="product-card__content">
+      {%- if card_product.vendor != blank -%}
+        <p class="eyebrow product-card__vendor">{{ card_product.vendor }}</p>
+      {%- endif -%}
+      <h3 class="product-card__title">
+        <a href="{{ card_product.url | within: card_collection }}">{{ card_product.title }}</a>
+      </h3>
+      {%- render 'price', product: card_product -%}
+
+      {%- if card_product.available and card_product.variants.size == 1 -%}
+        {%- form 'product', card_product, class: 'quick-add' -%}
+          <input type="hidden" name="id" value="{{ card_product.selected_or_first_available_variant.id }}">
+          <button class="button button--small button--ghost" type="submit">{{ 'products.product.add_to_cart' | t }}</button>
+        {%- endform -%}
+      {%- else -%}
+        <a class="button button--small button--ghost" href="{{ card_product.url | within: card_collection }}">
+          {{ 'products.product.add_to_cart' | t }}
+        </a>
+      {%- endif -%}
+    </div>
+  </article>
+{%- else -%}
+  <article class="product-card reveal-item">
+    <div class="product-card__media media-frame">
+      {{ 'product-1' | placeholder_svg_tag: 'product-card__image media-frame__image placeholder-svg' }}
+    </div>
+    <div class="product-card__content">
+      <p class="eyebrow product-card__vendor">Vendor</p>
+      <h3 class="product-card__title">Product title</h3>
+      <div class="price"><span class="price__regular">{{ 1999 | money }}</span></div>
+    </div>
+  </article>
+{%- endif -%}

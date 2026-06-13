@@ -1,0 +1,208 @@
+{%- liquid
+  assign item_count = section.blocks.size
+  if item_count == 0
+    assign item_count = 8
+  endif
+  assign section_height = section.settings.scroll_length
+-%}
+
+<section class="image-spread section-{{ section.id }}" data-image-spread style="--image-spread-height: {{ section_height }}svh;">
+  <div class="image-spread__stage">
+    <div class="image-spread__text">
+      {%- if section.settings.kicker != blank -%}
+        <p class="eyebrow">{{ section.settings.kicker }}</p>
+      {%- endif -%}
+      <h2>{{ section.settings.heading }}</h2>
+      {%- if section.settings.text != blank -%}
+        <p>{{ section.settings.text }}</p>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <a class="button button--light" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
+          {{ section.settings.button_label }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="image-spread__items" style="--image-spread-count: {{ item_count }};">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign spread_product = block.settings.product
+            assign spread_image = block.settings.image | default: spread_product.featured_media.preview_image | default: spread_product.featured_image
+            assign spread_title = block.settings.title | default: spread_product.title
+            assign spread_link = block.settings.link | default: spread_product.url | default: section.settings.button_link | default: routes.all_products_collection_url
+            assign fallback_index = forloop.index0 | modulo: 3
+            assign fallback_asset = 'scroll-hero-01.png'
+            if fallback_index == 1
+              assign fallback_asset = 'scroll-hero-02.png'
+            elsif fallback_index == 2
+              assign fallback_asset = 'scroll-hero-03.png'
+            endif
+          -%}
+          <a
+            class="image-spread__item{% if forloop.last and section.settings.last_image_cover %} is-cover{% endif %}"
+            href="{{ spread_link }}"
+            data-flow-item
+            style="--flow-index: {{ forloop.index0 }};"
+            {{ block.shopify_attributes }}
+          >
+            {%- if spread_image != blank -%}
+              {%- render 'responsive-image',
+                image: spread_image,
+                class: 'image-spread__img',
+                sizes: '(min-width: 990px) 500px, 70vw',
+                alt: spread_title
+              -%}
+            {%- else -%}
+              <img
+                src="{{ fallback_asset | asset_url }}"
+                width="768"
+                height="1344"
+                loading="lazy"
+                alt="{{ spread_title | default: 'Featured product' | escape }}"
+                class="image-spread__img"
+              >
+            {%- endif -%}
+            <span>{{ spread_title | default: 'Featured product' }}</span>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..8) -%}
+          {%- liquid
+            assign fallback_index = forloop.index0 | modulo: 3
+            assign fallback_asset = 'scroll-hero-01.png'
+            if fallback_index == 1
+              assign fallback_asset = 'scroll-hero-02.png'
+            elsif fallback_index == 2
+              assign fallback_asset = 'scroll-hero-03.png'
+            endif
+          -%}
+          <a
+            class="image-spread__item{% if forloop.last and section.settings.last_image_cover %} is-cover{% endif %}"
+            href="{{ section.settings.button_link | default: routes.all_products_collection_url }}"
+            data-flow-item
+            style="--flow-index: {{ forloop.index0 }};"
+          >
+            <img
+              src="{{ fallback_asset | asset_url }}"
+              width="768"
+              height="1344"
+              loading="lazy"
+              alt="Featured product"
+              class="image-spread__img"
+            >
+            <span>Featured product</span>
+          </a>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image spread",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Shop in motion"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Every piece opens into its own world"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "A Scroll 7-inspired product journey where featured items move from one focal point into a full spatial edit."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop the spread"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "scroll_length",
+      "label": "Scroll length",
+      "min": 300,
+      "max": 900,
+      "step": 50,
+      "unit": "vh",
+      "default": 450
+    },
+    {
+      "type": "checkbox",
+      "id": "last_image_cover",
+      "label": "Let the final image become a cover frame",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product image",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image override"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title override"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link override"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image spread",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

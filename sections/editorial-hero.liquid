@@ -1,0 +1,257 @@
+{%- liquid
+  assign hero_image = section.settings.image
+  assign first_collection = section.settings.collection
+  assign panel_count = section.blocks.size
+  if panel_count == 0
+    assign panel_count = 1
+  endif
+  assign panel_height = panel_count | times: 100
+-%}
+
+<section class="editorial-hero section-{{ section.id }}" data-scroll-hero style="--hero-height: {{ panel_height }}svh;">
+  <div class="editorial-hero__stage">
+    <div class="editorial-hero__progress" aria-hidden="true"></div>
+
+    <div class="editorial-hero__dots" aria-hidden="true">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          <span class="{% if forloop.first %}is-active{% endif %}"></span>
+        {%- endfor -%}
+      {%- else -%}
+        <span class="is-active"></span>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign panel_product = block.settings.product
+          assign panel_image = block.settings.image | default: panel_product.featured_media.preview_image | default: panel_product.featured_image
+          assign panel_title = block.settings.title | default: panel_product.title | default: section.settings.heading
+          assign panel_body = block.settings.text | default: panel_product.description | strip_html | truncatewords: 26 | default: section.settings.text
+          assign panel_link = block.settings.link | default: panel_product.url | default: section.settings.button_link | default: routes.all_products_collection_url
+          assign panel_category = block.settings.category | default: section.settings.kicker
+          assign fallback_index = forloop.index0 | modulo: 3
+          assign fallback_asset = 'scroll-hero-01.png'
+          if fallback_index == 1
+            assign fallback_asset = 'scroll-hero-02.png'
+          elsif fallback_index == 2
+            assign fallback_asset = 'scroll-hero-03.png'
+          endif
+          assign panel_loading = 'lazy'
+          if forloop.first
+            assign panel_loading = 'eager'
+          endif
+        -%}
+
+        <article class="editorial-hero__panel" style="--panel-index: {{ forloop.index0 }};" {{ block.shopify_attributes }}>
+          <div class="editorial-hero__image-wrap">
+            {%- if panel_image != blank -%}
+              {%- render 'responsive-image',
+                image: panel_image,
+                class: 'editorial-hero__image',
+                sizes: '100vw',
+                loading: panel_loading,
+                alt: panel_title
+              -%}
+            {%- else -%}
+              <img
+                src="{{ fallback_asset | asset_url }}"
+                width="768"
+                height="1344"
+                loading="{{ panel_loading }}"
+                alt="{{ panel_title | escape }}"
+                class="editorial-hero__image"
+              >
+            {%- endif -%}
+          </div>
+
+          <div class="editorial-hero__panel-content page-width">
+            <header class="editorial-hero__panel-header">
+              <span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+              <i aria-hidden="true"></i>
+              <em>{{ panel_category | default: 'Collection' }}</em>
+            </header>
+
+            <div class="editorial-hero__panel-footer">
+              <div class="editorial-hero__body">
+                {%- if panel_body != blank -%}
+                  <p>{{ panel_body }}</p>
+                {%- endif -%}
+                <div class="button-row">
+                  {%- if section.settings.button_label != blank -%}
+                    <a class="button button--light" href="{{ panel_link }}">{{ section.settings.button_label }}</a>
+                  {%- endif -%}
+                  {%- if section.settings.secondary_button_label != blank -%}
+                    <a class="button button--ghost button--hero" href="{{ section.settings.secondary_button_link | default: routes.collections_url }}">
+                      {{ section.settings.secondary_button_label }}
+                    </a>
+                  {%- endif -%}
+                </div>
+              </div>
+
+              <h1>{{ panel_title | default: 'Featured edit' }}</h1>
+            </div>
+          </div>
+        </article>
+      {%- endfor -%}
+    {%- else -%}
+      <article class="editorial-hero__panel" style="--panel-index: 0;">
+        <div class="editorial-hero__image-wrap">
+          {%- if hero_image != blank or first_collection.image != blank -%}
+            {%- render 'responsive-image',
+              image: hero_image | default: first_collection.image,
+              class: 'editorial-hero__image',
+              sizes: '100vw',
+              loading: 'eager',
+              alt: section.settings.heading
+            -%}
+          {%- else -%}
+            <img
+              src="{{ 'scroll-hero-01.png' | asset_url }}"
+              width="768"
+              height="1344"
+              loading="eager"
+              alt="{{ section.settings.heading | escape }}"
+              class="editorial-hero__image"
+            >
+          {%- endif -%}
+        </div>
+
+        <div class="editorial-hero__panel-content page-width">
+          <header class="editorial-hero__panel-header">
+            <span>01</span>
+            <i aria-hidden="true"></i>
+            <em>{{ section.settings.kicker | default: 'Collection' }}</em>
+          </header>
+          <div class="editorial-hero__panel-footer">
+            <div class="editorial-hero__body">
+              <p>{{ section.settings.text }}</p>
+              <div class="button-row">
+                <a class="button button--light" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
+                  {{ section.settings.button_label }}
+                </a>
+              </div>
+            </div>
+            <h1>{{ section.settings.heading }}</h1>
+          </div>
+        </div>
+      </article>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Editorial hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "New season"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Objects with momentum"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "A fast, editorial storefront for collections that deserve movement, contrast, and room to breathe."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Fallback collection"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Primary button",
+      "default": "Shop the edit"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Primary link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label",
+      "label": "Secondary button",
+      "default": "View collections"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Hero panel",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image override"
+        },
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category",
+          "default": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Body text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link override"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial hero",
+      "blocks": [
+        {
+          "type": "feature"
+        },
+        {
+          "type": "feature"
+        },
+        {
+          "type": "feature"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

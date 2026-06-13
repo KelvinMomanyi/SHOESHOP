@@ -1,0 +1,43 @@
+<section class="list-collections section-band">
+  <div class="page-width">
+    <div class="section-heading">
+      <p class="eyebrow">{{ shop.name }}</p>
+      <h1>{{ section.settings.heading }}</h1>
+    </div>
+
+    {%- paginate collections by 24 -%}
+      <div class="collection-grid">
+        {%- for collection in collections -%}
+          {%- unless collection.handle == 'frontpage' -%}
+            <a class="collection-card reveal-item" href="{{ collection.url }}">
+              <div class="collection-card__media media-frame">
+                {%- render 'responsive-image',
+                  image: collection.image,
+                  class: 'media-frame__image',
+                  sizes: '(min-width: 990px) 33vw, 100vw'
+                -%}
+              </div>
+              <strong>{{ collection.title }}</strong>
+              <span>{{ collection.products_count }} products</span>
+            </a>
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+      {%- render 'pagination', paginate: paginate -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "List collections",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Collections"
+    }
+  ]
+}
+{% endschema %}

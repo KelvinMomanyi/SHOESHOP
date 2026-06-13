@@ -1,0 +1,59 @@
+<section class="search-page section-band">
+  <div class="page-width">
+    <div class="section-heading">
+      <p class="eyebrow">{{ 'general.search.title' | t }}</p>
+      <h1>
+        {%- if search.performed -%}
+          {{ 'general.search.results_with_count' | t: count: search.results_count, terms: search.terms }}
+        {%- else -%}
+          {{ 'general.search.title' | t }}
+        {%- endif -%}
+      </h1>
+    </div>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="main-search-form">
+      <input type="hidden" name="type" value="product">
+      <label class="visually-hidden" for="SearchInput">{{ 'accessibility.search_products' | t }}</label>
+      <input id="SearchInput" class="field__input" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
+      <button class="button" type="submit">{{ 'general.search.search' | t }}</button>
+    </form>
+
+    {%- if search.performed -%}
+      {%- render 'facets', results: search -%}
+
+      {%- paginate search.results by section.settings.results_per_page -%}
+        {%- if search.results_count > 0 -%}
+          <div class="product-grid">
+            {%- for item in search.results -%}
+              {%- if item.object_type == 'product' -%}
+                {%- render 'product-card', product: item, loading: 'lazy' -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <div class="empty-state">
+            <p>{{ 'general.search.no_results' | t }}</p>
+          </div>
+        {%- endif -%}
+        {%- render 'pagination', paginate: paginate -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main search",
+  "settings": [
+    {
+      "type": "range",
+      "id": "results_per_page",
+      "label": "Results per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 16
+    }
+  ]
+}
+{% endschema %}

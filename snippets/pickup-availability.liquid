@@ -1,0 +1,33 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign pickup_availabilities = current_variant.store_availabilities | where: 'pick_up_enabled', true
+-%}
+
+{%- if current_variant and current_variant.available and pickup_availabilities.size > 0 -%}
+  <div class="pickup-availability__summary">
+    <strong>{{ 'products.product.pickup_availability.available' | t }}</strong>
+    <span>{{ pickup_availabilities.first.pick_up_time }}</span>
+  </div>
+
+  <details class="pickup-availability__details">
+    <summary>{{ 'products.product.pickup_availability.view_store_info' | t }}</summary>
+    <ul class="pickup-availability__list" role="list">
+      {%- for availability in pickup_availabilities -%}
+        <li>
+          <strong>{{ availability.location.name }}</strong>
+          <span>
+            {%- if availability.available -%}
+              {{ 'products.product.pickup_availability.available' | t }}
+            {%- else -%}
+              {{ 'products.product.pickup_availability.unavailable' | t }}
+            {%- endif -%}
+            {%- if availability.pick_up_time != blank -%}
+              · {{ availability.pick_up_time }}
+            {%- endif -%}
+          </span>
+          <address>{{ availability.location.address | format_address }}</address>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </details>
+{%- endif -%}

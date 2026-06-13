@@ -1,0 +1,55 @@
+<section class="complementary-products section-band color-paper">
+  <div class="page-width">
+    <div class="section-heading reveal-item">
+      <p class="eyebrow">{{ section.settings.kicker }}</p>
+      <h2>{{ section.settings.heading }}</h2>
+    </div>
+
+    <product-recommendations
+      class="product-recommendations__list"
+      data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}&intent=complementary"
+    >
+      {%- if recommendations.performed and recommendations.products_count > 0 -%}
+        <div class="product-grid">
+          {%- for recommendation in recommendations.products -%}
+            {%- render 'product-card', product: recommendation, loading: 'lazy' -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </product-recommendations>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Complementary products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Pairs with"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Complete the set"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Complementary products"
+    }
+  ]
+}
+{% endschema %}

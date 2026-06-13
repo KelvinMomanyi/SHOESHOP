@@ -1,0 +1,55 @@
+<section class="collection-page section-band">
+  <div class="page-width">
+    <header class="collection-hero">
+      <div>
+        <p class="eyebrow">{{ collection.products_count }} products</p>
+        <h1>{{ collection.title }}</h1>
+        {%- if collection.description != blank -%}
+          <div class="rte">{{ collection.description }}</div>
+        {%- endif -%}
+      </div>
+      {%- if collection.image != blank -%}
+        <div class="collection-hero__image media-frame">
+          {%- render 'responsive-image',
+            image: collection.image,
+            class: 'media-frame__image',
+            sizes: '(min-width: 990px) 35vw, 100vw',
+            loading: 'eager'
+          -%}
+        </div>
+      {%- endif -%}
+    </header>
+
+    {%- render 'facets', results: collection -%}
+
+    {%- paginate collection.products by section.settings.products_per_page -%}
+      <div class="product-grid">
+        {%- for product in collection.products -%}
+          {%- render 'product-card', product: product, collection: collection, loading: 'lazy' -%}
+        {%- else -%}
+          <div class="empty-state">
+            <p>No products found.</p>
+          </div>
+        {%- endfor -%}
+      </div>
+      {%- render 'pagination', paginate: paginate -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main collection",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 16
+    }
+  ]
+}
+{% endschema %}

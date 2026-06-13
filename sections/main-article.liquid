@@ -1,0 +1,65 @@
+<article class="article-page section-band">
+  <div class="page-width article-page__inner">
+    <header class="article-page__header">
+      <p class="eyebrow">{{ article.published_at | date: format: 'abbreviated_date' }}</p>
+      <h1>{{ article.title }}</h1>
+      {%- if article.author != blank -%}
+        <p>{{ article.author }}</p>
+      {%- endif -%}
+    </header>
+
+    {%- if article.image != blank -%}
+      <div class="article-page__image media-frame">
+        {%- render 'responsive-image',
+          image: article.image,
+          class: 'media-frame__image',
+          sizes: '(min-width: 990px) 80vw, 100vw',
+          loading: 'eager'
+        -%}
+      </div>
+    {%- endif -%}
+
+    <div class="rte article-page__content">
+      {{ article.content }}
+    </div>
+
+    {%- if blog.comments_enabled? -%}
+      <section class="comments">
+        <h2>{{ article.comments_count }} comments</h2>
+        {%- paginate article.comments by 12 -%}
+          {%- for comment in article.comments -%}
+            <article class="comment">
+              <p>{{ comment.content }}</p>
+              <footer>{{ comment.author }} · {{ comment.created_at | date: format: 'abbreviated_date' }}</footer>
+            </article>
+          {%- endfor -%}
+          {%- render 'pagination', paginate: paginate -%}
+        {%- endpaginate -%}
+
+        {%- form 'new_comment', article, class: 'comment-form' -%}
+          <h3>Leave a comment</h3>
+          {{ form.errors | default_errors }}
+          <label>
+            <span>Name</span>
+            <input class="field__input" type="text" name="comment[author]" value="{{ form.author }}" required>
+          </label>
+          <label>
+            <span>Email</span>
+            <input class="field__input" type="email" name="comment[email]" value="{{ form.email }}" required>
+          </label>
+          <label>
+            <span>Comment</span>
+            <textarea class="field__input" name="comment[body]" rows="5" required>{{ form.body }}</textarea>
+          </label>
+          <button class="button" type="submit">Post comment</button>
+        {%- endform -%}
+      </section>
+    {%- endif -%}
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Main article"
+}
+{% endschema %}

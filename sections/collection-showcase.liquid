@@ -1,0 +1,128 @@
+<section class="collection-showcase section-band">
+  <div class="page-width">
+    <div class="section-heading reveal-item">
+      {%- if section.settings.kicker != blank -%}
+        <p class="eyebrow">{{ section.settings.kicker }}</p>
+      {%- endif -%}
+      <h2>{{ section.settings.heading }}</h2>
+    </div>
+
+    <div class="collection-showcase__grid" data-hover-preview>
+      <div class="collection-showcase__list">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign featured_collection = block.settings.collection
+            assign title = block.settings.title | default: featured_collection.title
+            assign image = block.settings.image | default: featured_collection.image
+            assign link = block.settings.link | default: featured_collection.url
+          -%}
+          <a class="collection-row" href="{{ link | default: routes.collections_url }}" data-preview-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+            <span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+            <strong>{{ title | default: 'Collection title' }}</strong>
+            <em>{{ block.settings.caption | default: featured_collection.products_count | append: ' products' }}</em>
+          </a>
+        {%- else -%}
+          {%- for i in (1..4) -%}
+            <a class="collection-row" href="{{ routes.collections_url }}" data-preview-index="{{ forloop.index0 }}">
+              <span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+              <strong>Collection title</strong>
+              <em>Curated edit</em>
+            </a>
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="collection-showcase__preview" aria-hidden="true">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign featured_collection = block.settings.collection
+            assign image = block.settings.image | default: featured_collection.image
+          -%}
+          <div class="collection-preview-image{% if forloop.first %} is-active{% endif %}" data-preview-image="{{ forloop.index0 }}">
+            {%- render 'responsive-image',
+              image: image,
+              class: 'collection-preview-image__img',
+              sizes: '(min-width: 990px) 35vw, 80vw'
+            -%}
+          </div>
+        {%- else -%}
+          <div class="collection-preview-image is-active" data-preview-image="0">
+            {{ 'collection-1' | placeholder_svg_tag: 'collection-preview-image__img placeholder-svg' }}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection showcase",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Navigation"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find the right edit"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title override"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image override"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link override"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection showcase",
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

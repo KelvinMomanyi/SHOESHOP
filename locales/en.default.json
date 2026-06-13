@@ -1,0 +1,148 @@
+{
+  "accessibility": {
+    "skip_to_text": "Skip to content",
+    "close": "Close",
+    "search": "Search",
+    "search_products": "Search products",
+    "menu": "Menu",
+    "cart": "Cart",
+    "quantity": "Quantity",
+    "increase_quantity": "Increase quantity for {{ title }}",
+    "decrease_quantity": "Decrease quantity for {{ title }}"
+  },
+  "general": {
+    "404": {
+      "title": "Page not found",
+      "subtext": "The page you requested does not exist.",
+      "link": "Continue shopping"
+    },
+    "search": {
+      "title": "Search",
+      "search": "Search",
+      "placeholder": "Search products",
+      "results_with_count": "{{ count }} results for “{{ terms }}”",
+      "no_results": "No results found.",
+      "predictive_heading": "Suggested products"
+    },
+    "newsletter": {
+      "label": "Email",
+      "placeholder": "Email address",
+      "button": "Subscribe",
+      "success": "Thanks for subscribing."
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "social": {
+      "share_on_facebook": "Share on Facebook",
+      "share_on_x": "Share on X",
+      "share_on_pinterest": "Share on Pinterest"
+    }
+  },
+  "localization": {
+    "country_label": "Country/region",
+    "language_label": "Language"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "quantity": "Quantity",
+      "sale_price": "Sale price",
+      "regular_price": "Regular price",
+      "unit_price": "Unit price",
+      "vendor": "Vendor",
+      "sku": "SKU",
+      "tax_included": "Tax included.",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Shipping</a> calculated at checkout.",
+      "pickup_availability": {
+        "loading": "Checking pickup availability",
+        "available": "Pickup available",
+        "unavailable": "Pickup currently unavailable",
+        "view_store_info": "View store information"
+      },
+      "recipient": {
+        "checkbox": "Send as a gift",
+        "email": "Recipient email",
+        "name": "Recipient name",
+        "message": "Message",
+        "send_on": "Send on"
+      },
+      "share": "Share",
+      "recommendations": "You may also like",
+      "complementary": "Complete the set"
+    },
+    "facets": {
+      "filter_and_sort": "Filter and sort",
+      "filter_by_label": "Filter by",
+      "sort_by_label": "Sort by",
+      "apply": "Apply",
+      "clear": "Clear",
+      "clear_all": "Clear all"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Cart",
+      "empty": "Your cart is empty.",
+      "continue_shopping": "Continue shopping",
+      "remove": "Remove",
+      "subtotal": "Subtotal",
+      "checkout": "Check out",
+      "discount": "Discount",
+      "tax_included": "Tax included.",
+      "shipping_at_checkout": "Shipping calculated at checkout.",
+      "update": "Update cart",
+      "note": "Order note"
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "Account",
+      "details": "Account details",
+      "view_addresses": "View addresses",
+      "log_out": "Log out",
+      "orders": "Orders"
+    },
+    "login": {
+      "title": "Log in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Log in",
+      "forgot_password": "Forgot your password?",
+      "create_account": "Create account"
+    },
+    "register": {
+      "title": "Create account",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create"
+    },
+    "addresses": {
+      "title": "Addresses",
+      "add_new": "Add a new address"
+    },
+    "order": {
+      "title": "Order {{ name }}",
+      "date": "Placed on {{ date }}",
+      "billing_address": "Billing address",
+      "shipping_address": "Shipping address"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "{{ value }} gift card for {{ shop }}",
+      "subtext": "Your gift card",
+      "remaining_html": "{{ balance }} remaining",
+      "expired": "Expired on {{ expiry }}",
+      "active": "Expires on {{ expiry }}",
+      "redeem": "Use this code at checkout",
+      "print": "Print",
+      "add_to_apple_wallet": "Add to Apple Wallet"
+    }
+  }
+}

@@ -1,0 +1,240 @@
+{%- liquid
+  assign item_count = section.blocks.size
+  if item_count == 0
+    assign item_count = 5
+  endif
+  assign hero_index = item_count | plus: 1 | divided_by: 2
+-%}
+
+<section
+  class="alexandra-loader section-{{ section.id }}"
+  data-alexandra-loader
+  aria-label="{{ section.settings.heading_line_1 }} {{ section.settings.heading_line_2 }}"
+  style="--alexandra-loader-height: {{ section.settings.scroll_length }}svh;"
+>
+  <div class="alexandra-loader__stage">
+    <div class="alexandra-loader__curtain" data-loader-curtain aria-hidden="true"></div>
+
+    <header class="alexandra-loader__topbar" data-loader-topbar>
+      {%- if section.settings.brand_label != blank -%}
+        <span>{{ section.settings.brand_label }}</span>
+      {%- endif -%}
+      <div class="alexandra-loader__links">
+        {%- if section.settings.meta_label_1 != blank -%}
+          <span>{{ section.settings.meta_label_1 }}</span>
+        {%- endif -%}
+        {%- if section.settings.meta_label_2 != blank -%}
+          <span>{{ section.settings.meta_label_2 }}</span>
+        {%- endif -%}
+        {%- if section.settings.meta_label_3 != blank -%}
+          <span>{{ section.settings.meta_label_3 }}</span>
+        {%- endif -%}
+      </div>
+    </header>
+
+    <div class="alexandra-loader__title" aria-hidden="true">
+      {%- if section.settings.heading_line_1 != blank -%}
+        <div class="alexandra-loader__title-line">
+          <span data-loader-title-line>{{ section.settings.heading_line_1 }}</span>
+        </div>
+      {%- endif -%}
+      {%- if section.settings.heading_line_2 != blank -%}
+        <div class="alexandra-loader__title-line alexandra-loader__title-line--muted">
+          <span data-loader-title-line>{{ section.settings.heading_line_2 }}</span>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="alexandra-loader__gallery" data-loader-gallery>
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign loader_product = block.settings.product
+            assign loader_image = block.settings.image | default: loader_product.featured_media.preview_image | default: loader_product.featured_image
+            assign loader_title = block.settings.title | default: loader_product.title | default: 'Featured portrait'
+            assign loader_link = block.settings.link | default: loader_product.url | default: section.settings.link | default: routes.all_products_collection_url
+            assign fallback_index = forloop.index
+            assign fallback_asset = 'alexandra-loader-01.png'
+            if fallback_index == 2
+              assign fallback_asset = 'alexandra-loader-02.png'
+            elsif fallback_index == 3
+              assign fallback_asset = 'alexandra-loader-03.png'
+            elsif fallback_index == 4
+              assign fallback_asset = 'alexandra-loader-04.png'
+            elsif fallback_index == 5
+              assign fallback_asset = 'alexandra-loader-05.png'
+            endif
+          -%}
+
+          <a
+            class="alexandra-loader__item{% if forloop.index == hero_index %} is-hero{% endif %}"
+            href="{{ loader_link }}"
+            data-loader-item
+            {{ block.shopify_attributes }}
+          >
+            {%- if loader_image != blank -%}
+              {%- render 'responsive-image',
+                image: loader_image,
+                class: 'alexandra-loader__image',
+                sizes: '(min-width: 990px) 25vw, 70vw',
+                widths: '220, 360, 533, 720, 940, 1200',
+                alt: loader_title
+              -%}
+            {%- else -%}
+              <img
+                src="{{ fallback_asset | asset_url }}"
+                width="1200"
+                height="1600"
+                loading="lazy"
+                alt="{{ loader_title | escape }}"
+                class="alexandra-loader__image"
+              >
+            {%- endif -%}
+            <span class="visually-hidden">{{ loader_title }}</span>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..5) -%}
+          {%- liquid
+            assign fallback_asset = 'alexandra-loader-01.png'
+            if forloop.index == 2
+              assign fallback_asset = 'alexandra-loader-02.png'
+            elsif forloop.index == 3
+              assign fallback_asset = 'alexandra-loader-03.png'
+            elsif forloop.index == 4
+              assign fallback_asset = 'alexandra-loader-04.png'
+            elsif forloop.index == 5
+              assign fallback_asset = 'alexandra-loader-05.png'
+            endif
+          -%}
+          <a
+            class="alexandra-loader__item{% if forloop.index == hero_index %} is-hero{% endif %}"
+            href="{{ section.settings.link | default: routes.all_products_collection_url }}"
+            data-loader-item
+          >
+            <img
+              src="{{ fallback_asset | asset_url }}"
+              width="1200"
+              height="1600"
+              loading="lazy"
+              alt="Alexandra loader image {{ forloop.index }}"
+              class="alexandra-loader__image"
+            >
+            <span class="visually-hidden">Alexandra loader image {{ forloop.index }}</span>
+          </a>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Alexandra loader",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_label",
+      "label": "Top left label",
+      "default": "Alexandra Beaumont"
+    },
+    {
+      "type": "text",
+      "id": "meta_label_1",
+      "label": "Top right label 1",
+      "default": "Work"
+    },
+    {
+      "type": "text",
+      "id": "meta_label_2",
+      "label": "Top right label 2",
+      "default": "About"
+    },
+    {
+      "type": "text",
+      "id": "meta_label_3",
+      "label": "Top right label 3",
+      "default": "Contact"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Heading line 1",
+      "default": "Alexandra"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Heading line 2",
+      "default": "Beaumont"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Fallback image link"
+    },
+    {
+      "type": "range",
+      "id": "scroll_length",
+      "label": "Scroll length",
+      "min": 250,
+      "max": 700,
+      "step": 50,
+      "unit": "vh",
+      "default": 400
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image override"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title override"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link override"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Alexandra loader",
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

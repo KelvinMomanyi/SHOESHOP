@@ -1,0 +1,125 @@
+<section class="customer-page section-band">
+  <div class="page-width">
+    <div class="section-heading">
+      <p class="eyebrow">{{ customer.email }}</p>
+      <h1>{{ 'customer.addresses.title' | t }}</h1>
+      <a class="text-link" href="{{ routes.account_url }}">{{ 'customer.account.title' | t }}</a>
+    </div>
+
+    <div class="customer-grid">
+      <div>
+        <h2>{{ 'customer.addresses.add_new' | t }}</h2>
+        {%- form 'customer_address', customer.new_address, class: 'customer-form' -%}
+          <label>
+            <span>First name</span>
+            <input class="field__input" type="text" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name">
+          </label>
+          <label>
+            <span>Last name</span>
+            <input class="field__input" type="text" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name">
+          </label>
+          <label>
+            <span>Company</span>
+            <input class="field__input" type="text" name="address[company]" value="{{ form.company }}" autocomplete="organization">
+          </label>
+          <label>
+            <span>Address 1</span>
+            <input class="field__input" type="text" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1">
+          </label>
+          <label>
+            <span>Address 2</span>
+            <input class="field__input" type="text" name="address[address2]" value="{{ form.address2 }}" autocomplete="address-line2">
+          </label>
+          <label>
+            <span>City</span>
+            <input class="field__input" type="text" name="address[city]" value="{{ form.city }}" autocomplete="address-level2">
+          </label>
+          <label>
+            <span>Country</span>
+            <select class="field__input" name="address[country]" data-default="{{ form.country }}" autocomplete="country">
+              {{ all_country_option_tags }}
+            </select>
+          </label>
+          <label>
+            <span>Province</span>
+            <input class="field__input" type="text" name="address[province]" value="{{ form.province }}" autocomplete="address-level1">
+          </label>
+          <label>
+            <span>Postal code</span>
+            <input class="field__input" type="text" name="address[zip]" value="{{ form.zip }}" autocomplete="postal-code">
+          </label>
+          <label>
+            <span>Phone</span>
+            <input class="field__input" type="tel" name="address[phone]" value="{{ form.phone }}" autocomplete="tel">
+          </label>
+          <label class="checkbox-label">
+            {{ form.set_as_default_checkbox }}
+            <span>Set as default address</span>
+          </label>
+          <button class="button" type="submit">Add address</button>
+        {%- endform -%}
+      </div>
+
+      <div class="address-list">
+        {%- paginate customer.addresses by 8 -%}
+          {%- for address in customer.addresses -%}
+            <article class="customer-card">
+              {%- if address == customer.default_address -%}
+                <p class="eyebrow">Default</p>
+              {%- endif -%}
+              {{ address | format_address }}
+              <button class="button button--small button--secondary" type="button" data-address-toggle="EditAddress-{{ address.id }}">Edit</button>
+              <form method="post" action="{{ address.url }}" data-confirm-message="Delete address?">
+                <input type="hidden" name="_method" value="delete">
+                <button class="button button--small button--ghost" type="submit">Delete</button>
+              </form>
+
+              <div class="address-edit" id="EditAddress-{{ address.id }}" hidden>
+                {%- form 'customer_address', address, class: 'customer-form' -%}
+                  <label>
+                    <span>First name</span>
+                    <input class="field__input" type="text" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name">
+                  </label>
+                  <label>
+                    <span>Last name</span>
+                    <input class="field__input" type="text" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name">
+                  </label>
+                  <label>
+                    <span>Address 1</span>
+                    <input class="field__input" type="text" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1">
+                  </label>
+                  <label>
+                    <span>City</span>
+                    <input class="field__input" type="text" name="address[city]" value="{{ form.city }}" autocomplete="address-level2">
+                  </label>
+                  <label>
+                    <span>Country</span>
+                    <select class="field__input" name="address[country]" data-default="{{ form.country }}" autocomplete="country">
+                      {{ all_country_option_tags }}
+                    </select>
+                  </label>
+                  <label>
+                    <span>Postal code</span>
+                    <input class="field__input" type="text" name="address[zip]" value="{{ form.zip }}" autocomplete="postal-code">
+                  </label>
+                  <label class="checkbox-label">
+                    {{ form.set_as_default_checkbox }}
+                    <span>Set as default address</span>
+                  </label>
+                  <button class="button button--small" type="submit">Update</button>
+                {%- endform -%}
+              </div>
+            </article>
+          {%- endfor -%}
+          {%- render 'pagination', paginate: paginate -%}
+        {%- endpaginate -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Customer addresses"
+}
+{% endschema %}

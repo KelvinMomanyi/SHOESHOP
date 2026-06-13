@@ -1,0 +1,34 @@
+{% layout 'gift_card' %}
+
+<section class="gift-card-page">
+  <div class="gift-card-page__panel">
+    <p class="eyebrow">{{ shop.name }}</p>
+    <h1>{{ 'gift_cards.issued.subtext' | t }}</h1>
+
+    <div class="gift-card-page__value">
+      {{ gift_card.balance | money }}
+    </div>
+
+    {%- if gift_card.expired -%}
+      <p>{{ 'gift_cards.issued.expired' | t: expiry: gift_card.expires_on }}</p>
+    {%- elsif gift_card.expires_on -%}
+      <p>{{ 'gift_cards.issued.active' | t: expiry: gift_card.expires_on }}</p>
+    {%- endif -%}
+
+    <div class="gift-card-page__code">
+      <span>{{ 'gift_cards.issued.redeem' | t }}</span>
+      <strong>{{ gift_card.code | format_code }}</strong>
+    </div>
+
+    <div class="button-row">
+      <a class="button" href="{{ shop.url }}">Shop now</a>
+      <button class="button button--secondary" type="button" onclick="window.print()">{{ 'gift_cards.issued.print' | t }}</button>
+    </div>
+
+    {%- if gift_card.pass_url -%}
+      <a class="gift-card-page__wallet" href="{{ gift_card.pass_url }}">
+        <img src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}" width="120" height="40" alt="{{ 'gift_cards.issued.add_to_apple_wallet' | t }}">
+      </a>
+    {%- endif -%}
+  </div>
+</section>

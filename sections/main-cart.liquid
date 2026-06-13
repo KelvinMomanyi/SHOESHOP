@@ -1,0 +1,72 @@
+<section class="cart-page section-band">
+  <div class="page-width">
+    <div class="section-heading">
+      <p class="eyebrow">{{ cart.item_count }} items</p>
+      <h1>{{ 'cart.general.title' | t }}</h1>
+    </div>
+
+    {%- if cart.item_count == 0 -%}
+      <div class="empty-state">
+        <p>{{ 'cart.general.empty' | t }}</p>
+        <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'cart.general.continue_shopping' | t }}</a>
+      </div>
+    {%- else -%}
+      {%- form 'cart', cart, class: 'cart-form' -%}
+        <div class="cart-form__table-wrap">
+          <table class="cart-form__table">
+            <caption class="visually-hidden">{{ 'cart.general.title' | t }}</caption>
+            <thead>
+              <tr>
+                <th scope="col">Product</th>
+                <th scope="col"></th>
+                <th scope="col">Total</th>
+                <th scope="col">{{ 'accessibility.quantity' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- for item in cart.items -%}
+                {%- render 'cart-line-item', item: item -%}
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cart-form__footer">
+          <label class="cart-note">
+            <span>{{ 'cart.general.note' | t }}</span>
+            <textarea class="field__input" name="note" rows="4">{{ cart.note }}</textarea>
+          </label>
+
+          <div class="cart-summary">
+            {%- for discount_application in cart.cart_level_discount_applications -%}
+              <div class="cart-summary__row">
+                <span>{{ discount_application.title }}</span>
+                <strong>-{{ discount_application.total_allocated_amount | money }}</strong>
+              </div>
+            {%- endfor -%}
+
+            <div class="cart-summary__row cart-summary__row--total">
+              <span>{{ 'cart.general.subtotal' | t }}</span>
+              <strong>{{ cart.total_price | money_with_currency }}</strong>
+            </div>
+
+            {%- if cart.taxes_included -%}
+              <p>{{ 'cart.general.tax_included' | t }}</p>
+            {%- endif -%}
+            <p>{{ 'cart.general.shipping_at_checkout' | t }}</p>
+
+            <button class="button button--secondary" type="submit" name="update">{{ 'cart.general.update' | t }}</button>
+            <button class="button" type="submit" name="checkout">{{ 'cart.general.checkout' | t }}</button>
+            {{ form | payment_button }}
+          </div>
+        </div>
+      {%- endform -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main cart"
+}
+{% endschema %}

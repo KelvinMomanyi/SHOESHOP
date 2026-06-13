@@ -1,0 +1,21 @@
+<section class="customer-page section-band">
+  <div class="page-width customer-auth">
+    <div class="section-heading">
+      <p class="eyebrow">{{ shop.name }}</p>
+      <h1>Activate account</h1>
+    </div>
+    {%- form 'activate_customer_password', class: 'customer-form' -%}
+      {{ form.errors | default_errors }}
+      <label>
+        <span>{{ 'customer.login.password' | t }}</span>
+        <input class="field__input" type="password" name="customer[password]" autocomplete="new-password" required>
+      </label>
+      <label>
+        <span>Confirm password</span>
+        <input class="field__input" type="password" name="customer[password_confirmation]" autocomplete="new-password" required>
+      </label>
+      <button class="button" type="submit">Activate account</button>
+      <button class="button button--secondary" type="submit" name="decline">Decline invitation</button>
+    {%- endform -%}
+  </div>
+</section>

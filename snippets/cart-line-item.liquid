@@ -1,0 +1,65 @@
+<tr class="cart-item">
+  <td class="cart-item__media">
+    {%- if item.image -%}
+      {%- assign item_image_alt = item.image.alt | escape -%}
+      <a href="{{ item.url }}" class="media-frame">
+        {{ item.image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 180, 240', class: 'media-frame__image', alt: item_image_alt }}
+      </a>
+    {%- endif -%}
+  </td>
+  <td class="cart-item__details">
+    <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+    {%- unless item.product.has_only_default_variant -%}
+      <dl class="cart-item__options">
+        {%- for option in item.options_with_values -%}
+          <div>
+            <dt>{{ option.name }}:</dt>
+            <dd>{{ option.value }}</dd>
+          </div>
+        {%- endfor -%}
+      </dl>
+    {%- endunless -%}
+    {%- if item.selling_plan_allocation -%}
+      <p class="cart-item__selling-plan">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+    {%- endif -%}
+    {%- for property in item.properties -%}
+      {%- assign property_first_char = property.first | slice: 0 -%}
+      {%- if property.last != blank and property_first_char != '_' -%}
+        <p class="cart-item__property">{{ property.first }}: {{ property.last }}</p>
+      {%- endif -%}
+    {%- endfor -%}
+    {%- for discount in item.line_level_discount_allocations -%}
+      <p class="cart-item__discount">{{ discount.discount_application.title }} (-{{ discount.amount | money }})</p>
+    {%- endfor -%}
+  </td>
+  <td class="cart-item__price">
+    {%- if item.original_line_price != item.final_line_price -%}
+      <s>{{ item.original_line_price | money }}</s>
+      <span>{{ item.final_line_price | money }}</span>
+    {%- else -%}
+      <span>{{ item.final_line_price | money }}</span>
+    {%- endif -%}
+    {%- if item.unit_price_measurement -%}
+      <small>
+        {{ item.unit_price | money }}/
+        {%- if item.unit_price_measurement.reference_value != 1 -%}
+          {{ item.unit_price_measurement.reference_value }}
+        {%- endif -%}
+        {{ item.unit_price_measurement.reference_unit }}
+      </small>
+    {%- endif -%}
+  </td>
+  <td class="cart-item__quantity">
+    <label class="visually-hidden" for="Quantity-{{ item.index | plus: 1 }}">{{ 'accessibility.quantity' | t }}</label>
+    <input
+      class="field__input quantity-input"
+      id="Quantity-{{ item.index | plus: 1 }}"
+      name="updates[]"
+      type="number"
+      value="{{ item.quantity }}"
+      min="0"
+      aria-label="{{ 'accessibility.quantity' | t }}"
+    >
+    <a class="cart-item__remove" href="{{ item.url_to_remove }}">{{ 'cart.general.remove' | t }}</a>
+  </td>
+</tr>

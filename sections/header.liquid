@@ -1,0 +1,147 @@
+{%- liquid
+  assign menu = linklists[section.settings.menu]
+  assign logo = section.settings.logo | default: settings.logo
+-%}
+
+<header class="site-header" data-section-id="{{ section.id }}">
+  <div class="site-header__inner page-width">
+    <details class="mobile-drawer">
+      <summary class="icon-button mobile-drawer__summary" aria-label="{{ 'accessibility.menu' | t }}">
+        <span></span>
+        <span></span>
+      </summary>
+      <div class="mobile-drawer__panel">
+        <nav class="mobile-nav" aria-label="Mobile">
+          <ul role="list">
+            {%- for link in menu.links -%}
+              <li>
+                <a href="{{ link.url }}">{{ link.title }}</a>
+                {%- if link.links != blank -%}
+                  <ul role="list">
+                    {%- for child_link in link.links -%}
+                      <li>
+                        <a href="{{ child_link.url }}">{{ child_link.title }}</a>
+                        {%- if child_link.links != blank -%}
+                          <ul role="list">
+                            {%- for grandchild_link in child_link.links -%}
+                              <li><a href="{{ grandchild_link.url }}">{{ grandchild_link.title }}</a></li>
+                            {%- endfor -%}
+                          </ul>
+                        {%- endif -%}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+
+        {%- if section.settings.show_localization -%}
+          {%- render 'localization-form', id: 'HeaderMobileLocalization' -%}
+        {%- endif -%}
+      </div>
+    </details>
+
+    <a class="site-header__brand" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+      {%- if logo != blank -%}
+        {{ logo | image_url: width: 280 | image_tag: widths: '120, 180, 240, 280', loading: 'eager', class: 'site-header__logo', alt: shop.name }}
+      {%- else -%}
+        <span class="site-header__mark">{{ shop.name | slice: 0, 1 }}</span>
+        <span class="site-header__name">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <nav class="site-header__nav" aria-label="Primary">
+      <ul role="list">
+        {%- for link in menu.links -%}
+          <li class="{% if link.links != blank %}has-submenu{% endif %}">
+            <a href="{{ link.url }}">{{ link.title }}</a>
+            {%- if link.links != blank -%}
+              <ul class="site-header__submenu" role="list">
+                {%- for child_link in link.links -%}
+                  <li>
+                    <a href="{{ child_link.url }}">{{ child_link.title }}</a>
+                    {%- if child_link.links != blank -%}
+                      <ul role="list">
+                        {%- for grandchild_link in child_link.links -%}
+                          <li><a href="{{ grandchild_link.url }}">{{ grandchild_link.title }}</a></li>
+                        {%- endfor -%}
+                      </ul>
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="site-header__tools">
+      {%- if section.settings.show_search -%}
+        <form action="{{ routes.search_url }}" method="get" role="search" class="header-search" data-predictive-search>
+          <input type="hidden" name="type" value="product">
+          <label class="visually-hidden" for="HeaderSearch-{{ section.id }}">{{ 'accessibility.search_products' | t }}</label>
+          <input
+            id="HeaderSearch-{{ section.id }}"
+            class="header-search__input"
+            type="search"
+            name="q"
+            value="{{ search.terms | escape }}"
+            placeholder="{{ 'general.search.placeholder' | t }}"
+            autocomplete="off"
+            aria-controls="PredictiveSearch-{{ section.id }}"
+            aria-expanded="false"
+          >
+          <button class="icon-button header-search__button" type="submit" aria-label="{{ 'accessibility.search' | t }}">
+            <span aria-hidden="true">⌕</span>
+          </button>
+          <div id="PredictiveSearch-{{ section.id }}" class="predictive-search" data-predictive-search-results></div>
+        </form>
+      {%- endif -%}
+
+      {%- if section.settings.show_localization -%}
+        <div class="site-header__localization">
+          {%- render 'localization-form', id: 'HeaderLocalization' -%}
+        </div>
+      {%- endif -%}
+
+      <a class="site-header__cart" href="{{ routes.cart_url }}" aria-label="{{ 'accessibility.cart' | t }}">
+        <span>{{ 'accessibility.cart' | t }}</span>
+        <span class="site-header__cart-count">{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo override"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_localization",
+      "label": "Show country and language selectors",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

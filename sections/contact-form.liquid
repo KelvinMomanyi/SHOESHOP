@@ -1,0 +1,64 @@
+<section class="contact-section section-band">
+  <div class="page-width contact-section__inner">
+    <div class="section-heading">
+      <p class="eyebrow">{{ section.settings.kicker }}</p>
+      <h1>{{ page.title | default: section.settings.heading }}</h1>
+      {%- if section.settings.text != blank -%}
+        <p>{{ section.settings.text }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- form 'contact', class: 'contact-form' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="form-status">{{ 'general.newsletter.success' | t }}</p>
+      {%- elsif form.errors -%}
+        <div class="form-status form-status--error">{{ form.errors | default_errors }}</div>
+      {%- endif -%}
+
+      <label>
+        <span>Name</span>
+        <input class="field__input" type="text" name="contact[name]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" autocomplete="name">
+      </label>
+      <label>
+        <span>Email</span>
+        <input class="field__input" type="email" name="contact[email]" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" autocomplete="email" required>
+      </label>
+      <label>
+        <span>Message</span>
+        <textarea class="field__input" name="contact[body]" rows="7" required>{{ form.body }}</textarea>
+      </label>
+      <button class="button" type="submit">Send</button>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Contact"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Contact"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Questions, wholesale, sizing, or order support."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact form"
+    }
+  ]
+}
+{% endschema %}

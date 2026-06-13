@@ -1,0 +1,35 @@
+<section class="customer-page section-band">
+  <div class="page-width customer-auth">
+    <div class="section-heading">
+      <p class="eyebrow">{{ shop.name }}</p>
+      <h1>{{ 'customer.register.title' | t }}</h1>
+    </div>
+
+    {%- form 'create_customer', class: 'customer-form' -%}
+      {{ form.errors | default_errors }}
+      <label>
+        <span>{{ 'customer.register.first_name' | t }}</span>
+        <input class="field__input" type="text" name="customer[first_name]" autocomplete="given-name">
+      </label>
+      <label>
+        <span>{{ 'customer.register.last_name' | t }}</span>
+        <input class="field__input" type="text" name="customer[last_name]" autocomplete="family-name">
+      </label>
+      <label>
+        <span>{{ 'customer.register.email' | t }}</span>
+        <input class="field__input" type="email" name="customer[email]" autocomplete="email" required>
+      </label>
+      <label>
+        <span>{{ 'customer.register.password' | t }}</span>
+        <input class="field__input" type="password" name="customer[password]" autocomplete="new-password" required>
+      </label>
+      <button class="button" type="submit">{{ 'customer.register.submit' | t }}</button>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Customer register"
+}
+{% endschema %}

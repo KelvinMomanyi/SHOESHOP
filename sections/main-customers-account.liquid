@@ -1,0 +1,55 @@
+<section class="customer-page section-band">
+  <div class="page-width">
+    <div class="section-heading">
+      <p class="eyebrow">{{ customer.email }}</p>
+      <h1>{{ 'customer.account.title' | t }}</h1>
+      <a class="text-link" href="{{ routes.account_logout_url }}">{{ 'customer.account.log_out' | t }}</a>
+    </div>
+
+    <div class="customer-grid">
+      <div>
+        <h2>{{ 'customer.account.orders' | t }}</h2>
+        {%- if customer.orders.size > 0 -%}
+          <div class="customer-table-wrap">
+            <table class="customer-table">
+              <thead>
+                <tr>
+                  <th scope="col">Order</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Payment</th>
+                  <th scope="col">Fulfillment</th>
+                  <th scope="col">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {%- for order in customer.orders -%}
+                  <tr>
+                    <td><a href="{{ order.customer_url }}">{{ order.name }}</a></td>
+                    <td>{{ order.created_at | date: format: 'abbreviated_date' }}</td>
+                    <td>{{ order.financial_status_label }}</td>
+                    <td>{{ order.fulfillment_status_label }}</td>
+                    <td>{{ order.total_price | money_with_currency }}</td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table>
+          </div>
+        {%- else -%}
+          <p>No orders yet.</p>
+        {%- endif -%}
+      </div>
+
+      <aside class="customer-card">
+        <h2>{{ 'customer.account.details' | t }}</h2>
+        {{ customer.default_address | format_address }}
+        <a class="button button--small" href="{{ routes.account_addresses_url }}">{{ 'customer.account.view_addresses' | t }}</a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Customer account"
+}
+{% endschema %}

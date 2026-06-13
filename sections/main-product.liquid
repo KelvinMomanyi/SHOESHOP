@@ -1,0 +1,333 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign product_form_id = 'product-form-' | append: section.id
+-%}
+
+<section class="product product--main page-width" data-section-id="{{ section.id }}">
+  <div class="product__media-gallery">
+    {%- if product.media.size > 0 -%}
+      {%- for media in product.media -%}
+        {%- liquid
+          assign media_loading = 'lazy'
+          assign media_alt = media.alt | escape
+          if forloop.first
+            assign media_loading = 'eager'
+          endif
+        -%}
+        <div class="product-media media-frame" data-media-id="{{ section.id }}-{{ media.id }}">
+          {%- case media.media_type -%}
+            {%- when 'image' -%}
+              {{
+                media.preview_image
+                | image_url: width: 1800
+                | image_tag:
+                  widths: '360, 533, 720, 940, 1200, 1500, 1800',
+                  sizes: '(min-width: 990px) 55vw, 100vw',
+                  loading: media_loading,
+                  class: 'media-frame__image',
+                  alt: media_alt
+              }}
+            {%- when 'external_video' -%}
+              {{ media | external_video_tag: class: 'product-media__video' }}
+            {%- when 'video' -%}
+              {{ media | video_tag: controls: true, image_size: '1200x', class: 'product-media__video' }}
+            {%- when 'model' -%}
+              {{ media | model_viewer_tag: class: 'product-media__model', reveal: 'interaction' }}
+            {%- else -%}
+              {{ media | media_tag }}
+          {%- endcase -%}
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      <div class="product-media media-frame">
+        {{ 'product-1' | placeholder_svg_tag: 'media-frame__image placeholder-svg' }}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="product__info">
+    {%- form 'product', product, id: product_form_id, class: 'product-form', novalidate: 'novalidate' -%}
+      <input type="hidden" name="id" value="{{ current_variant.id }}" data-product-id-input>
+
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'vendor' -%}
+            {%- if product.vendor != blank -%}
+              <p class="eyebrow" {{ block.shopify_attributes }}>{{ product.vendor }}</p>
+            {%- endif -%}
+
+          {%- when 'title' -%}
+            <div class="product__title" {{ block.shopify_attributes }}>
+              <h1>{{ product.title }}</h1>
+            </div>
+
+          {%- when 'price' -%}
+            <div class="product__price" {{ block.shopify_attributes }}>
+              {%- render 'price', product: product -%}
+              {%- if cart.taxes_included -%}
+                <p class="product__tax">{{ 'products.product.tax_included' | t }}</p>
+              {%- endif -%}
+              {%- if shop.shipping_policy.body != blank -%}
+                <p class="product__tax">{{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}</p>
+              {%- endif -%}
+            </div>
+
+          {%- when 'sku' -%}
+            <p class="product__meta" data-variant-sku {{ block.shopify_attributes }}>
+              {%- if current_variant.sku != blank -%}
+                {{ 'products.product.sku' | t }}: {{ current_variant.sku }}
+              {%- endif -%}
+            </p>
+
+          {%- when 'inventory' -%}
+            <p class="product__inventory" data-variant-inventory {{ block.shopify_attributes }}>
+              {%- if current_variant.inventory_management and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= block.settings.inventory_threshold -%}
+                {{ current_variant.inventory_quantity }} in stock
+              {%- endif -%}
+            </p>
+
+          {%- when 'variant_picker' -%}
+            {%- unless product.has_only_default_variant -%}
+              <variant-selects class="variant-picker" data-section="{{ section.id }}" data-url="{{ product.url }}" {{ block.shopify_attributes }}>
+                {%- for option in product.options_with_values -%}
+                  <fieldset class="product-form__input">
+                    <legend>{{ option.name }}</legend>
+                    <div class="option-values">
+                      {%- for value in option.values -%}
+                        {%- liquid
+                          assign swatch = value.swatch
+                          assign option_id = 'Option-' | append: section.id | append: '-' | append: option.position | append: '-' | append: forloop.index0
+                        -%}
+                        <input
+                          type="radio"
+                          id="{{ option_id }}"
+                          name="options[{{ option.name | escape }}]"
+                          value="{{ value | escape }}"
+                          {% if option.selected_value == value %}checked{% endif %}
+                        >
+                        <label
+                          for="{{ option_id }}"
+                          class="option-value{% if swatch.color or swatch.image %} option-value--swatch{% endif %}"
+                          {% if swatch.color %}style="--swatch-color: {{ swatch.color }};"{% endif %}
+                        >
+                          {%- if swatch.image -%}
+                            <span class="option-value__swatch" style="background-image: url({{ swatch.image | image_url: width: 96 }});"></span>
+                          {%- elsif swatch.color -%}
+                            <span class="option-value__swatch"></span>
+                          {%- endif -%}
+                          <span>{{ value }}</span>
+                        </label>
+                      {%- endfor -%}
+                    </div>
+                  </fieldset>
+                {%- endfor -%}
+              </variant-selects>
+            {%- endunless -%}
+
+          {%- when 'quantity_selector' -%}
+            <div class="quantity-field" {{ block.shopify_attributes }}>
+              <label for="Quantity-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+              <input class="field__input quantity-input" id="Quantity-{{ section.id }}" type="number" name="quantity" value="1" min="1">
+            </div>
+
+          {%- when 'buy_buttons' -%}
+            <div class="product-form__buttons" {{ block.shopify_attributes }}>
+              {%- if product.gift_card? and block.settings.show_gift_card_recipient -%}
+                <div class="recipient-form">
+                  <label class="recipient-form__checkbox">
+                    <input type="checkbox" name="properties[__shopify_send_gift_card_to_recipient]" value="true">
+                    <span>{{ 'products.product.recipient.checkbox' | t }}</span>
+                  </label>
+                  <label>
+                    <span>{{ 'products.product.recipient.email' | t }}</span>
+                    <input class="field__input" type="email" name="properties[Recipient email]" value="{{ form.email }}" autocomplete="email">
+                  </label>
+                  <label>
+                    <span>{{ 'products.product.recipient.name' | t }}</span>
+                    <input class="field__input" type="text" name="properties[Recipient name]" value="{{ form.name }}" autocomplete="name">
+                  </label>
+                  <label>
+                    <span>{{ 'products.product.recipient.message' | t }}</span>
+                    <textarea class="field__input" name="properties[Message]" rows="3">{{ form.message }}</textarea>
+                  </label>
+                  <label>
+                    <span>{{ 'products.product.recipient.send_on' | t }}</span>
+                    <input class="field__input" type="date" name="properties[Send on]" value="{{ gift_card.send_on }}">
+                  </label>
+                </div>
+              {%- endif -%}
+
+              <button
+                type="submit"
+                name="add"
+                class="button product-form__submit"
+                {% unless current_variant.available %}disabled{% endunless %}
+                data-add-to-cart
+              >
+                <span data-add-to-cart-text>
+                  {%- if current_variant.available -%}
+                    {{ 'products.product.add_to_cart' | t }}
+                  {%- else -%}
+                    {{ 'products.product.sold_out' | t }}
+                  {%- endif -%}
+                </span>
+              </button>
+
+              {%- if block.settings.show_dynamic_checkout -%}
+                {{ form | payment_button }}
+              {%- endif -%}
+
+              {{ form | payment_terms }}
+
+              {%- if form.errors -%}
+                <div class="form-status form-status--error">{{ form.errors | default_errors }}</div>
+              {%- endif -%}
+            </div>
+
+          {%- when 'description' -%}
+            {%- if product.description != blank -%}
+              <div class="product__description rte" {{ block.shopify_attributes }}>
+                {{ product.description }}
+              </div>
+            {%- endif -%}
+
+          {%- when 'pickup_availability' -%}
+            <pickup-availability
+              class="pickup-availability"
+              data-root-url="{{ routes.root_url }}"
+              data-variant-id="{{ current_variant.id }}"
+              data-section-id="pickup-availability"
+              {{ block.shopify_attributes }}
+            >
+              {%- render 'pickup-availability', product: product -%}
+            </pickup-availability>
+
+          {%- when 'share' -%}
+            <div class="product__share" {{ block.shopify_attributes }}>
+              <span>{{ 'products.product.share' | t }}</span>
+              <a href="https://www.facebook.com/sharer.php?u={{ shop.url | append: product.url | url_encode }}" target="_blank" rel="noopener">{{ 'general.social.share_on_facebook' | t }}</a>
+              <a href="https://twitter.com/share?url={{ shop.url | append: product.url | url_encode }}&text={{ product.title | url_encode }}" target="_blank" rel="noopener">{{ 'general.social.share_on_x' | t }}</a>
+              <a href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: product.url | url_encode }}&media={{ product.featured_image | image_url: width: 1200 | url_encode }}&description={{ product.title | url_encode }}" target="_blank" rel="noopener">{{ 'general.social.share_on_pinterest' | t }}</a>
+            </div>
+
+          {%- when 'collapsible_tab' -%}
+            <details class="product-accordion" {{ block.shopify_attributes }}>
+              <summary>{{ block.settings.heading }}</summary>
+              <div class="rte">{{ block.settings.content }}</div>
+            </details>
+        {%- endcase -%}
+      {%- endfor -%}
+    {%- endform -%}
+
+    <script type="application/json" id="ProductJson-{{ section.id }}">
+      {{ product.variants | json }}
+    </script>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main product",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "vendor",
+      "name": "Vendor",
+      "limit": 1
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "sku",
+      "name": "SKU",
+      "limit": 1
+    },
+    {
+      "type": "inventory",
+      "name": "Inventory",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "inventory_threshold",
+          "label": "Low stock threshold",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 5
+        }
+      ]
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant picker",
+      "limit": 1
+    },
+    {
+      "type": "quantity_selector",
+      "name": "Quantity selector",
+      "limit": 1
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "label": "Show dynamic checkout buttons",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_gift_card_recipient",
+          "label": "Show gift card recipient form",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1
+    },
+    {
+      "type": "pickup_availability",
+      "name": "Pickup availability",
+      "limit": 1
+    },
+    {
+      "type": "share",
+      "name": "Share",
+      "limit": 1
+    },
+    {
+      "type": "collapsible_tab",
+      "name": "Collapsible row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Materials"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "default": "<p>Add product care, fit, sizing, or sourcing details.</p>"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
