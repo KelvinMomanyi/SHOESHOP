@@ -7,7 +7,7 @@
   <form class="facets" id="FacetFiltersForm">
     {%- if request.page_type == 'search' -%}
       <input type="hidden" name="q" value="{{ search.terms | escape }}">
-      <input type="hidden" name="type" value="product">
+      <input type="hidden" name="type" value="product,page,article">
     {%- endif -%}
 
     <div class="facets__header">
@@ -23,9 +23,12 @@
           {%- case filter.type -%}
             {%- when 'price_range' -%}
               <div class="facets__price">
-                <label>
-                  <span>{{ filter.min_value.param_name | remove: 'filter.v.price.' | capitalize }}</span>
+                {%- assign min_input_id = 'Filter-' | append: section.id | append: '-' | append: filter.min_value.param_name | handle -%}
+                {%- assign max_input_id = 'Filter-' | append: section.id | append: '-' | append: filter.max_value.param_name | handle -%}
+                <div>
+                  <label for="{{ min_input_id }}">{{ filter.min_value.param_name | remove: 'filter.v.price.' | capitalize }}</label>
                   <input
+                    id="{{ min_input_id }}"
                     class="field__input"
                     name="{{ filter.min_value.param_name }}"
                     type="number"
@@ -33,10 +36,11 @@
                     max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                     value="{% if filter.min_value.value %}{{ filter.min_value.value | money_without_currency | replace: ',', '' }}{% endif %}"
                   >
-                </label>
-                <label>
-                  <span>{{ filter.max_value.param_name | remove: 'filter.v.price.' | capitalize }}</span>
+                </div>
+                <div>
+                  <label for="{{ max_input_id }}">{{ filter.max_value.param_name | remove: 'filter.v.price.' | capitalize }}</label>
                   <input
+                    id="{{ max_input_id }}"
                     class="field__input"
                     name="{{ filter.max_value.param_name }}"
                     type="number"
@@ -44,14 +48,16 @@
                     max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                     value="{% if filter.max_value.value %}{{ filter.max_value.value | money_without_currency | replace: ',', '' }}{% endif %}"
                   >
-                </label>
+                </div>
               </div>
             {%- else -%}
               <ul class="facets__list" role="list">
                 {%- for value in filter.values -%}
+                  {%- assign filter_value_id = 'Filter-' | append: section.id | append: '-' | append: value.param_name | handle | append: '-' | append: forloop.index -%}
                   <li>
-                    <label class="facet-checkbox{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}">
+                    <label for="{{ filter_value_id }}" class="facet-checkbox{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}">
                       <input
+                        id="{{ filter_value_id }}"
                         type="checkbox"
                         name="{{ value.param_name }}"
                         value="{{ value.value }}"
@@ -69,16 +75,16 @@
       {%- endfor -%}
 
       {%- if results.sort_options != blank -%}
-        <label class="facets__sort">
-          <span>{{ 'products.facets.sort_by_label' | t }}</span>
-          <select class="field__input" name="sort_by">
+        <div class="facets__sort">
+          <label for="SortBy-{{ section.id }}">{{ 'products.facets.sort_by_label' | t }}</label>
+          <select id="SortBy-{{ section.id }}" class="field__input" name="sort_by">
             {%- for option in results.sort_options -%}
               <option value="{{ option.value | escape }}" {% if option.value == sort_by %}selected{% endif %}>
                 {{ option.name | escape }}
               </option>
             {%- endfor -%}
           </select>
-        </label>
+        </div>
       {%- endif -%}
     </div>
 
@@ -86,7 +92,7 @@
       <div class="facets__active">
         {%- for filter in results.filters -%}
           {%- for value in filter.active_values -%}
-            <a href="{{ value.url_to_remove }}" class="active-filter">{{ value.label }} ×</a>
+            <a href="{{ value.url_to_remove }}" class="active-filter">{{ value.label }} &times;</a>
           {%- endfor -%}
           {%- if filter.type == 'price_range' -%}
             {%- if filter.min_value.value or filter.max_value.value -%}

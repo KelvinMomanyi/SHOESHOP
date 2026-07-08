@@ -12,13 +12,13 @@
     <div class="hover-preview__rows">
       {%- for block in section.blocks -%}
         <a class="hover-row reveal-item" href="{{ block.settings.link | default: routes.all_products_collection_url }}" data-preview-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
-          <strong>{{ block.settings.title | default: 'Featured project' }}</strong>
+          <strong>{{ block.settings.title | default: 'Featured collection' }}</strong>
           <span>{{ block.settings.caption | default: 'Shop now' }}</span>
         </a>
       {%- else -%}
         {%- for i in (1..4) -%}
           <a class="hover-row reveal-item" href="{{ routes.all_products_collection_url }}" data-preview-index="{{ forloop.index0 }}">
-            <strong>Featured project</strong>
+            <strong>Featured collection</strong>
             <span>Shop now</span>
           </a>
         {%- endfor -%}
@@ -51,7 +51,7 @@
               width="768"
               height="1344"
               loading="lazy"
-              alt="{{ block.settings.title | default: 'Featured project' | escape }}"
+              alt="{{ block.settings.title | default: 'Featured collection' | escape }}"
               class="hover-preview__img"
             >
           {%- endif -%}
@@ -73,7 +73,7 @@
               width="768"
               height="1344"
               loading="lazy"
-              alt="Featured project"
+              alt="Featured collection"
               class="hover-preview__img"
             >
           </div>

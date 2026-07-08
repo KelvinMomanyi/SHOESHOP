@@ -2,7 +2,11 @@
 
 <section class="gift-card-page">
   <div class="gift-card-page__panel">
-    <p class="eyebrow">{{ shop.name }}</p>
+    {%- if settings.logo != blank -%}
+      {{ settings.logo | image_url: width: 220 | image_tag: widths: '120, 180, 220', class: 'gift-card-page__logo', alt: shop.name }}
+    {%- else -%}
+      <p class="eyebrow">{{ shop.name }}</p>
+    {%- endif -%}
     <h1>{{ 'gift_cards.issued.subtext' | t }}</h1>
 
     <div class="gift-card-page__value">
@@ -20,8 +24,18 @@
       <strong>{{ gift_card.code | format_code }}</strong>
     </div>
 
+    {% # theme-check-disable UnknownFilter %}
+    <img
+      class="gift-card-page__qr"
+      src="{{ gift_card.qr_identifier | qrcode_url: width: 160 }}"
+      width="160"
+      height="160"
+      alt="{{ 'gift_cards.issued.qr_image_alt' | t }}"
+    >
+    {% # theme-check-enable UnknownFilter %}
+
     <div class="button-row">
-      <a class="button" href="{{ shop.url }}">Shop now</a>
+      <a class="button" href="{{ routes.root_url }}">{{ 'gift_cards.issued.shop_now' | t }}</a>
       <button class="button button--secondary" type="button" onclick="window.print()">{{ 'gift_cards.issued.print' | t }}</button>
     </div>
 

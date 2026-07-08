@@ -33,6 +33,10 @@
           "type": "quantity_selector",
           "settings": {}
         },
+        "selling_plan": {
+          "type": "selling_plan_picker",
+          "settings": {}
+        },
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
@@ -68,6 +72,7 @@
         "inventory",
         "variant_picker",
         "quantity",
+        "selling_plan",
         "buy_buttons",
         "description",
         "pickup",

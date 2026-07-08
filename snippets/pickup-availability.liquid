@@ -22,7 +22,7 @@
               {{ 'products.product.pickup_availability.unavailable' | t }}
             {%- endif -%}
             {%- if availability.pick_up_time != blank -%}
-              · {{ availability.pick_up_time }}
+              &middot; {{ availability.pick_up_time }}
             {%- endif -%}
           </span>
           <address>{{ availability.location.address | format_address }}</address>

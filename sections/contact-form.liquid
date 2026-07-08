@@ -15,18 +15,18 @@
         <div class="form-status form-status--error">{{ form.errors | default_errors }}</div>
       {%- endif -%}
 
-      <label>
-        <span>Name</span>
-        <input class="field__input" type="text" name="contact[name]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" autocomplete="name">
-      </label>
-      <label>
-        <span>Email</span>
-        <input class="field__input" type="email" name="contact[email]" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" autocomplete="email" required>
-      </label>
-      <label>
-        <span>Message</span>
-        <textarea class="field__input" name="contact[body]" rows="7" required>{{ form.body }}</textarea>
-      </label>
+      <div>
+        <label for="ContactName-{{ section.id }}">Name</label>
+        <input id="ContactName-{{ section.id }}" class="field__input" type="text" name="contact[name]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" autocomplete="name">
+      </div>
+      <div>
+        <label for="ContactEmail-{{ section.id }}">Email</label>
+        <input id="ContactEmail-{{ section.id }}" class="field__input" type="email" name="contact[email]" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" autocomplete="email" required>
+      </div>
+      <div>
+        <label for="ContactMessage-{{ section.id }}">Message</label>
+        <textarea id="ContactMessage-{{ section.id }}" class="field__input" name="contact[body]" rows="7" required>{{ form.body }}</textarea>
+      </div>
       <button class="button" type="submit">Send</button>
     {%- endform -%}
   </div>

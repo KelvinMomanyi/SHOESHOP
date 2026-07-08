@@ -117,10 +117,10 @@
               width="1200"
               height="1600"
               loading="lazy"
-              alt="Alexandra loader image {{ forloop.index }}"
+              alt="Product reveal image {{ forloop.index }}"
               class="alexandra-loader__image"
             >
-            <span class="visually-hidden">Alexandra loader image {{ forloop.index }}</span>
+            <span class="visually-hidden">Product reveal image {{ forloop.index }}</span>
           </a>
         {%- endfor -%}
       {%- endif -%}
@@ -130,44 +130,44 @@
 
 {% schema %}
 {
-  "name": "Alexandra loader",
+  "name": "Product reveal",
   "tag": "section",
   "settings": [
     {
       "type": "text",
       "id": "brand_label",
       "label": "Top left label",
-      "default": "Alexandra Beaumont"
+      "default": "Stride studio"
     },
     {
       "type": "text",
       "id": "meta_label_1",
       "label": "Top right label 1",
-      "default": "Work"
+      "default": "New arrivals"
     },
     {
       "type": "text",
       "id": "meta_label_2",
       "label": "Top right label 2",
-      "default": "About"
+      "default": "Bestsellers"
     },
     {
       "type": "text",
       "id": "meta_label_3",
       "label": "Top right label 3",
-      "default": "Contact"
+      "default": "Fit guide"
     },
     {
       "type": "text",
       "id": "heading_line_1",
       "label": "Heading line 1",
-      "default": "Alexandra"
+      "default": "Pace"
     },
     {
       "type": "text",
       "id": "heading_line_2",
       "label": "Heading line 2",
-      "default": "Beaumont"
+      "default": "Edit"
     },
     {
       "type": "url",
@@ -216,7 +216,7 @@
   ],
   "presets": [
     {
-      "name": "Alexandra loader",
+      "name": "Product reveal",
       "blocks": [
         {
           "type": "image"

@@ -12,8 +12,8 @@
     </div>
 
     <form action="{{ routes.search_url }}" method="get" role="search" class="main-search-form">
-      <input type="hidden" name="type" value="product">
-      <label class="visually-hidden" for="SearchInput">{{ 'accessibility.search_products' | t }}</label>
+      <input type="hidden" name="type" value="product,page,article">
+      <label class="visually-hidden" for="SearchInput">{{ 'accessibility.search' | t }}</label>
       <input id="SearchInput" class="field__input" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
       <button class="button" type="submit">{{ 'general.search.search' | t }}</button>
     </form>
@@ -23,10 +23,26 @@
 
       {%- paginate search.results by section.settings.results_per_page -%}
         {%- if search.results_count > 0 -%}
-          <div class="product-grid">
+          <div class="search-results">
             {%- for item in search.results -%}
               {%- if item.object_type == 'product' -%}
                 {%- render 'product-card', product: item, loading: 'lazy' -%}
+              {%- elsif item.object_type == 'article' -%}
+                <article class="search-result-card">
+                  <p class="eyebrow">{{ item.object_type | capitalize }}</p>
+                  <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
+                  {%- if item.excerpt_or_content != blank -%}
+                    <p>{{ item.excerpt_or_content | strip_html | truncatewords: 24 }}</p>
+                  {%- endif -%}
+                </article>
+              {%- elsif item.object_type == 'page' -%}
+                <article class="search-result-card">
+                  <p class="eyebrow">{{ item.object_type | capitalize }}</p>
+                  <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
+                  {%- if item.content != blank -%}
+                    <p>{{ item.content | strip_html | truncatewords: 24 }}</p>
+                  {%- endif -%}
+                </article>
               {%- endif -%}
             {%- endfor -%}
           </div>

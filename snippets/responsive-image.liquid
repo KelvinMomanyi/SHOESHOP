@@ -4,6 +4,7 @@
   assign image_widths = widths | default: '165, 360, 533, 720, 940, 1200, 1600, 2000'
   assign image_loading = loading | default: 'lazy'
   assign image_alt = alt | default: image.alt | escape
+  assign image_style = style | default: image.presentation.focal_point
 -%}
 
 {%- if image != blank -%}
@@ -15,7 +16,8 @@
       sizes: image_sizes,
       loading: image_loading,
       class: image_class,
-      alt: image_alt
+      alt: image_alt,
+      style: image_style
   }}
 {%- else -%}
   {{ 'product-1' | placeholder_svg_tag: image_class }}

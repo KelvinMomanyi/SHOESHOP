@@ -12,7 +12,7 @@
             <a class="collection-card reveal-item" href="{{ collection.url }}">
               <div class="collection-card__media media-frame">
                 {%- render 'responsive-image',
-                  image: collection.image,
+                  image: collection.featured_image,
                   class: 'media-frame__image',
                   sizes: '(min-width: 990px) 33vw, 100vw'
                 -%}

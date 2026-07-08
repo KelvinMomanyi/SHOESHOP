@@ -79,6 +79,12 @@
       },
       {
         "type": "color",
+        "id": "color_surface_text",
+        "label": "Surface text",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
         "id": "color_border",
         "label": "Borders",
         "default": "#d8d4cb"
@@ -91,9 +97,21 @@
       },
       {
         "type": "color",
+        "id": "color_accent_text",
+        "label": "Accent text",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
         "id": "color_accent_2",
         "label": "Secondary accent",
         "default": "#e56b48"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_2_text",
+        "label": "Secondary accent text",
+        "default": "#ffffff"
       },
       {
         "type": "color",

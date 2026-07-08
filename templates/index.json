@@ -53,7 +53,7 @@
       "settings": {
         "kicker": "Shop in motion",
         "heading": "Every piece opens into its own world",
-        "text": "A Scroll 7-inspired product journey where featured items move from one focal point into a full spatial edit.",
+        "text": "A product journey where featured styles move from one focal point into a full seasonal edit.",
         "button_label": "Shop the spread",
         "scroll_length": 450,
         "last_image_cover": true
@@ -142,12 +142,12 @@
     "alexandra_loader": {
       "type": "alexandra-loader",
       "settings": {
-        "brand_label": "Alexandra Beaumont",
-        "meta_label_1": "Work",
-        "meta_label_2": "About",
-        "meta_label_3": "Contact",
-        "heading_line_1": "Alexandra",
-        "heading_line_2": "Beaumont",
+        "brand_label": "Stride studio",
+        "meta_label_1": "New arrivals",
+        "meta_label_2": "Bestsellers",
+        "meta_label_3": "Fit guide",
+        "heading_line_1": "Pace",
+        "heading_line_2": "Edit",
         "scroll_length": 400
       },
       "blocks": {
@@ -227,36 +227,36 @@
     "hover_preview": {
       "type": "hover-preview",
       "settings": {
-        "heading": "Selected work",
+        "heading": "Shop by pace",
         "show_heading": false
       },
       "blocks": {
         "row_1": {
           "type": "row",
           "settings": {
-            "title": "Mann Sales",
-            "caption": "Design & Development"
+            "title": "Daily trainers",
+            "caption": "Lightweight support"
           }
         },
         "row_2": {
           "type": "row",
           "settings": {
-            "title": "Lab.",
-            "caption": "Project Type"
+            "title": "Road running",
+            "caption": "Responsive cushioning"
           }
         },
         "row_3": {
           "type": "row",
           "settings": {
-            "title": "Fringe",
-            "caption": "Project Type"
+            "title": "Trail grip",
+            "caption": "All-terrain traction"
           }
         },
         "row_4": {
           "type": "row",
           "settings": {
-            "title": "Astro Club",
-            "caption": "Project Type"
+            "title": "Recovery slides",
+            "caption": "Post-run comfort"
           }
         }
       },

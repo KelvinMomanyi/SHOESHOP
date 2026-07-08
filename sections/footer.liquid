@@ -28,21 +28,35 @@
     <div class="site-footer__meta">
       <div class="site-footer__social">
         {%- if settings.social_instagram_link != blank -%}
-          <a href="{{ settings.social_instagram_link }}" rel="noopener" target="_blank">Instagram</a>
+          <a href="{{ settings.social_instagram_link }}" rel="noopener nofollow" target="_blank" aria-label="Instagram">
+            {%- render 'icon-social', icon: 'instagram' -%}
+          </a>
         {%- endif -%}
         {%- if settings.social_tiktok_link != blank -%}
-          <a href="{{ settings.social_tiktok_link }}" rel="noopener" target="_blank">TikTok</a>
+          <a href="{{ settings.social_tiktok_link }}" rel="noopener nofollow" target="_blank" aria-label="TikTok">
+            {%- render 'icon-social', icon: 'tiktok' -%}
+          </a>
         {%- endif -%}
         {%- if settings.social_youtube_link != blank -%}
-          <a href="{{ settings.social_youtube_link }}" rel="noopener" target="_blank">YouTube</a>
+          <a href="{{ settings.social_youtube_link }}" rel="noopener nofollow" target="_blank" aria-label="YouTube">
+            {%- render 'icon-social', icon: 'youtube' -%}
+          </a>
         {%- endif -%}
         {%- if settings.social_pinterest_link != blank -%}
-          <a href="{{ settings.social_pinterest_link }}" rel="noopener" target="_blank">Pinterest</a>
+          <a href="{{ settings.social_pinterest_link }}" rel="noopener nofollow" target="_blank" aria-label="Pinterest">
+            {%- render 'icon-social', icon: 'pinterest' -%}
+          </a>
         {%- endif -%}
       </div>
 
       {%- if section.settings.show_localization -%}
         {%- render 'localization-form', id: 'FooterLocalization' -%}
+      {%- endif -%}
+
+      {%- if shop.features.follow_on_shop? and section.settings.show_follow_on_shop -%}
+        <div class="site-footer__follow-on-shop">
+          {{ shop | login_button: action: 'follow' }}
+        </div>
       {%- endif -%}
     </div>
 
@@ -55,7 +69,7 @@
     {%- endif -%}
 
     <div class="site-footer__bottom">
-      <small>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ powered_by_link }}</small>
+      <small>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}</small>
     </div>
   </div>
 </footer>
@@ -73,13 +87,19 @@
     {
       "type": "link_list",
       "id": "menu",
-      "label": "Menu",
+      "label": "Footer menu",
       "default": "footer"
     },
     {
       "type": "checkbox",
       "id": "show_localization",
       "label": "Show country and language selectors",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_follow_on_shop",
+      "label": "Show Follow on Shop",
       "default": true
     }
   ]

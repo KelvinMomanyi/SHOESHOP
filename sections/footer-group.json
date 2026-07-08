@@ -13,7 +13,8 @@
       "type": "footer",
       "settings": {
         "menu": "footer",
-        "show_localization": true
+        "show_localization": true,
+        "show_follow_on_shop": true
       }
     }
   },

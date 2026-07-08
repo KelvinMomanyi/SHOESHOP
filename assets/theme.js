@@ -1,5 +1,16 @@
 (() => {
   const moneyFormat = window.Scrollcraft?.moneyFormat || '${{amount}}';
+  const strings = window.Scrollcraft?.strings || {
+    addToCart: 'Add to cart',
+    soldOut: 'Sold out',
+    unavailable: 'Unavailable'
+  };
+
+  const escapeHTML = (value) => {
+    const element = document.createElement('span');
+    element.textContent = value || '';
+    return element.innerHTML;
+  };
 
   const formatMoney = (cents, format = moneyFormat) => {
     if (typeof cents === 'string') cents = cents.replace('.', '');
@@ -426,8 +437,8 @@
             }
 
             results.innerHTML = products.map((product) => {
-              const image = product.image ? `<img src="${product.image}" alt="">` : '<span></span>';
-              return `<a href="${product.url}">${image}<span>${product.title}</span></a>`;
+              const image = product.image ? `<img src="${escapeHTML(product.image)}" alt="">` : '<span></span>';
+              return `<a href="${escapeHTML(product.url)}">${image}<span>${escapeHTML(product.title)}</span></a>`;
             }).join('');
             results.classList.add('is-open');
             input.setAttribute('aria-expanded', 'true');
@@ -550,9 +561,9 @@
 
       if (button) button.disabled = unavailable || soldOut;
       if (text) {
-        if (unavailable) text.textContent = 'Unavailable';
-        else if (soldOut) text.textContent = 'Sold out';
-        else text.textContent = 'Add to cart';
+        if (unavailable) text.textContent = strings.unavailable;
+        else if (soldOut) text.textContent = strings.soldOut;
+        else text.textContent = strings.addToCart;
       }
       if (sku) sku.textContent = this.currentVariant?.sku ? `SKU: ${this.currentVariant.sku}` : '';
     }
@@ -565,7 +576,7 @@
     }
 
     updatePickupAvailability() {
-      const pickup = document.querySelector('pickup-availability');
+      const pickup = this.form?.closest('.product')?.querySelector('pickup-availability');
       if (pickup && this.currentVariant) pickup.update(this.currentVariant.id);
     }
   }

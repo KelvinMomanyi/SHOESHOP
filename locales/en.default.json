@@ -19,8 +19,8 @@
     "search": {
       "title": "Search",
       "search": "Search",
-      "placeholder": "Search products",
-      "results_with_count": "{{ count }} results for “{{ terms }}”",
+      "placeholder": "Search the store",
+      "results_with_count": "{{ count }} results for \"{{ terms }}\"",
       "no_results": "No results found.",
       "predictive_heading": "Suggested products"
     },
@@ -55,6 +55,8 @@
       "unit_price": "Unit price",
       "vendor": "Vendor",
       "sku": "SKU",
+      "selling_plan": "Purchase option",
+      "one_time_purchase": "One-time purchase",
       "tax_included": "Tax included.",
       "shipping_policy_html": "<a href=\"{{ link }}\">Shipping</a> calculated at checkout.",
       "pickup_availability": {
@@ -98,6 +100,11 @@
       "note": "Order note"
     }
   },
+  "blog": {
+    "comments": {
+      "success": "Comment posted."
+    }
+  },
   "customer": {
     "account": {
       "title": "Account",
@@ -130,7 +137,10 @@
       "title": "Order {{ name }}",
       "date": "Placed on {{ date }}",
       "billing_address": "Billing address",
-      "shipping_address": "Shipping address"
+      "shipping_address": "Shipping address",
+      "shipping": "Shipping",
+      "tax": "Tax",
+      "total": "Total"
     }
   },
   "gift_cards": {
@@ -141,6 +151,8 @@
       "expired": "Expired on {{ expiry }}",
       "active": "Expires on {{ expiry }}",
       "redeem": "Use this code at checkout",
+      "qr_image_alt": "QR code for gift card",
+      "shop_now": "Shop now",
       "print": "Print",
       "add_to_apple_wallet": "Add to Apple Wallet"
     }

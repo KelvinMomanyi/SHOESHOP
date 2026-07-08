@@ -32,6 +32,9 @@
                     <p>{{ property.first }}: {{ property.last }}</p>
                   {%- endif -%}
                 {%- endfor -%}
+                {%- for discount in line_item.line_level_discount_allocations -%}
+                  <p>{{ discount.discount_application.title }} (-{{ discount.amount | money }})</p>
+                {%- endfor -%}
               </td>
               <td>{{ line_item.sku }}</td>
               <td>
@@ -54,14 +57,43 @@
       </table>
     </div>
 
+    <div class="cart-summary customer-order-summary">
+      <div class="cart-summary__row">
+        <span>{{ 'cart.general.subtotal' | t }}</span>
+        <strong>{{ order.subtotal_price | money_with_currency }}</strong>
+      </div>
+      {%- if order.total_discounts > 0 -%}
+        <div class="cart-summary__row">
+          <span>{{ 'cart.general.discount' | t }}</span>
+          <strong>-{{ order.total_discounts | money }}</strong>
+        </div>
+      {%- endif -%}
+      {%- if order.shipping_price > 0 -%}
+        <div class="cart-summary__row">
+          <span>{{ 'customer.order.shipping' | t }}</span>
+          <strong>{{ order.shipping_price | money }}</strong>
+        </div>
+      {%- endif -%}
+      {%- if order.tax_price > 0 -%}
+        <div class="cart-summary__row">
+          <span>{{ 'customer.order.tax' | t }}</span>
+          <strong>{{ order.tax_price | money }}</strong>
+        </div>
+      {%- endif -%}
+      <div class="cart-summary__row cart-summary__row--total">
+        <span>{{ 'customer.order.total' | t }}</span>
+        <strong>{{ order.total_price | money_with_currency }}</strong>
+      </div>
+    </div>
+
     <div class="customer-grid">
       <aside class="customer-card">
         <h2>{{ 'customer.order.billing_address' | t }}</h2>
-        <p>{{ order.billing_address | format_address }}</p>
+        <div>{{ order.billing_address | format_address }}</div>
       </aside>
       <aside class="customer-card">
         <h2>{{ 'customer.order.shipping_address' | t }}</h2>
-        <p>{{ order.shipping_address | format_address }}</p>
+        <div>{{ order.shipping_address | format_address }}</div>
       </aside>
     </div>
   </div>

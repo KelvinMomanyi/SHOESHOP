@@ -17,14 +17,32 @@
 
     {%- liquid
       assign body_font = settings.type_body_font
+      assign body_font_bold = body_font | font_modify: 'weight', 'bold'
+      assign body_font_italic = body_font | font_modify: 'style', 'italic'
+      assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
       assign heading_font = settings.type_heading_font
+      assign heading_font_bold = heading_font | font_modify: 'weight', 'bold'
+      assign heading_font_italic = heading_font | font_modify: 'style', 'italic'
+      assign heading_font_bold_italic = heading_font_bold | font_modify: 'style', 'italic'
       assign mono_font = settings.type_mono_font
+      assign mono_font_bold = mono_font | font_modify: 'weight', 'bold'
+      assign mono_font_italic = mono_font | font_modify: 'style', 'italic'
+      assign mono_font_bold_italic = mono_font_bold | font_modify: 'style', 'italic'
     -%}
 
     <style>
       {{ body_font | font_face: font_display: 'swap' }}
+      {{ body_font_bold | font_face: font_display: 'swap' }}
+      {{ body_font_italic | font_face: font_display: 'swap' }}
+      {{ body_font_bold_italic | font_face: font_display: 'swap' }}
       {{ heading_font | font_face: font_display: 'swap' }}
+      {{ heading_font_bold | font_face: font_display: 'swap' }}
+      {{ heading_font_italic | font_face: font_display: 'swap' }}
+      {{ heading_font_bold_italic | font_face: font_display: 'swap' }}
       {{ mono_font | font_face: font_display: 'swap' }}
+      {{ mono_font_bold | font_face: font_display: 'swap' }}
+      {{ mono_font_italic | font_face: font_display: 'swap' }}
+      {{ mono_font_bold_italic | font_face: font_display: 'swap' }}
 
       :root {
         --font-body: {{ body_font.family }}, {{ body_font.fallback_families }};
@@ -34,8 +52,11 @@
         --color-foreground: {{ settings.color_foreground }};
         --color-muted: {{ settings.color_muted }};
         --color-surface: {{ settings.color_surface }};
+        --color-surface-text: {{ settings.color_surface_text }};
         --color-accent: {{ settings.color_accent }};
+        --color-accent-text: {{ settings.color_accent_text }};
         --color-accent-2: {{ settings.color_accent_2 }};
+        --color-accent-2-text: {{ settings.color_accent_2_text }};
         --color-border: {{ settings.color_border }};
         --color-button: {{ settings.color_button }};
         --color-button-text: {{ settings.color_button_text }};
@@ -48,6 +69,11 @@
       document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
       window.Scrollcraft = {
         moneyFormat: {{ shop.money_format | json }},
+        strings: {
+          addToCart: {{ 'products.product.add_to_cart' | t | json }},
+          soldOut: {{ 'products.product.sold_out' | t | json }},
+          unavailable: {{ 'products.product.unavailable' | t | json }}
+        },
         routes: {
           root: {{ routes.root_url | json }},
           cart: {{ routes.cart_url | json }},

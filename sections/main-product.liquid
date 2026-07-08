@@ -25,7 +25,8 @@
                   sizes: '(min-width: 990px) 55vw, 100vw',
                   loading: media_loading,
                   class: 'media-frame__image',
-                  alt: media_alt
+                  alt: media_alt,
+                  style: media.preview_image.presentation.focal_point
               }}
             {%- when 'external_video' -%}
               {{ media | external_video_tag: class: 'product-media__video' }}
@@ -63,7 +64,7 @@
 
           {%- when 'price' -%}
             <div class="product__price" {{ block.shopify_attributes }}>
-              {%- render 'price', product: product -%}
+              {%- render 'price', product: product, use_variant: true -%}
               {%- if cart.taxes_included -%}
                 <p class="product__tax">{{ 'products.product.tax_included' | t }}</p>
               {%- endif -%}
@@ -130,30 +131,47 @@
               <input class="field__input quantity-input" id="Quantity-{{ section.id }}" type="number" name="quantity" value="1" min="1">
             </div>
 
+          {%- when 'selling_plan_picker' -%}
+            {%- if product.selling_plan_groups.size > 0 -%}
+              <div class="selling-plan-picker" {{ block.shopify_attributes }}>
+                <label for="SellingPlan-{{ section.id }}">{{ 'products.product.selling_plan' | t }}</label>
+                <select id="SellingPlan-{{ section.id }}" class="field__input" name="selling_plan">
+                  <option value="">{{ 'products.product.one_time_purchase' | t }}</option>
+                  {%- for group in product.selling_plan_groups -%}
+                    <optgroup label="{{ group.name | escape }}">
+                      {%- for selling_plan in group.selling_plans -%}
+                        <option value="{{ selling_plan.id }}">{{ selling_plan.name }}</option>
+                      {%- endfor -%}
+                    </optgroup>
+                  {%- endfor -%}
+                </select>
+              </div>
+            {%- endif -%}
+
           {%- when 'buy_buttons' -%}
             <div class="product-form__buttons" {{ block.shopify_attributes }}>
               {%- if product.gift_card? and block.settings.show_gift_card_recipient -%}
                 <div class="recipient-form">
-                  <label class="recipient-form__checkbox">
-                    <input type="checkbox" name="properties[__shopify_send_gift_card_to_recipient]" value="true">
+                  <label class="recipient-form__checkbox" for="RecipientEnabled-{{ section.id }}">
+                    <input id="RecipientEnabled-{{ section.id }}" type="checkbox" name="properties[__shopify_send_gift_card_to_recipient]" value="true">
                     <span>{{ 'products.product.recipient.checkbox' | t }}</span>
                   </label>
-                  <label>
-                    <span>{{ 'products.product.recipient.email' | t }}</span>
-                    <input class="field__input" type="email" name="properties[Recipient email]" value="{{ form.email }}" autocomplete="email">
-                  </label>
-                  <label>
-                    <span>{{ 'products.product.recipient.name' | t }}</span>
-                    <input class="field__input" type="text" name="properties[Recipient name]" value="{{ form.name }}" autocomplete="name">
-                  </label>
-                  <label>
-                    <span>{{ 'products.product.recipient.message' | t }}</span>
-                    <textarea class="field__input" name="properties[Message]" rows="3">{{ form.message }}</textarea>
-                  </label>
-                  <label>
-                    <span>{{ 'products.product.recipient.send_on' | t }}</span>
-                    <input class="field__input" type="date" name="properties[Send on]" value="{{ gift_card.send_on }}">
-                  </label>
+                  <div>
+                    <label for="RecipientEmail-{{ section.id }}">{{ 'products.product.recipient.email' | t }}</label>
+                    <input id="RecipientEmail-{{ section.id }}" class="field__input" type="email" name="properties[Recipient email]" value="{{ form.email }}" autocomplete="email">
+                  </div>
+                  <div>
+                    <label for="RecipientName-{{ section.id }}">{{ 'products.product.recipient.name' | t }}</label>
+                    <input id="RecipientName-{{ section.id }}" class="field__input" type="text" name="properties[Recipient name]" value="{{ form.name }}" autocomplete="name">
+                  </div>
+                  <div>
+                    <label for="RecipientMessage-{{ section.id }}">{{ 'products.product.recipient.message' | t }}</label>
+                    <textarea id="RecipientMessage-{{ section.id }}" class="field__input" name="properties[Message]" rows="3">{{ form.message }}</textarea>
+                  </div>
+                  <div>
+                    <label for="RecipientSendOn-{{ section.id }}">{{ 'products.product.recipient.send_on' | t }}</label>
+                    <input id="RecipientSendOn-{{ section.id }}" class="field__input" type="date" name="properties[Send on]" value="{{ gift_card.send_on }}">
+                  </div>
                 </div>
               {%- endif -%}
 
@@ -205,9 +223,9 @@
           {%- when 'share' -%}
             <div class="product__share" {{ block.shopify_attributes }}>
               <span>{{ 'products.product.share' | t }}</span>
-              <a href="https://www.facebook.com/sharer.php?u={{ shop.url | append: product.url | url_encode }}" target="_blank" rel="noopener">{{ 'general.social.share_on_facebook' | t }}</a>
-              <a href="https://twitter.com/share?url={{ shop.url | append: product.url | url_encode }}&text={{ product.title | url_encode }}" target="_blank" rel="noopener">{{ 'general.social.share_on_x' | t }}</a>
-              <a href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: product.url | url_encode }}&media={{ product.featured_image | image_url: width: 1200 | url_encode }}&description={{ product.title | url_encode }}" target="_blank" rel="noopener">{{ 'general.social.share_on_pinterest' | t }}</a>
+              <a href="//www.facebook.com/sharer.php?u={{ shop.url | append: product.url | url_encode }}" target="_blank" rel="noopener nofollow">{{ 'general.social.share_on_facebook' | t }}</a>
+              <a href="//twitter.com/share?url={{ shop.url | append: product.url | url_encode }}&text={{ product.title | url_encode }}" target="_blank" rel="noopener nofollow">{{ 'general.social.share_on_x' | t }}</a>
+              <a href="//pinterest.com/pin/create/button/?url={{ shop.url | append: product.url | url_encode }}&media={{ product.featured_image | image_url: width: 1200 | url_encode }}&description={{ product.title | url_encode }}" target="_blank" rel="noopener nofollow">{{ 'general.social.share_on_pinterest' | t }}</a>
             </div>
 
           {%- when 'collapsible_tab' -%}
@@ -215,6 +233,14 @@
               <summary>{{ block.settings.heading }}</summary>
               <div class="rte">{{ block.settings.content }}</div>
             </details>
+
+          {%- when 'custom_liquid' -%}
+            <div class="custom-liquid" {{ block.shopify_attributes }}>
+              {{ block.settings.custom_liquid }}
+            </div>
+
+          {%- when '@app' -%}
+            {% render block %}
         {%- endcase -%}
       {%- endfor -%}
     {%- endform -%}
@@ -277,6 +303,11 @@
       "limit": 1
     },
     {
+      "type": "selling_plan_picker",
+      "name": "Selling plan picker",
+      "limit": 1
+    },
+    {
       "type": "buy_buttons",
       "name": "Buy buttons",
       "limit": 1,
@@ -327,6 +358,20 @@
           "default": "<p>Add product care, fit, sizing, or sourcing details.</p>"
         }
       ]
+    },
+    {
+      "type": "custom_liquid",
+      "name": "Custom liquid",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Custom liquid"
+        }
+      ]
+    },
+    {
+      "type": "@app"
     }
   ]
 }

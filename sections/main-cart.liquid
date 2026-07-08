@@ -17,8 +17,9 @@
             <caption class="visually-hidden">{{ 'cart.general.title' | t }}</caption>
             <thead>
               <tr>
+                <th scope="col"><span class="visually-hidden">Image</span></th>
                 <th scope="col">Product</th>
-                <th scope="col"></th>
+                <th scope="col">Unit price</th>
                 <th scope="col">Total</th>
                 <th scope="col">{{ 'accessibility.quantity' | t }}</th>
               </tr>
@@ -32,10 +33,10 @@
         </div>
 
         <div class="cart-form__footer">
-          <label class="cart-note">
-            <span>{{ 'cart.general.note' | t }}</span>
-            <textarea class="field__input" name="note" rows="4">{{ cart.note }}</textarea>
-          </label>
+          <div class="cart-note">
+            <label for="CartNote-{{ section.id }}">{{ 'cart.general.note' | t }}</label>
+            <textarea id="CartNote-{{ section.id }}" class="field__input" name="note" rows="4">{{ cart.note }}</textarea>
+          </div>
 
           <div class="cart-summary">
             {%- for discount_application in cart.cart_level_discount_applications -%}

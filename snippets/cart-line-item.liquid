@@ -8,7 +8,7 @@
     {%- endif -%}
   </td>
   <td class="cart-item__details">
-    <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+    <a href="{{ item.url }}" class="cart-item__title">{{ item.title }}</a>
     {%- unless item.product.has_only_default_variant -%}
       <dl class="cart-item__options">
         {%- for option in item.options_with_values -%}
@@ -32,12 +32,12 @@
       <p class="cart-item__discount">{{ discount.discount_application.title }} (-{{ discount.amount | money }})</p>
     {%- endfor -%}
   </td>
-  <td class="cart-item__price">
-    {%- if item.original_line_price != item.final_line_price -%}
-      <s>{{ item.original_line_price | money }}</s>
-      <span>{{ item.final_line_price | money }}</span>
+  <td class="cart-item__unit-price">
+    {%- if item.original_price != item.final_price -%}
+      <s>{{ item.original_price | money }}</s>
+      <span>{{ item.final_price | money }}</span>
     {%- else -%}
-      <span>{{ item.final_line_price | money }}</span>
+      <span>{{ item.final_price | money }}</span>
     {%- endif -%}
     {%- if item.unit_price_measurement -%}
       <small>
@@ -47,6 +47,14 @@
         {%- endif -%}
         {{ item.unit_price_measurement.reference_unit }}
       </small>
+    {%- endif -%}
+  </td>
+  <td class="cart-item__price">
+    {%- if item.original_line_price != item.final_line_price -%}
+      <s>{{ item.original_line_price | money }}</s>
+      <span>{{ item.final_line_price | money }}</span>
+    {%- else -%}
+      <span>{{ item.final_line_price | money }}</span>
     {%- endif -%}
   </td>
   <td class="cart-item__quantity">

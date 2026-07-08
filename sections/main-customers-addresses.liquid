@@ -10,52 +10,52 @@
       <div>
         <h2>{{ 'customer.addresses.add_new' | t }}</h2>
         {%- form 'customer_address', customer.new_address, class: 'customer-form' -%}
-          <label>
-            <span>First name</span>
-            <input class="field__input" type="text" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name">
-          </label>
-          <label>
-            <span>Last name</span>
-            <input class="field__input" type="text" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name">
-          </label>
-          <label>
-            <span>Company</span>
-            <input class="field__input" type="text" name="address[company]" value="{{ form.company }}" autocomplete="organization">
-          </label>
-          <label>
-            <span>Address 1</span>
-            <input class="field__input" type="text" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1">
-          </label>
-          <label>
-            <span>Address 2</span>
-            <input class="field__input" type="text" name="address[address2]" value="{{ form.address2 }}" autocomplete="address-line2">
-          </label>
-          <label>
-            <span>City</span>
-            <input class="field__input" type="text" name="address[city]" value="{{ form.city }}" autocomplete="address-level2">
-          </label>
-          <label>
-            <span>Country</span>
-            <select class="field__input" name="address[country]" data-default="{{ form.country }}" autocomplete="country">
+          <div>
+            <label for="AddressFirstNameNew">First name</label>
+            <input id="AddressFirstNameNew" class="field__input" type="text" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name">
+          </div>
+          <div>
+            <label for="AddressLastNameNew">Last name</label>
+            <input id="AddressLastNameNew" class="field__input" type="text" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name">
+          </div>
+          <div>
+            <label for="AddressCompanyNew">Company</label>
+            <input id="AddressCompanyNew" class="field__input" type="text" name="address[company]" value="{{ form.company }}" autocomplete="organization">
+          </div>
+          <div>
+            <label for="AddressAddress1New">Address 1</label>
+            <input id="AddressAddress1New" class="field__input" type="text" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1">
+          </div>
+          <div>
+            <label for="AddressAddress2New">Address 2</label>
+            <input id="AddressAddress2New" class="field__input" type="text" name="address[address2]" value="{{ form.address2 }}" autocomplete="address-line2">
+          </div>
+          <div>
+            <label for="AddressCityNew">City</label>
+            <input id="AddressCityNew" class="field__input" type="text" name="address[city]" value="{{ form.city }}" autocomplete="address-level2">
+          </div>
+          <div>
+            <label for="AddressCountryNew">Country</label>
+            <select id="AddressCountryNew" class="field__input" name="address[country]" data-default="{{ form.country }}" autocomplete="country">
               {{ all_country_option_tags }}
             </select>
-          </label>
-          <label>
-            <span>Province</span>
-            <input class="field__input" type="text" name="address[province]" value="{{ form.province }}" autocomplete="address-level1">
-          </label>
-          <label>
-            <span>Postal code</span>
-            <input class="field__input" type="text" name="address[zip]" value="{{ form.zip }}" autocomplete="postal-code">
-          </label>
-          <label>
-            <span>Phone</span>
-            <input class="field__input" type="tel" name="address[phone]" value="{{ form.phone }}" autocomplete="tel">
-          </label>
-          <label class="checkbox-label">
+          </div>
+          <div>
+            <label for="AddressProvinceNew">Province</label>
+            <input id="AddressProvinceNew" class="field__input" type="text" name="address[province]" value="{{ form.province }}" autocomplete="address-level1">
+          </div>
+          <div>
+            <label for="AddressZipNew">Postal code</label>
+            <input id="AddressZipNew" class="field__input" type="text" name="address[zip]" value="{{ form.zip }}" autocomplete="postal-code">
+          </div>
+          <div>
+            <label for="AddressPhoneNew">Phone</label>
+            <input id="AddressPhoneNew" class="field__input" type="tel" name="address[phone]" value="{{ form.phone }}" autocomplete="tel">
+          </div>
+          <div class="checkbox-label">
             {{ form.set_as_default_checkbox }}
-            <span>Set as default address</span>
-          </label>
+            <label for="address_default_address_new">Set as default address</label>
+          </div>
           <button class="button" type="submit">Add address</button>
         {%- endform -%}
       </div>
@@ -76,36 +76,36 @@
 
               <div class="address-edit" id="EditAddress-{{ address.id }}" hidden>
                 {%- form 'customer_address', address, class: 'customer-form' -%}
-                  <label>
-                    <span>First name</span>
-                    <input class="field__input" type="text" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name">
-                  </label>
-                  <label>
-                    <span>Last name</span>
-                    <input class="field__input" type="text" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name">
-                  </label>
-                  <label>
-                    <span>Address 1</span>
-                    <input class="field__input" type="text" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1">
-                  </label>
-                  <label>
-                    <span>City</span>
-                    <input class="field__input" type="text" name="address[city]" value="{{ form.city }}" autocomplete="address-level2">
-                  </label>
-                  <label>
-                    <span>Country</span>
-                    <select class="field__input" name="address[country]" data-default="{{ form.country }}" autocomplete="country">
+                  <div>
+                    <label for="AddressFirstName-{{ address.id }}">First name</label>
+                    <input id="AddressFirstName-{{ address.id }}" class="field__input" type="text" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name">
+                  </div>
+                  <div>
+                    <label for="AddressLastName-{{ address.id }}">Last name</label>
+                    <input id="AddressLastName-{{ address.id }}" class="field__input" type="text" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name">
+                  </div>
+                  <div>
+                    <label for="AddressAddress1-{{ address.id }}">Address 1</label>
+                    <input id="AddressAddress1-{{ address.id }}" class="field__input" type="text" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1">
+                  </div>
+                  <div>
+                    <label for="AddressCity-{{ address.id }}">City</label>
+                    <input id="AddressCity-{{ address.id }}" class="field__input" type="text" name="address[city]" value="{{ form.city }}" autocomplete="address-level2">
+                  </div>
+                  <div>
+                    <label for="AddressCountry-{{ address.id }}">Country</label>
+                    <select id="AddressCountry-{{ address.id }}" class="field__input" name="address[country]" data-default="{{ form.country }}" autocomplete="country">
                       {{ all_country_option_tags }}
                     </select>
-                  </label>
-                  <label>
-                    <span>Postal code</span>
-                    <input class="field__input" type="text" name="address[zip]" value="{{ form.zip }}" autocomplete="postal-code">
-                  </label>
-                  <label class="checkbox-label">
+                  </div>
+                  <div>
+                    <label for="AddressZip-{{ address.id }}">Postal code</label>
+                    <input id="AddressZip-{{ address.id }}" class="field__input" type="text" name="address[zip]" value="{{ form.zip }}" autocomplete="postal-code">
+                  </div>
+                  <div class="checkbox-label">
                     {{ form.set_as_default_checkbox }}
-                    <span>Set as default address</span>
-                  </label>
+                    <label for="address_default_address_{{ form.id }}">Set as default address</label>
+                  </div>
                   <button class="button button--small" type="submit">Update</button>
                 {%- endform -%}
               </div>
