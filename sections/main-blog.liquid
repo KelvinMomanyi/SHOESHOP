@@ -9,17 +9,21 @@
       <div class="article-grid">
         {%- for article in blog.articles -%}
           <article class="article-card reveal-item">
-            <a class="article-card__media media-frame" href="{{ article.url }}">
-              {%- render 'responsive-image',
-                image: article.image,
-                class: 'media-frame__image',
-                sizes: '(min-width: 990px) 33vw, 100vw'
-              -%}
-            </a>
-            <p class="eyebrow">{{ article.published_at | date: format: 'abbreviated_date' }}</p>
+            {%- if section.settings.show_images -%}
+              <a class="article-card__media media-frame" href="{{ article.url }}">
+                {%- render 'responsive-image',
+                  image: article.image,
+                  class: 'media-frame__image',
+                  sizes: '(min-width: 990px) 33vw, 100vw'
+                -%}
+              </a>
+            {%- endif -%}
+            {%- if section.settings.show_date -%}
+              <p class="eyebrow">{{ article.published_at | date: format: 'abbreviated_date' }}</p>
+            {%- endif -%}
             <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
-            {%- if article.excerpt_or_content != blank -%}
-              <p>{{ article.excerpt_or_content | strip_html | truncatewords: 24 }}</p>
+            {%- if section.settings.show_excerpt and article.excerpt_or_content != blank -%}
+              <p>{{ article.excerpt_or_content | strip_html | truncatewords: section.settings.excerpt_words }}</p>
             {%- endif -%}
           </article>
         {%- endfor -%}
@@ -33,6 +37,33 @@
 {
   "name": "Main blog",
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_images",
+      "label": "Show article images",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show publish date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Show excerpts",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "excerpt_words",
+      "label": "Excerpt words",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "default": 24
+    },
     {
       "type": "range",
       "id": "articles_per_page",

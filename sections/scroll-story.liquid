@@ -13,9 +13,12 @@
     {%- for block in section.blocks -%}
       {%- liquid
         assign story_product = block.settings.product
-        assign story_image = block.settings.image | default: story_product.featured_media.preview_image | default: story_product.featured_image
-        assign story_title = block.settings.title | default: story_product.title
-        assign story_text = block.settings.text | default: story_product.description | strip_html | truncatewords: 32
+        assign story_collection = block.settings.collection
+        assign story_image = block.settings.image | default: story_product.featured_media.preview_image | default: story_product.featured_image | default: story_collection.featured_image
+        assign story_title = block.settings.title | default: story_product.title | default: story_collection.title
+        assign story_text = block.settings.text | default: story_product.description | default: story_collection.description | strip_html | truncatewords: 32
+        assign story_link = block.settings.link | default: story_product.url | default: story_collection.url
+        assign story_link_label = block.settings.link_label | default: story_product.title | default: story_collection.title
       -%}
       <article class="story-card reveal-item" {{ block.shopify_attributes }}>
         <span class="story-card__number">({{ forloop.index | prepend: '0' | slice: -2, 2 }})</span>
@@ -31,10 +34,8 @@
           {%- if story_text != blank -%}
             <p>{{ story_text }}</p>
           {%- endif -%}
-          {%- if story_product != blank -%}
-            <a class="text-link" href="{{ story_product.url }}">{{ story_product.title }}</a>
-          {%- elsif block.settings.link != blank -%}
-            <a class="text-link" href="{{ block.settings.link }}">{{ block.settings.link_label | default: 'Explore' }}</a>
+          {%- if story_link != blank -%}
+            <a class="text-link" href="{{ story_link }}">{{ story_link_label | default: 'Explore' }}</a>
           {%- endif -%}
         </div>
       </article>
@@ -87,6 +88,11 @@
           "type": "product",
           "id": "product",
           "label": "Product"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
         },
         {
           "type": "image_picker",

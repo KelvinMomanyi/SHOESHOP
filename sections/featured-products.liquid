@@ -1,8 +1,22 @@
 {%- liquid
   assign collection = section.settings.collection
   assign product_limit = section.settings.products_to_show
+  assign has_manual_products = false
+  for block in section.blocks
+    if block.settings.product != blank
+      assign has_manual_products = true
+      break
+    endif
+  endfor
   assign stack_count = 4
-  if collection.products != blank
+  if has_manual_products
+    assign stack_count = 0
+    for block in section.blocks
+      if block.settings.product != blank
+        assign stack_count = stack_count | plus: 1
+      endif
+    endfor
+  elsif collection.products != blank
     assign stack_count = collection.products.size
     if stack_count > product_limit
       assign stack_count = product_limit
@@ -30,7 +44,22 @@
     </div>
 
     <div class="featured-products__stack-deck" data-featured-product-deck>
-      {%- if collection.products != blank -%}
+      {%- if has_manual_products -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.product != blank -%}
+            <div
+              class="featured-products__stack-card"
+              data-featured-product-card
+              data-rotate-from="{% cycle '11', '-9', '8', '-12', '10', '-7', '9', '-10', '6', '-8', '12', '-6' %}"
+              data-rotate-to="{% cycle '-3', '4', '-5', '3', '-4', '5', '-2', '4', '-5', '3', '-4', '2' %}"
+              style="--stack-index: {{ forloop.index0 }};"
+              {{ block.shopify_attributes }}
+            >
+              {%- render 'product-card', product: block.settings.product, collection: collection, loading: 'lazy' -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- elsif collection.products != blank -%}
         {%- for product in collection.products limit: product_limit -%}
           <div
             class="featured-products__stack-card"
@@ -98,11 +127,25 @@
     {
       "type": "range",
       "id": "products_to_show",
-      "label": "Products to show",
+      "label": "Collection products to show",
       "min": 2,
       "max": 12,
       "step": 1,
       "default": 8
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
     }
   ],
   "presets": [

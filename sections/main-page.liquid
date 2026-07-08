@@ -1,17 +1,58 @@
 <section class="page-section section-band">
   <div class="page-width page-section__inner">
     <div class="section-heading">
-      <p class="eyebrow">{{ shop.name }}</p>
-      <h1>{{ page.title }}</h1>
+      {%- if section.settings.kicker != blank -%}
+        <p class="eyebrow">{{ section.settings.kicker }}</p>
+      {%- endif -%}
+      {%- if section.settings.show_title -%}
+        <h1>{{ page.title }}</h1>
+      {%- endif -%}
     </div>
-    <div class="rte page-section__content">
-      {{ page.content }}
-    </div>
+    {%- if section.settings.image != blank -%}
+      <div class="page-section__image media-frame">
+        {%- render 'responsive-image',
+          image: section.settings.image,
+          class: 'media-frame__image',
+          sizes: '(min-width: 990px) 80vw, 100vw',
+          loading: 'eager'
+        -%}
+      </div>
+    {%- endif -%}
+    {%- if section.settings.show_content -%}
+      <div class="rte page-section__content">
+        {{ page.content }}
+      </div>
+    {%- endif -%}
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "Main page"
+  "name": "Main page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Page"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show page title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_content",
+      "label": "Show page content",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    }
+  ]
 }
 {% endschema %}

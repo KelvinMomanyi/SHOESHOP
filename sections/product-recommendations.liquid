@@ -15,6 +15,12 @@
             {%- render 'product-card', product: recommendation, loading: 'lazy' -%}
           {%- endfor -%}
         </div>
+      {%- elsif section.settings.fallback_products != blank -%}
+        <div class="product-grid">
+          {%- for fallback_product in section.settings.fallback_products limit: section.settings.products_to_show -%}
+            {%- render 'product-card', product: fallback_product, loading: 'lazy' -%}
+          {%- endfor -%}
+        </div>
       {%- endif -%}
     </product-recommendations>
   </div>
@@ -44,6 +50,12 @@
       "max": 10,
       "step": 1,
       "default": 4
+    },
+    {
+      "type": "product_list",
+      "id": "fallback_products",
+      "label": "Fallback products",
+      "info": "Shown when automatic recommendations are unavailable."
     }
   ],
   "presets": [

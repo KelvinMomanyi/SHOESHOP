@@ -1,14 +1,16 @@
 <article class="article-page section-band">
   <div class="page-width article-page__inner">
     <header class="article-page__header">
-      <p class="eyebrow">{{ article.published_at | date: format: 'abbreviated_date' }}</p>
+      {%- if section.settings.show_date -%}
+        <p class="eyebrow">{{ article.published_at | date: format: 'abbreviated_date' }}</p>
+      {%- endif -%}
       <h1>{{ article.title }}</h1>
-      {%- if article.author != blank -%}
+      {%- if section.settings.show_author and article.author != blank -%}
         <p>{{ article.author }}</p>
       {%- endif -%}
     </header>
 
-    {%- if article.image != blank -%}
+    {%- if section.settings.show_image and article.image != blank -%}
       <div class="article-page__image media-frame">
         {%- render 'responsive-image',
           image: article.image,
@@ -23,10 +25,10 @@
       {{ article.content }}
     </div>
 
-    {%- if blog.comments_enabled? -%}
+    {%- if section.settings.show_comments and blog.comments_enabled? -%}
       <section class="comments">
         <h2>{{ article.comments_count }} comments</h2>
-        {%- paginate article.comments by 12 -%}
+        {%- paginate article.comments by section.settings.comments_per_page -%}
           {%- for comment in article.comments -%}
             <article class="comment">
               <p>{{ comment.content }}</p>
@@ -63,6 +65,41 @@
 
 {% schema %}
 {
-  "name": "Main article"
+  "name": "Main article",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show publish date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show author",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show article image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_comments",
+      "label": "Show comments",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "comments_per_page",
+      "label": "Comments per page",
+      "min": 4,
+      "max": 20,
+      "step": 4,
+      "default": 12
+    }
+  ]
 }
 {% endschema %}

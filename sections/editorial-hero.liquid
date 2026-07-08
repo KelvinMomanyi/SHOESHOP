@@ -26,10 +26,11 @@
       {%- for block in section.blocks -%}
         {%- liquid
           assign panel_product = block.settings.product
-          assign panel_image = block.settings.image | default: panel_product.featured_media.preview_image | default: panel_product.featured_image
-          assign panel_title = block.settings.title | default: panel_product.title | default: section.settings.heading
-          assign panel_body = block.settings.text | default: panel_product.description | strip_html | truncatewords: 26 | default: section.settings.text
-          assign panel_link = block.settings.link | default: panel_product.url | default: section.settings.button_link | default: routes.all_products_collection_url
+          assign panel_collection = block.settings.collection
+          assign panel_image = block.settings.image | default: panel_product.featured_media.preview_image | default: panel_product.featured_image | default: panel_collection.featured_image
+          assign panel_title = block.settings.title | default: panel_product.title | default: panel_collection.title | default: section.settings.heading
+          assign panel_body = block.settings.text | default: panel_product.description | default: panel_collection.description | strip_html | truncatewords: 26 | default: section.settings.text
+          assign panel_link = block.settings.link | default: panel_product.url | default: panel_collection.url | default: section.settings.button_link | default: routes.all_products_collection_url
           assign panel_category = block.settings.category | default: section.settings.kicker
           assign fallback_index = forloop.index0 | modulo: 3
           assign fallback_asset = 'scroll-hero-01.png'
@@ -207,6 +208,11 @@
           "type": "product",
           "id": "product",
           "label": "Product"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
         },
         {
           "type": "image_picker",

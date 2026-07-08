@@ -5,11 +5,11 @@
       <h1>{{ section.settings.heading }}</h1>
     </div>
 
-    {%- paginate collections by 24 -%}
+    {%- if section.settings.collections != blank -%}
       <div class="collection-grid">
-        {%- for collection in collections -%}
-          {%- unless collection.handle == 'frontpage' -%}
-            <a class="collection-card reveal-item" href="{{ collection.url }}">
+        {%- for collection in section.settings.collections -%}
+          <a class="collection-card reveal-item" href="{{ collection.url }}">
+            {%- if section.settings.show_images -%}
               <div class="collection-card__media media-frame">
                 {%- render 'responsive-image',
                   image: collection.featured_image,
@@ -17,14 +17,40 @@
                   sizes: '(min-width: 990px) 33vw, 100vw'
                 -%}
               </div>
-              <strong>{{ collection.title }}</strong>
+            {%- endif -%}
+            <strong>{{ collection.title }}</strong>
+            {%- if section.settings.show_product_count -%}
               <span>{{ collection.products_count }} products</span>
-            </a>
-          {%- endunless -%}
+            {%- endif -%}
+          </a>
         {%- endfor -%}
       </div>
-      {%- render 'pagination', paginate: paginate -%}
-    {%- endpaginate -%}
+    {%- else -%}
+      {%- paginate collections by section.settings.collections_per_page -%}
+        <div class="collection-grid">
+          {%- for collection in collections -%}
+            {%- unless collection.handle == 'frontpage' -%}
+              <a class="collection-card reveal-item" href="{{ collection.url }}">
+                {%- if section.settings.show_images -%}
+                  <div class="collection-card__media media-frame">
+                    {%- render 'responsive-image',
+                      image: collection.featured_image,
+                      class: 'media-frame__image',
+                      sizes: '(min-width: 990px) 33vw, 100vw'
+                    -%}
+                  </div>
+                {%- endif -%}
+                <strong>{{ collection.title }}</strong>
+                {%- if section.settings.show_product_count -%}
+                  <span>{{ collection.products_count }} products</span>
+                {%- endif -%}
+              </a>
+            {%- endunless -%}
+          {%- endfor -%}
+        </div>
+        {%- render 'pagination', paginate: paginate -%}
+      {%- endpaginate -%}
+    {%- endif -%}
   </div>
 </section>
 
@@ -37,6 +63,33 @@
       "id": "heading",
       "label": "Heading",
       "default": "Collections"
+    },
+    {
+      "type": "collection_list",
+      "id": "collections",
+      "label": "Selected collections",
+      "info": "Leave empty to show all collections."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_images",
+      "label": "Show images",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_count",
+      "label": "Show product count",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "collections_per_page",
+      "label": "Collections per page",
+      "min": 6,
+      "max": 48,
+      "step": 6,
+      "default": 24
     }
   ]
 }

@@ -28,9 +28,10 @@
         {%- for block in section.blocks -%}
           {%- liquid
             assign spread_product = block.settings.product
-            assign spread_image = block.settings.image | default: spread_product.featured_media.preview_image | default: spread_product.featured_image
-            assign spread_title = block.settings.title | default: spread_product.title
-            assign spread_link = block.settings.link | default: spread_product.url | default: section.settings.button_link | default: routes.all_products_collection_url
+            assign spread_collection = block.settings.collection
+            assign spread_image = block.settings.image | default: spread_product.featured_media.preview_image | default: spread_product.featured_image | default: spread_collection.featured_image
+            assign spread_title = block.settings.title | default: spread_product.title | default: spread_collection.title
+            assign spread_link = block.settings.link | default: spread_product.url | default: spread_collection.url | default: section.settings.button_link | default: routes.all_products_collection_url
             assign fallback_index = forloop.index0 | modulo: 3
             assign fallback_asset = 'scroll-hero-01.png'
             if fallback_index == 1
@@ -160,6 +161,11 @@
           "type": "product",
           "id": "product",
           "label": "Product"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
         },
         {
           "type": "image_picker",

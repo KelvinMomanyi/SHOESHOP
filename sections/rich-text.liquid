@@ -1,5 +1,14 @@
 <section class="rich-text-section section-band">
-  <div class="rich-text-section__inner page-width reveal-item">
+  <div class="rich-text-section__inner rich-text-section__inner--{{ section.settings.alignment }} page-width reveal-item">
+    {%- if section.settings.image != blank -%}
+      <div class="rich-text-section__media media-frame">
+        {%- render 'responsive-image',
+          image: section.settings.image,
+          class: 'media-frame__image',
+          sizes: '(min-width: 990px) 48vw, 100vw'
+        -%}
+      </div>
+    {%- endif -%}
     {%- if section.settings.kicker != blank -%}
       <p class="eyebrow">{{ section.settings.kicker }}</p>
     {%- endif -%}
@@ -26,6 +35,11 @@
       "default": "Note"
     },
     {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
       "type": "text",
       "id": "heading",
       "label": "Heading",
@@ -46,6 +60,22 @@
       "type": "url",
       "id": "button_link",
       "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Content alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
     }
   ],
   "presets": [

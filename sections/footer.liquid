@@ -5,7 +5,13 @@
 <footer class="site-footer">
   <div class="site-footer__inner page-width">
     <div class="site-footer__brand">
-      <a href="{{ routes.root_url }}">{{ shop.name }}</a>
+      <a href="{{ routes.root_url }}">
+        {%- if section.settings.logo != blank -%}
+          {{ section.settings.logo | image_url: width: 280 | image_tag: widths: '120, 180, 240, 280', loading: 'lazy', class: 'site-footer__logo', alt: shop.name }}
+        {%- else -%}
+          {{ shop.name }}
+        {%- endif -%}
+      </a>
       {%- if shop.description != blank -%}
         <p>{{ shop.description }}</p>
       {%- else -%}
@@ -78,6 +84,11 @@
 {
   "name": "Footer",
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
     {
       "type": "textarea",
       "id": "text",

@@ -1,9 +1,17 @@
 {%- liquid
   assign results = results | default: collection
   assign sort_by = results.sort_by | default: results.default_sort_by
+  assign enable_filtering = true
+  assign enable_sorting = true
+  if show_filters == false
+    assign enable_filtering = false
+  endif
+  if show_sorting == false
+    assign enable_sorting = false
+  endif
 -%}
 
-{%- if results.filters != blank or results.sort_options != blank -%}
+{%- if enable_filtering and results.filters != blank or enable_sorting and results.sort_options != blank -%}
   <form class="facets" id="FacetFiltersForm">
     {%- if request.page_type == 'search' -%}
       <input type="hidden" name="q" value="{{ search.terms | escape }}">
@@ -16,46 +24,47 @@
     </div>
 
     <div class="facets__groups">
-      {%- for filter in results.filters -%}
-        <details class="facets__group" {% if forloop.first %}open{% endif %}>
-          <summary>{{ filter.label }}</summary>
+      {%- if enable_filtering -%}
+        {%- for filter in results.filters -%}
+          <details class="facets__group" {% if forloop.first %}open{% endif %}>
+            <summary>{{ filter.label }}</summary>
 
-          {%- case filter.type -%}
-            {%- when 'price_range' -%}
-              <div class="facets__price">
-                {%- assign min_input_id = 'Filter-' | append: section.id | append: '-' | append: filter.min_value.param_name | handle -%}
-                {%- assign max_input_id = 'Filter-' | append: section.id | append: '-' | append: filter.max_value.param_name | handle -%}
-                <div>
-                  <label for="{{ min_input_id }}">{{ filter.min_value.param_name | remove: 'filter.v.price.' | capitalize }}</label>
-                  <input
-                    id="{{ min_input_id }}"
-                    class="field__input"
-                    name="{{ filter.min_value.param_name }}"
-                    type="number"
-                    min="0"
-                    max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
-                    value="{% if filter.min_value.value %}{{ filter.min_value.value | money_without_currency | replace: ',', '' }}{% endif %}"
-                  >
+            {%- case filter.type -%}
+              {%- when 'price_range' -%}
+                <div class="facets__price">
+                  {%- assign min_input_id = 'Filter-' | append: section.id | append: '-' | append: filter.min_value.param_name | handle -%}
+                  {%- assign max_input_id = 'Filter-' | append: section.id | append: '-' | append: filter.max_value.param_name | handle -%}
+                  <div>
+                    <label for="{{ min_input_id }}">{{ filter.min_value.param_name | remove: 'filter.v.price.' | capitalize }}</label>
+                    <input
+                      id="{{ min_input_id }}"
+                      class="field__input"
+                      name="{{ filter.min_value.param_name }}"
+                      type="number"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      value="{% if filter.min_value.value %}{{ filter.min_value.value | money_without_currency | replace: ',', '' }}{% endif %}"
+                    >
+                  </div>
+                  <div>
+                    <label for="{{ max_input_id }}">{{ filter.max_value.param_name | remove: 'filter.v.price.' | capitalize }}</label>
+                    <input
+                      id="{{ max_input_id }}"
+                      class="field__input"
+                      name="{{ filter.max_value.param_name }}"
+                      type="number"
+                      min="0"
+                      max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                      value="{% if filter.max_value.value %}{{ filter.max_value.value | money_without_currency | replace: ',', '' }}{% endif %}"
+                    >
+                  </div>
                 </div>
-                <div>
-                  <label for="{{ max_input_id }}">{{ filter.max_value.param_name | remove: 'filter.v.price.' | capitalize }}</label>
-                  <input
-                    id="{{ max_input_id }}"
-                    class="field__input"
-                    name="{{ filter.max_value.param_name }}"
-                    type="number"
-                    min="0"
-                    max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
-                    value="{% if filter.max_value.value %}{{ filter.max_value.value | money_without_currency | replace: ',', '' }}{% endif %}"
-                  >
-                </div>
-              </div>
-            {%- else -%}
-              <ul class="facets__list" role="list">
-                {%- for value in filter.values -%}
-                  {%- assign filter_value_id = 'Filter-' | append: section.id | append: '-' | append: value.param_name | handle | append: '-' | append: forloop.index -%}
-                  <li>
-                    <label for="{{ filter_value_id }}" class="facet-checkbox{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}">
+              {%- else -%}
+                <ul class="facets__list" role="list">
+                  {%- for value in filter.values -%}
+                    {%- assign filter_value_id = 'Filter-' | append: section.id | append: '-' | append: value.param_name | handle | append: '-' | append: forloop.index -%}
+                    <li>
+                      <label for="{{ filter_value_id }}" class="facet-checkbox{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}">
                       <input
                         id="{{ filter_value_id }}"
                         type="checkbox"
@@ -66,15 +75,16 @@
                       >
                       <span>{{ value.label }}</span>
                       <small>{{ value.count }}</small>
-                    </label>
-                  </li>
-                {%- endfor -%}
-              </ul>
-          {%- endcase -%}
-        </details>
-      {%- endfor -%}
+                      </label>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+            {%- endcase -%}
+          </details>
+        {%- endfor -%}
+      {%- endif -%}
 
-      {%- if results.sort_options != blank -%}
+      {%- if enable_sorting and results.sort_options != blank -%}
         <div class="facets__sort">
           <label for="SortBy-{{ section.id }}">{{ 'products.facets.sort_by_label' | t }}</label>
           <select id="SortBy-{{ section.id }}" class="field__input" name="sort_by">
@@ -88,7 +98,7 @@
       {%- endif -%}
     </div>
 
-    {%- if results.filters != blank -%}
+    {%- if enable_filtering and results.filters != blank -%}
       <div class="facets__active">
         {%- for filter in results.filters -%}
           {%- for value in filter.active_values -%}

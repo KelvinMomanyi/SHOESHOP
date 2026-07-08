@@ -50,9 +50,10 @@
         {%- for block in section.blocks -%}
           {%- liquid
             assign loader_product = block.settings.product
-            assign loader_image = block.settings.image | default: loader_product.featured_media.preview_image | default: loader_product.featured_image
-            assign loader_title = block.settings.title | default: loader_product.title | default: 'Featured portrait'
-            assign loader_link = block.settings.link | default: loader_product.url | default: section.settings.link | default: routes.all_products_collection_url
+            assign loader_collection = block.settings.collection
+            assign loader_image = block.settings.image | default: loader_product.featured_media.preview_image | default: loader_product.featured_image | default: loader_collection.featured_image
+            assign loader_title = block.settings.title | default: loader_product.title | default: loader_collection.title | default: 'Featured product'
+            assign loader_link = block.settings.link | default: loader_product.url | default: loader_collection.url | default: section.settings.link | default: routes.all_products_collection_url
             assign fallback_index = forloop.index
             assign fallback_asset = 'alexandra-loader-01.png'
             if fallback_index == 2
@@ -195,6 +196,11 @@
           "type": "product",
           "id": "product",
           "label": "Product"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
         },
         {
           "type": "image_picker",

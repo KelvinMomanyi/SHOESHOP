@@ -8,6 +8,15 @@
       {%- if section.settings.text != blank -%}
         <p>{{ section.settings.text }}</p>
       {%- endif -%}
+      {%- if section.settings.image != blank -%}
+        <div class="newsletter-section__media media-frame">
+          {%- render 'responsive-image',
+            image: section.settings.image,
+            class: 'media-frame__image',
+            sizes: '(min-width: 990px) 34vw, 100vw'
+          -%}
+        </div>
+      {%- endif -%}
     </div>
 
     {%- form 'customer', class: 'newsletter-form' -%}
@@ -25,7 +34,7 @@
         placeholder="{{ 'general.newsletter.placeholder' | t }}"
         required
       >
-      <button class="button button--light" type="submit">{{ 'general.newsletter.button' | t }}</button>
+      <button class="button button--light" type="submit">{{ section.settings.button_label }}</button>
       {%- if form.posted_successfully? -%}
         <p class="form-status">{{ 'general.newsletter.success' | t }}</p>
       {%- elsif form.errors -%}
@@ -56,6 +65,17 @@
       "id": "text",
       "label": "Text",
       "default": "New products, limited edits, and useful notes."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Subscribe"
     }
   ],
   "presets": [

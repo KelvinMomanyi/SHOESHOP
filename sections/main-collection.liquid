@@ -2,13 +2,17 @@
   <div class="page-width">
     <header class="collection-hero">
       <div>
-        <p class="eyebrow">{{ collection.products_count }} products</p>
+        {%- if section.settings.show_product_count -%}
+          <p class="eyebrow">{{ collection.products_count }} products</p>
+        {%- elsif section.settings.kicker != blank -%}
+          <p class="eyebrow">{{ section.settings.kicker }}</p>
+        {%- endif -%}
         <h1>{{ collection.title }}</h1>
-        {%- if collection.description != blank -%}
+        {%- if section.settings.show_description and collection.description != blank -%}
           <div class="rte">{{ collection.description }}</div>
         {%- endif -%}
       </div>
-      {%- if collection.image != blank -%}
+      {%- if section.settings.show_image and collection.image != blank -%}
         <div class="collection-hero__image media-frame">
           {%- render 'responsive-image',
             image: collection.image,
@@ -20,7 +24,11 @@
       {%- endif -%}
     </header>
 
-    {%- render 'facets', results: collection -%}
+    {%- render 'facets',
+      results: collection,
+      show_filters: section.settings.show_filters,
+      show_sorting: section.settings.show_sorting
+    -%}
 
     {%- paginate collection.products by section.settings.products_per_page -%}
       <div class="product-grid">
@@ -41,6 +49,42 @@
 {
   "name": "Main collection",
   "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_count",
+      "label": "Show product count",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filters",
+      "label": "Show filters",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sorting",
+      "label": "Show sorting",
+      "default": true
+    },
     {
       "type": "range",
       "id": "products_per_page",

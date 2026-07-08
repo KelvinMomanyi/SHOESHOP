@@ -18,8 +18,12 @@
       <button class="button" type="submit">{{ 'general.search.search' | t }}</button>
     </form>
 
-    {%- if search.performed -%}
-      {%- render 'facets', results: search -%}
+      {%- if search.performed -%}
+      {%- render 'facets',
+        results: search,
+        show_filters: section.settings.show_filters,
+        show_sorting: section.settings.show_sorting
+      -%}
 
       {%- paginate search.results by section.settings.results_per_page -%}
         {%- if search.results_count > 0 -%}
@@ -29,17 +33,21 @@
                 {%- render 'product-card', product: item, loading: 'lazy' -%}
               {%- elsif item.object_type == 'article' -%}
                 <article class="search-result-card">
-                  <p class="eyebrow">{{ item.object_type | capitalize }}</p>
+                  {%- if section.settings.show_result_type -%}
+                    <p class="eyebrow">{{ item.object_type | capitalize }}</p>
+                  {%- endif -%}
                   <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
-                  {%- if item.excerpt_or_content != blank -%}
+                  {%- if section.settings.show_excerpt and item.excerpt_or_content != blank -%}
                     <p>{{ item.excerpt_or_content | strip_html | truncatewords: 24 }}</p>
                   {%- endif -%}
                 </article>
               {%- elsif item.object_type == 'page' -%}
                 <article class="search-result-card">
-                  <p class="eyebrow">{{ item.object_type | capitalize }}</p>
+                  {%- if section.settings.show_result_type -%}
+                    <p class="eyebrow">{{ item.object_type | capitalize }}</p>
+                  {%- endif -%}
                   <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
-                  {%- if item.content != blank -%}
+                  {%- if section.settings.show_excerpt and item.content != blank -%}
                     <p>{{ item.content | strip_html | truncatewords: 24 }}</p>
                   {%- endif -%}
                 </article>
@@ -61,6 +69,30 @@
 {
   "name": "Main search",
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_filters",
+      "label": "Show filters",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sorting",
+      "label": "Show sorting",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_result_type",
+      "label": "Show result type",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Show excerpts",
+      "default": true
+    },
     {
       "type": "range",
       "id": "results_per_page",

@@ -7,8 +7,10 @@
 
     {%- if cart.item_count == 0 -%}
       <div class="empty-state">
-        <p>{{ 'cart.general.empty' | t }}</p>
-        <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'cart.general.continue_shopping' | t }}</a>
+        <p>{{ section.settings.empty_text }}</p>
+        {%- if section.settings.continue_shopping_label != blank -%}
+          <a class="button" href="{{ section.settings.continue_shopping_link | default: routes.all_products_collection_url }}">{{ section.settings.continue_shopping_label }}</a>
+        {%- endif -%}
       </div>
     {%- else -%}
       {%- form 'cart', cart, class: 'cart-form' -%}
@@ -33,10 +35,12 @@
         </div>
 
         <div class="cart-form__footer">
-          <div class="cart-note">
-            <label for="CartNote-{{ section.id }}">{{ 'cart.general.note' | t }}</label>
-            <textarea id="CartNote-{{ section.id }}" class="field__input" name="note" rows="4">{{ cart.note }}</textarea>
-          </div>
+          {%- if section.settings.show_cart_note -%}
+            <div class="cart-note">
+              <label for="CartNote-{{ section.id }}">{{ 'cart.general.note' | t }}</label>
+              <textarea id="CartNote-{{ section.id }}" class="field__input" name="note" rows="4">{{ cart.note }}</textarea>
+            </div>
+          {%- endif -%}
 
           <div class="cart-summary">
             {%- for discount_application in cart.cart_level_discount_applications -%}
@@ -58,7 +62,9 @@
 
             <button class="button button--secondary" type="submit" name="update">{{ 'cart.general.update' | t }}</button>
             <button class="button" type="submit" name="checkout">{{ 'cart.general.checkout' | t }}</button>
-            {{ form | payment_button }}
+            {%- if section.settings.show_dynamic_checkout -%}
+              {{ form | payment_button }}
+            {%- endif -%}
           </div>
         </div>
       {%- endform -%}
@@ -68,6 +74,37 @@
 
 {% schema %}
 {
-  "name": "Main cart"
+  "name": "Main cart",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "empty_text",
+      "label": "Empty cart text",
+      "default": "Your cart is empty."
+    },
+    {
+      "type": "text",
+      "id": "continue_shopping_label",
+      "label": "Continue shopping button label",
+      "default": "Continue shopping"
+    },
+    {
+      "type": "url",
+      "id": "continue_shopping_link",
+      "label": "Continue shopping button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_note",
+      "label": "Show cart note",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show dynamic checkout buttons",
+      "default": true
+    }
+  ]
 }
 {% endschema %}

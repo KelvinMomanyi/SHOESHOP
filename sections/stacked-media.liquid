@@ -12,9 +12,10 @@
       {%- for block in section.blocks -%}
         {%- liquid
           assign deck_product = block.settings.product
-          assign image = block.settings.image | default: deck_product.featured_media.preview_image | default: deck_product.featured_image
-          assign title = block.settings.title | default: deck_product.title
-          assign link = block.settings.link | default: deck_product.url
+          assign deck_collection = block.settings.collection
+          assign image = block.settings.image | default: deck_product.featured_media.preview_image | default: deck_product.featured_image | default: deck_collection.featured_image
+          assign title = block.settings.title | default: deck_product.title | default: deck_collection.title
+          assign link = block.settings.link | default: deck_product.url | default: deck_collection.url
         -%}
         <a class="deck-card" href="{{ link | default: routes.all_products_collection_url }}" style="--stack-index: {{ forloop.index0 }};" {{ block.shopify_attributes }}>
           {%- render 'responsive-image',
@@ -68,6 +69,11 @@
           "type": "product",
           "id": "product",
           "label": "Product"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
         },
         {
           "type": "image_picker",

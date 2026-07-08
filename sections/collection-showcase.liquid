@@ -5,6 +5,9 @@
         <p class="eyebrow">{{ section.settings.kicker }}</p>
       {%- endif -%}
       <h2>{{ section.settings.heading }}</h2>
+      {%- if section.settings.text != blank -%}
+        <p>{{ section.settings.text }}</p>
+      {%- endif -%}
     </div>
 
     <div class="collection-showcase__grid" data-hover-preview>
@@ -13,7 +16,7 @@
           {%- liquid
             assign featured_collection = block.settings.collection
             assign title = block.settings.title | default: featured_collection.title
-            assign image = block.settings.image | default: featured_collection.image
+            assign image = block.settings.image | default: featured_collection.featured_image
             assign link = block.settings.link | default: featured_collection.url
           -%}
           <a class="collection-row" href="{{ link | default: routes.collections_url }}" data-preview-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
@@ -36,7 +39,7 @@
         {%- for block in section.blocks -%}
           {%- liquid
             assign featured_collection = block.settings.collection
-            assign image = block.settings.image | default: featured_collection.image
+            assign image = block.settings.image | default: featured_collection.featured_image
           -%}
           <div class="collection-preview-image{% if forloop.first %} is-active{% endif %}" data-preview-image="{{ forloop.index0 }}">
             {%- render 'responsive-image',
@@ -70,6 +73,11 @@
       "id": "heading",
       "label": "Heading",
       "default": "Find the right edit"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text"
     }
   ],
   "blocks": [
