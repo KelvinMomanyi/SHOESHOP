@@ -5,8 +5,8 @@
     "newsletter": {
       "type": "newsletter",
       "settings": {
-        "heading": "Dispatches from the shop floor",
-        "text": "New products, limited edits, and useful notes."
+        "heading": "New drops, fit notes, and care tips",
+        "text": "Footwear launches, restocks, limited colorways, and practical notes for finding the right pair."
       }
     },
     "footer": {

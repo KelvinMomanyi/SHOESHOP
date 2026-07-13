@@ -23,13 +23,13 @@
             class: 'deck-card__image',
             sizes: '(min-width: 990px) 28vw, 80vw'
           -%}
-          <span>{{ title | default: 'Layered product' }}</span>
+          <span>{{ title | default: 'Layered shoe' }}</span>
         </a>
       {%- else -%}
         {%- for i in (1..3) -%}
           <a class="deck-card" href="{{ routes.all_products_collection_url }}" style="--stack-index: {{ forloop.index0 }};">
             {{ 'product-1' | placeholder_svg_tag: 'deck-card__image placeholder-svg' }}
-            <span>Layered product</span>
+            <span>Layered shoe</span>
           </a>
         {%- endfor -%}
       {%- endfor -%}
@@ -45,19 +45,19 @@
       "type": "text",
       "id": "kicker",
       "label": "Kicker",
-      "default": "In hand"
+      "default": "In rotation"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "A layered way to show range"
+      "default": "Build a footwear rotation"
     },
     {
       "type": "textarea",
       "id": "text",
       "label": "Text",
-      "default": "A compact perspective deck adapted from the Scroll card experiments."
+      "default": "A compact perspective deck for daily trainers, trail shoes, recovery slides, and seasonal footwear."
     }
   ],
   "blocks": [

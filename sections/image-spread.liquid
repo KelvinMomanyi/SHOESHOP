@@ -60,11 +60,11 @@
                 width="768"
                 height="1344"
                 loading="lazy"
-                alt="{{ spread_title | default: 'Featured product' | escape }}"
+                alt="{{ spread_title | default: 'Featured shoe' | escape }}"
                 class="image-spread__img"
               >
             {%- endif -%}
-            <span>{{ spread_title | default: 'Featured product' }}</span>
+            <span>{{ spread_title | default: 'Featured shoe' }}</span>
           </a>
         {%- endfor -%}
       {%- else -%}
@@ -89,10 +89,10 @@
               width="768"
               height="1344"
               loading="lazy"
-              alt="Featured product"
+              alt="Featured shoe"
               class="image-spread__img"
             >
-            <span>Featured product</span>
+            <span>Featured shoe</span>
           </a>
         {%- endfor -%}
       {%- endif -%}
@@ -115,19 +115,19 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Every piece opens into its own world"
+      "default": "Every step opens into its own world"
     },
     {
       "type": "textarea",
       "id": "text",
       "label": "Text",
-      "default": "A product journey where featured styles move from one focal point into a full seasonal edit."
+      "default": "A footwear journey where featured shoes move from one focal point into a full seasonal edit."
     },
     {
       "type": "text",
       "id": "button_label",
       "label": "Button label",
-      "default": "Shop the spread"
+      "default": "Shop footwear"
     },
     {
       "type": "url",

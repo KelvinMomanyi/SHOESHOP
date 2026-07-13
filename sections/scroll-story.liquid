@@ -44,11 +44,11 @@
         <article class="story-card reveal-item">
           <span class="story-card__number">({{ forloop.index | prepend: '0' | slice: -2, 2 }})</span>
           <div class="story-card__body">
-            <h3>Editorial chapter</h3>
+            <h3>Footwear chapter</h3>
             <div class="story-card__media media-frame">
               {{ 'product-1' | placeholder_svg_tag: 'media-frame__image placeholder-svg' }}
             </div>
-            <p>Use this block for collection stories, product craft notes, founder edits, or campaign drops.</p>
+            <p>Use this block for shoe fit notes, material stories, collection launches, or performance details.</p>
           </div>
         </article>
       {%- endfor -%}
@@ -64,19 +64,19 @@
       "type": "text",
       "id": "kicker",
       "label": "Kicker",
-      "default": "Chapters"
+      "default": "Fit notes"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "A shop you can scroll through"
+      "default": "Footwear stories built for browsing"
     },
     {
       "type": "textarea",
       "id": "text",
       "label": "Text",
-      "default": "Numbered editorial modules give merchants a memorable way to pace launches, collections, and product storytelling."
+      "default": "Numbered editorial modules give footwear merchants a memorable way to explain fit, cushioning, materials, and use cases."
     }
   ],
   "blocks": [

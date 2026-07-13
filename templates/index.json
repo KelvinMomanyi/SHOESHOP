@@ -3,35 +3,35 @@
     "hero": {
       "type": "editorial-hero",
       "settings": {
-        "kicker": "New season",
-        "heading": "Objects with momentum",
-        "text": "A fast, editorial storefront for collections that deserve movement, contrast, and room to breathe.",
-        "button_label": "Shop the edit",
+        "kicker": "New arrivals",
+        "heading": "Footwear with momentum",
+        "text": "A fast, editorial storefront for running shoes, everyday sneakers, and recovery essentials built around movement.",
+        "button_label": "Shop new shoes",
         "secondary_button_label": "View collections"
       },
       "blocks": {
         "feature_1": {
           "type": "feature",
           "settings": {
-            "category": "Arrival",
-            "title": "First light",
-            "text": "A sharp opening panel for new releases, hero products, and high-impact collection stories."
+            "category": "Road",
+            "title": "Daily miles",
+            "text": "Lead with lightweight running shoes, cushioned trainers, and the styles customers reach for every day."
           }
         },
         "feature_2": {
           "type": "feature",
           "settings": {
-            "category": "Materials",
-            "title": "Tactile edit",
-            "text": "Use this slide to frame texture, fit, construction, and the details that make the product feel considered."
+            "category": "Fit",
+            "title": "Built to feel right",
+            "text": "Use this slide to frame cushioning, outsole grip, upper materials, and fit details that help shoppers choose."
           }
         },
         "feature_3": {
           "type": "feature",
           "settings": {
-            "category": "Campaign",
-            "title": "After dark",
-            "text": "A cinematic closing panel for limited drops, campaign moments, and featured collection links."
+            "category": "Trail",
+            "title": "Grip for every route",
+            "text": "A cinematic panel for trail shoes, limited colorways, seasonal drops, and featured footwear collections."
           }
         }
       },
@@ -44,7 +44,7 @@
     "featured_products": {
       "type": "featured-products",
       "settings": {
-        "heading": "Built for browsing",
+        "heading": "Shoes worth a closer look",
         "products_to_show": 8
       }
     },
@@ -52,9 +52,9 @@
       "type": "image-spread",
       "settings": {
         "kicker": "Shop in motion",
-        "heading": "Every piece opens into its own world",
-        "text": "A product journey where featured styles move from one focal point into a full seasonal edit.",
-        "button_label": "Shop the spread",
+        "heading": "Every step opens into its own world",
+        "text": "A footwear journey where featured shoes move from one focal point into a full seasonal edit.",
+        "button_label": "Shop footwear",
         "scroll_length": 450,
         "last_image_cover": true
       },
@@ -62,37 +62,37 @@
         "spread_1": {
           "type": "product",
           "settings": {
-            "title": "Signature layer"
+            "title": "Signature trainer"
           }
         },
         "spread_2": {
           "type": "product",
           "settings": {
-            "title": "New-season texture"
+            "title": "New-season upper"
           }
         },
         "spread_3": {
           "type": "product",
           "settings": {
-            "title": "Daily carry"
+            "title": "Daily miles"
           }
         },
         "spread_4": {
           "type": "product",
           "settings": {
-            "title": "Object of focus"
+            "title": "Road-ready cushion"
           }
         },
         "spread_5": {
           "type": "product",
           "settings": {
-            "title": "Collector edit"
+            "title": "Trail grip"
           }
         },
         "spread_6": {
           "type": "product",
           "settings": {
-            "title": "Final look"
+            "title": "Recovery finish"
           }
         }
       },
@@ -108,28 +108,28 @@
     "story": {
       "type": "scroll-story",
       "settings": {
-        "heading": "A shop you can scroll through"
+        "heading": "Footwear stories built for browsing"
       },
       "blocks": {
         "chapter_1": {
           "type": "chapter",
           "settings": {
-            "title": "Drop one",
-            "text": "Use this chapter to turn product detail into a browsable editorial beat."
+            "title": "The daily trainer",
+            "text": "Highlight cushion, support, and the road-ready details that make a shoe easy to choose."
           }
         },
         "chapter_2": {
           "type": "chapter",
           "settings": {
-            "title": "Materials",
-            "text": "Show craft, fit, sourcing, and the small decisions that make a product worth buying."
+            "title": "Materials that move",
+            "text": "Show breathable uppers, durable overlays, outsole grip, and the construction details shoppers compare."
           }
         },
         "chapter_3": {
           "type": "chapter",
           "settings": {
-            "title": "Pairings",
-            "text": "Move customers from inspiration into clear product discovery."
+            "title": "Complete the rotation",
+            "text": "Move customers from running shoes into slides, socks, care kits, and seasonal footwear pairings."
           }
         }
       },
@@ -154,31 +154,31 @@
         "alexandra_1": {
           "type": "image",
           "settings": {
-            "title": "Portrait one"
+            "title": "Road runner"
           }
         },
         "alexandra_2": {
           "type": "image",
           "settings": {
-            "title": "Portrait two"
+            "title": "Trail grip"
           }
         },
         "alexandra_3": {
           "type": "image",
           "settings": {
-            "title": "Portrait three"
+            "title": "Everyday sneaker"
           }
         },
         "alexandra_4": {
           "type": "image",
           "settings": {
-            "title": "Portrait four"
+            "title": "Recovery slide"
           }
         },
         "alexandra_5": {
           "type": "image",
           "settings": {
-            "title": "Portrait five"
+            "title": "Training shoe"
           }
         }
       },
@@ -193,13 +193,13 @@
     "collections": {
       "type": "collection-showcase",
       "settings": {
-        "heading": "Find the right edit"
+        "heading": "Find the right pair"
       },
       "blocks": {
         "collection_1": {
           "type": "collection",
           "settings": {
-            "title": "New arrivals",
+            "title": "New shoes",
             "caption": "Freshly landed"
           }
         },
@@ -207,14 +207,14 @@
           "type": "collection",
           "settings": {
             "title": "Bestsellers",
-            "caption": "Customer favorites"
+            "caption": "Most worn"
           }
         },
         "collection_3": {
           "type": "collection",
           "settings": {
-            "title": "Accessories",
-            "caption": "Finishing pieces"
+            "title": "Slides and recovery",
+            "caption": "After the run"
           }
         }
       },
@@ -270,7 +270,7 @@
     "stacked": {
       "type": "stacked-media",
       "settings": {
-        "heading": "A layered way to show range"
+        "heading": "Build a footwear rotation"
       },
       "blocks": {
         "card_1": {
