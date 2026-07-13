@@ -13,8 +13,7 @@
       "type": "header",
       "settings": {
         "menu": "main-menu",
-        "show_search": true,
-        "show_localization": true
+        "show_search": true
       }
     }
   },

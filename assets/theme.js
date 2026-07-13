@@ -456,6 +456,74 @@
     });
   };
 
+  const initHeaderDrawers = () => {
+    const closeDetails = (details, restoreFocus = false) => {
+      if (!details || !details.hasAttribute('open')) return;
+
+      details.removeAttribute('open');
+      details.querySelectorAll('[data-predictive-search-results]').forEach((results) => {
+        results.classList.remove('is-open');
+      });
+      details.querySelectorAll('input[aria-expanded]').forEach((input) => {
+        input.setAttribute('aria-expanded', 'false');
+      });
+
+      if (restoreFocus) details.querySelector('summary')?.focus();
+    };
+
+    const closeGroup = (selector, except = null) => {
+      document.querySelectorAll(selector).forEach((details) => {
+        if (details !== except) closeDetails(details);
+      });
+    };
+
+    document.querySelectorAll('[data-search-drawer]').forEach((details) => {
+      details.addEventListener('toggle', () => {
+        if (!details.open) return;
+        closeGroup('[data-cart-drawer][open]');
+        window.requestAnimationFrame(() => details.querySelector('[data-search-input]')?.focus());
+      });
+    });
+
+    document.querySelectorAll('[data-cart-drawer]').forEach((details) => {
+      details.addEventListener('toggle', () => {
+        if (!details.open) return;
+        closeGroup('[data-search-drawer][open]');
+      });
+    });
+
+    document.querySelectorAll('[data-cart-open]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const cartDrawer = document.querySelector('[data-cart-drawer]');
+        if (!cartDrawer) return;
+
+        closeGroup('[data-search-drawer][open]');
+        button.closest('.mobile-drawer')?.removeAttribute('open');
+        cartDrawer.setAttribute('open', '');
+        cartDrawer.querySelector('summary')?.focus();
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      const closeTrigger = event.target.closest('[data-details-close]');
+      if (closeTrigger) {
+        closeDetails(closeTrigger.closest('details'), true);
+        return;
+      }
+
+      document.querySelectorAll('[data-search-drawer][open]').forEach((details) => {
+        if (!details.contains(event.target)) closeDetails(details);
+      });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      document.querySelectorAll('[data-search-drawer][open], [data-cart-drawer][open], .mobile-drawer[open]').forEach((details) => {
+        closeDetails(details, true);
+      });
+    });
+  };
+
   class ProductRecommendations extends HTMLElement {
     connectedCallback() {
       const url = this.dataset.url;
@@ -616,6 +684,7 @@
     initAlexandraLoader();
     initFeaturedProductStacks();
     initPredictiveSearch();
+    initHeaderDrawers();
     initAddressToggles();
   });
 })();
