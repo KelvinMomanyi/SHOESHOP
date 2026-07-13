@@ -11,15 +11,20 @@
         <span></span>
       </summary>
       <div class="mobile-drawer__panel">
+        <div class="mobile-drawer__header">
+          <span class="eyebrow">{{ 'accessibility.menu' | t }}</span>
+          <strong>{{ shop.name }}</strong>
+        </div>
+
         <nav class="mobile-nav" aria-label="Mobile">
           <ul role="list">
             {%- for link in menu.links -%}
-              <li>
+              <li class="{% if link.links != blank %}mobile-nav__item--has-children{% endif %}">
                 <a href="{{ link.url }}">{{ link.title }}</a>
                 {%- if link.links != blank -%}
                   <ul role="list">
                     {%- for child_link in link.links -%}
-                      <li>
+                      <li class="{% if child_link.links != blank %}mobile-nav__item--has-children{% endif %}">
                         <a href="{{ child_link.url }}">{{ child_link.title }}</a>
                         {%- if child_link.links != blank -%}
                           <ul role="list">
@@ -40,6 +45,11 @@
         {%- if section.settings.show_localization -%}
           {%- render 'localization-form', id: 'HeaderMobileLocalization' -%}
         {%- endif -%}
+
+        <a class="mobile-drawer__cart" href="{{ routes.cart_url }}">
+          <span>{{ 'accessibility.cart' | t }}</span>
+          <strong>{{ cart.item_count }}</strong>
+        </a>
       </div>
     </details>
 

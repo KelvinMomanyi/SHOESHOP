@@ -629,7 +629,10 @@ textarea.field__input {
 }
 
 .mobile-drawer__summary {
+  position: relative;
+  z-index: 125;
   list-style: none;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
 }
 
 .mobile-drawer__summary::-webkit-details-marker {
@@ -637,36 +640,180 @@ textarea.field__input {
 }
 
 .mobile-drawer__summary span {
+  display: block;
   width: 18px;
   height: 1px;
   background: currentColor;
+  transform-origin: center;
+  transition: transform 180ms ease, margin 180ms ease;
 }
 
 .mobile-drawer__summary span + span {
   margin-top: 5px;
 }
 
+.mobile-drawer[open]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  background: rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(5px);
+}
+
+.mobile-drawer[open] .mobile-drawer__summary {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  background: var(--color-surface);
+  color: var(--color-surface-text);
+  border-color: var(--color-border);
+  box-shadow: 0 14px 36px rgba(17, 17, 17, 0.18);
+}
+
+.mobile-drawer[open] .mobile-drawer__summary span:first-child {
+  transform: translateY(3px) rotate(45deg);
+}
+
+.mobile-drawer[open] .mobile-drawer__summary span:last-child {
+  margin-top: 0;
+  transform: translateY(2px) rotate(-45deg);
+}
+
 .mobile-drawer__panel {
   position: fixed;
-  inset: 72px 0 auto 0;
-  padding: 24px 16px;
-  background: var(--color-background);
-  border-bottom: 1px solid var(--color-border);
-  box-shadow: 0 20px 50px rgba(17, 17, 17, 0.12);
+  inset: 0 auto 0 0;
+  z-index: 120;
+  width: min(88vw, 390px);
+  height: 100svh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  gap: 20px;
+  padding: 82px 18px 18px;
+  overflow-y: auto;
+  background: color-mix(in srgb, var(--color-background) 94%, var(--color-surface));
+  color: var(--color-foreground);
+  border-right: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  box-shadow: 26px 0 70px rgba(17, 17, 17, 0.22);
+  text-shadow: none;
+  animation: drawer-slide-in 220ms ease both;
 }
 
 .template-index .mobile-drawer__panel {
-  top: 92px;
+  top: 0;
+}
+
+.mobile-drawer__header {
+  display: grid;
+  gap: 6px;
+  padding: 0 4px 18px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-drawer__header strong {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  line-height: 1;
 }
 
 .mobile-nav a {
   display: flex;
-  padding: 10px 0;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  padding: 12px 4px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
   font-weight: 800;
 }
 
+.mobile-nav > ul > li > a {
+  font-family: var(--font-heading);
+  font-size: 1.55rem;
+  line-height: 1.05;
+}
+
+.mobile-nav__item--has-children > a::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  opacity: 0.46;
+  transform: rotate(45deg);
+}
+
 .mobile-nav ul ul {
-  padding-left: 16px;
+  margin: 2px 0 10px 12px;
+  padding-left: 14px;
+  border-left: 1px solid var(--color-border);
+}
+
+.mobile-nav ul ul a {
+  min-height: 40px;
+  padding-block: 8px;
+  color: var(--color-muted);
+  border-bottom: 0;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.mobile-nav ul ul ul {
+  margin-bottom: 4px;
+}
+
+.mobile-nav ul ul ul a {
+  min-height: 34px;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.mobile-drawer__panel .localization-form {
+  display: grid;
+  gap: 10px;
+  padding-top: 6px;
+}
+
+.mobile-drawer__panel .localization-form__select {
+  width: 100%;
+  min-height: 44px;
+}
+
+.mobile-drawer__cart {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-surface-text);
+  font-weight: 800;
+}
+
+.mobile-drawer__cart strong {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  padding-inline: 8px;
+  border-radius: 4px;
+  background: var(--color-foreground);
+  color: var(--color-background);
+  font-size: 0.8rem;
+}
+
+@keyframes drawer-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @media (max-width: 989px) {
