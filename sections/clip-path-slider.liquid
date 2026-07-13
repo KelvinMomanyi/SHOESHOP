@@ -472,6 +472,61 @@
       return animation.finished.catch(() => {});
     };
 
+    const animateTransition = ({
+      oldBg,
+      nextBg,
+      oldBgImage,
+      nextBgImage,
+      oldFrame,
+      nextFrame,
+      oldFrameImage,
+      nextFrameImage,
+      oldCount,
+      nextCount,
+      bgStart,
+      frameStart,
+      dir
+    }) => {
+      if (reduceMotion) {
+        if (nextBg) nextBg.style.clipPath = openClip;
+        if (nextFrame) nextFrame.style.clipPath = openClip;
+        return Promise.resolve();
+      }
+
+      if (gsapInstance) {
+        return new Promise((resolve) => {
+          if (nextBgImage) gsapInstance.set(nextBgImage, { scale: 1.35 });
+          if (nextFrameImage) gsapInstance.set(nextFrameImage, { yPercent: -dir * 50 });
+          if (nextCount) gsapInstance.set(nextCount, { yPercent: dir * 110 });
+
+          const timeline = gsapInstance.timeline({
+            defaults: { duration: duration / 1000, ease: gsapEase },
+            onComplete: resolve
+          });
+
+          if (nextBg) timeline.to(nextBg, { clipPath: openClip }, 0);
+          if (nextBgImage) timeline.to(nextBgImage, { scale: 1 }, 0);
+          if (oldBgImage) timeline.to(oldBgImage, { scale: 1.15 }, 0);
+          if (nextFrame) timeline.to(nextFrame, { clipPath: openClip }, 0);
+          if (oldFrameImage) timeline.to(oldFrameImage, { yPercent: dir * 50 }, 0);
+          if (nextFrameImage) timeline.to(nextFrameImage, { yPercent: 0 }, 0);
+          if (oldCount) timeline.to(oldCount, { yPercent: -dir * 110 }, 0);
+          if (nextCount) timeline.to(nextCount, { yPercent: 0 }, 0);
+        });
+      }
+
+      return Promise.all([
+        animateTo(nextBg, [{ clipPath: bgStart }, { clipPath: openClip }]),
+        animateTo(nextBgImage, [{ transform: 'scale(1.35)' }, { transform: 'scale(1)' }]),
+        animateTo(oldBgImage, [{ transform: 'scale(1)' }, { transform: 'scale(1.15)' }]),
+        animateTo(nextFrame, [{ clipPath: frameStart }, { clipPath: openClip }]),
+        animateTo(oldFrameImage, [{ transform: 'translateY(0%)' }, { transform: `translateY(${dir * 50}%)` }]),
+        animateTo(nextFrameImage, [{ transform: `translateY(${-dir * 50}%)` }, { transform: 'translateY(0%)' }]),
+        animateTo(oldCount, [{ transform: 'translateY(0%)' }, { transform: `translateY(${-dir * 110}%)` }]),
+        animateTo(nextCount, [{ transform: `translateY(${dir * 110}%)` }, { transform: 'translateY(0%)' }])
+      ]);
+    };
+
     const atEdge = (dir) => {
       if (loopSlides) return false;
       return (dir > 0 && current === slides.length - 1) || (dir < 0 && current === 0);
@@ -506,6 +561,10 @@
       setVisible(nextCount, true);
       nextSlide.style.zIndex = '3';
       oldSlide.style.zIndex = '2';
+      if (nextFrame) nextFrame.style.zIndex = '3';
+      if (oldFrame) oldFrame.style.zIndex = '2';
+      if (nextCount) nextCount.style.zIndex = '3';
+      if (oldCount) oldCount.style.zIndex = '2';
 
       if (nextBg) nextBg.style.clipPath = bgStart;
       if (nextFrame) nextFrame.style.clipPath = frameStart;
@@ -513,18 +572,21 @@
       if (nextFrameImage) nextFrameImage.style.transform = `translateY(${-dir * 50}%)`;
       if (nextCount) nextCount.style.transform = `translateY(${dir * 110}%)`;
 
-      const animations = [
-        animateTo(nextBg, [{ clipPath: bgStart }, { clipPath: openClip }]),
-        animateTo(nextBgImage, [{ transform: 'scale(1.35)' }, { transform: 'scale(1)' }]),
-        animateTo(oldBgImage, [{ transform: 'scale(1)' }, { transform: 'scale(1.15)' }]),
-        animateTo(nextFrame, [{ clipPath: frameStart }, { clipPath: openClip }]),
-        animateTo(oldFrameImage, [{ transform: 'translateY(0%)' }, { transform: `translateY(${dir * 50}%)` }]),
-        animateTo(nextFrameImage, [{ transform: `translateY(${-dir * 50}%)` }, { transform: 'translateY(0%)' }]),
-        animateTo(oldCount, [{ transform: 'translateY(0%)' }, { transform: `translateY(${-dir * 110}%)` }]),
-        animateTo(nextCount, [{ transform: `translateY(${dir * 110}%)` }, { transform: 'translateY(0%)' }])
-      ];
-
-      Promise.all(animations).then(() => {
+      animateTransition({
+        oldBg,
+        nextBg,
+        oldBgImage,
+        nextBgImage,
+        oldFrame,
+        nextFrame,
+        oldFrameImage,
+        nextFrameImage,
+        oldCount,
+        nextCount,
+        bgStart,
+        frameStart,
+        dir
+      }).then(() => {
         [oldBg, nextBg, oldFrame, nextFrame].forEach((element) => {
           if (element) element.style.clipPath = openClip;
         });
@@ -545,10 +607,11 @@
 
       const rect = root.getBoundingClientRect();
       if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
-      if (atEdge(event.deltaY > 0 ? 1 : -1)) return;
 
+      const dir = event.deltaY > 0 ? 1 : -1;
+      if (atEdge(dir)) return;
       event.preventDefault();
-      go(event.deltaY > 0 ? 1 : -1, 'wheel');
+      go(dir, 'wheel');
     };
 
     const onKeydown = (event) => {
