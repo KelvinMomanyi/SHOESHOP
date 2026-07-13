@@ -393,9 +393,11 @@
     const wheelEnabled = root.dataset.wheel === 'true';
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const easing = 'cubic-bezier(0.76, 0, 0.24, 1)';
+    const gsapEase = 'power3.inOut';
     const openClip = 'inset(0% 0% 0% 0%)';
     const fromBottom = 'inset(100% 0% 0% 0%)';
     const fromTop = 'inset(0% 0% 100% 0%)';
+    let gsapInstance = window.gsap || null;
     let current = 0;
     let busy = false;
     let touchStartY = null;
@@ -420,10 +422,44 @@
       });
     };
 
+    const loadGsap = () => {
+      if (window.gsap) return Promise.resolve(window.gsap);
+      if (window.TreadoraGsapLoading) return window.TreadoraGsapLoading;
+
+      window.TreadoraGsapLoading = new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
+        script.async = true;
+        script.onload = () => resolve(window.gsap || null);
+        script.onerror = () => resolve(null);
+        document.head.appendChild(script);
+      });
+
+      return window.TreadoraGsapLoading;
+    };
+
     const animateTo = (element, frames) => {
       if (!element) return Promise.resolve();
-      if (reduceMotion || !element.animate) {
-        Object.assign(element.style, frames[frames.length - 1]);
+      const endFrame = frames[frames.length - 1];
+
+      if (reduceMotion) {
+        Object.assign(element.style, endFrame);
+        return Promise.resolve();
+      }
+
+      if (gsapInstance) {
+        return new Promise((resolve) => {
+          gsapInstance.to(element, {
+            ...endFrame,
+            duration: duration / 1000,
+            ease: gsapEase,
+            onComplete: resolve
+          });
+        });
+      }
+
+      if (!element.animate) {
+        Object.assign(element.style, endFrame);
         return Promise.resolve();
       }
 
@@ -509,9 +545,10 @@
 
       const rect = root.getBoundingClientRect();
       if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
+      if (atEdge(event.deltaY > 0 ? 1 : -1)) return;
 
-      const handled = go(event.deltaY > 0 ? 1 : -1, 'wheel');
-      if (handled) event.preventDefault();
+      event.preventDefault();
+      go(event.deltaY > 0 ? 1 : -1, 'wheel');
     };
 
     const onKeydown = (event) => {
@@ -533,13 +570,18 @@
       go(delta > 0 ? 1 : -1, 'touch');
     };
 
-    root.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('wheel', onWheel, { passive: false });
     root.addEventListener('keydown', onKeydown);
     root.addEventListener('touchstart', onTouchStart, { passive: true });
     root.addEventListener('touchend', onTouchEnd, { passive: true });
 
+    loadGsap().then((gsap) => {
+      gsapInstance = gsap;
+      root.dataset.gsapReady = gsap ? 'true' : 'false';
+    });
+
     root.clipPathSliderDestroy = () => {
-      root.removeEventListener('wheel', onWheel);
+      window.removeEventListener('wheel', onWheel);
       root.removeEventListener('keydown', onKeydown);
       root.removeEventListener('touchstart', onTouchStart);
       root.removeEventListener('touchend', onTouchEnd);
@@ -596,7 +638,7 @@
       "type": "checkbox",
       "id": "loop_slides",
       "label": "Loop slides",
-      "default": false
+      "default": true
     },
     {
       "type": "range",
