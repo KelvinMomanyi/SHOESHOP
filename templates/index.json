@@ -4,9 +4,9 @@
       "type": "editorial-hero",
       "settings": {
         "kicker": "New arrivals",
-        "heading": "Footwear with momentum",
-        "text": "A fast, editorial storefront for running shoes, everyday sneakers, and recovery essentials built around movement.",
-        "button_label": "Shop new shoes",
+        "heading": "Treadora footwear with momentum",
+        "text": "A fast, editorial storefront for Treadora running shoes, everyday sneakers, and recovery essentials built around movement.",
+        "button_label": "Shop Treadora",
         "secondary_button_label": "View collections"
       },
       "blocks": {
@@ -53,7 +53,7 @@
     "featured_products": {
       "type": "featured-products",
       "settings": {
-        "heading": "Shoes worth a closer look",
+        "heading": "Treadora picks worth a closer look",
         "products_to_show": 8
       }
     },
@@ -151,11 +151,11 @@
     "alexandra_loader": {
       "type": "alexandra-loader",
       "settings": {
-        "brand_label": "Stride studio",
+        "brand_label": "Treadora",
         "meta_label_1": "New arrivals",
         "meta_label_2": "Bestsellers",
         "meta_label_3": "Fit guide",
-        "heading_line_1": "Pace",
+        "heading_line_1": "Treadora",
         "heading_line_2": "Edit",
         "scroll_length": 400
       },

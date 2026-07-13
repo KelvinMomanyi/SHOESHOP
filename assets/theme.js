@@ -1,6 +1,6 @@
 (() => {
-  const moneyFormat = window.Scrollcraft?.moneyFormat || '${{amount}}';
-  const strings = window.Scrollcraft?.strings || {
+  const moneyFormat = window.Treadora?.moneyFormat || '${{amount}}';
+  const strings = window.Treadora?.strings || {
     addToCart: 'Add to cart',
     soldOut: 'Sold out',
     unavailable: 'Unavailable'
@@ -548,7 +548,7 @@
         }
 
         controller = new AbortController();
-        const url = `${window.Scrollcraft.routes.predictiveSearch}?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=4&resources[options][unavailable_products]=last`;
+        const url = `${window.Treadora.routes.predictiveSearch}?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=4&resources[options][unavailable_products]=last`;
 
         fetch(url, { signal: controller.signal })
           .then((response) => response.json())
