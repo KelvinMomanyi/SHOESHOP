@@ -1,0 +1,684 @@
+{%- liquid
+  assign brand_name = section.settings.brand_label | default: settings.brand_name | default: 'Treadora'
+  assign slide_count = section.blocks.size
+  if slide_count == 0
+    assign slide_count = 3
+  endif
+  assign total_label = slide_count
+  if slide_count < 10
+    assign total_label = slide_count | prepend: '0'
+  endif
+-%}
+
+<section
+  id="ClipPathSlider-{{ section.id }}"
+  class="clip-path-slider section-{{ section.id }}"
+  data-clip-path-slider
+  data-duration="{{ section.settings.transition_duration }}"
+  data-loop="{{ section.settings.loop_slides }}"
+  data-wheel="{{ section.settings.enable_wheel }}"
+  role="region"
+  aria-label="{{ section.settings.accessibility_label | escape }}"
+  tabindex="0"
+  style="
+    --clip-slider-height: {{ section.settings.section_height }}svh;
+    --clip-frame-width: {{ section.settings.frame_width }}vw;
+    --clip-frame-ratio: {{ section.settings.frame_ratio | divided_by: 100.0 }};
+  "
+>
+  {%- if section.settings.show_brand -%}
+    <a class="clip-path-slider__brand" href="{{ routes.root_url }}" aria-label="{{ brand_name | escape }}">
+      {%- if section.settings.logo != blank -%}
+        {{
+          section.settings.logo
+          | image_url: width: 220
+          | image_tag:
+            widths: '96, 140, 180, 220',
+            loading: 'eager',
+            class: 'clip-path-slider__logo',
+            alt: brand_name
+        }}
+      {%- else -%}
+        <span>{{ brand_name }}</span>
+      {%- endif -%}
+    </a>
+  {%- endif -%}
+
+  <div class="clip-path-slider__stage" data-clip-stage>
+    <div class="clip-path-slider__slides">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign slide_title = block.settings.title | default: brand_name
+            assign slide_link = block.settings.link
+            assign slide_loading = 'lazy'
+            assign index_label = forloop.index
+            if forloop.first
+              assign slide_loading = 'eager'
+            endif
+            if forloop.index < 10
+              assign index_label = forloop.index | prepend: '0'
+            endif
+          -%}
+          <article
+            class="clip-path-slider__slide{% if forloop.first %} is-active{% endif %}"
+            data-clip-slide
+            data-index="{{ forloop.index0 }}"
+            aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+            style="z-index: {% if forloop.first %}2{% else %}1{% endif %};"
+            {{ block.shopify_attributes }}
+          >
+            <div class="clip-path-slider__bg" data-clip-bg>
+              {%- render 'responsive-image',
+                image: block.settings.image,
+                class: 'clip-path-slider__image',
+                sizes: '100vw',
+                widths: '533, 720, 940, 1200, 1600, 2000',
+                loading: slide_loading,
+                alt: slide_title
+              -%}
+            </div>
+          </article>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..3) -%}
+          <article
+            class="clip-path-slider__slide{% if forloop.first %} is-active{% endif %}"
+            data-clip-slide
+            data-index="{{ forloop.index0 }}"
+            aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+            style="z-index: {% if forloop.first %}2{% else %}1{% endif %};"
+          >
+            <div class="clip-path-slider__bg" data-clip-bg>
+              {{ 'product-' | append: i | placeholder_svg_tag: 'clip-path-slider__image placeholder-svg' }}
+            </div>
+          </article>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    <div class="clip-path-slider__frame" data-clip-frame>
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign slide_title = block.settings.title | default: brand_name
+            assign slide_link = block.settings.link
+            assign slide_loading = 'lazy'
+            if forloop.first
+              assign slide_loading = 'eager'
+            endif
+          -%}
+          {%- if slide_link != blank -%}
+            <a
+              class="clip-path-slider__frame-img{% if forloop.first %} is-active{% endif %}"
+              href="{{ slide_link }}"
+              data-clip-frame-item
+              data-index="{{ forloop.index0 }}"
+              aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+              aria-label="{{ slide_title | escape }}"
+            >
+              {%- render 'responsive-image',
+                image: block.settings.image,
+                class: 'clip-path-slider__image',
+                sizes: '(min-width: 990px) 28vw, 58vw',
+                widths: '360, 533, 720, 940',
+                loading: slide_loading,
+                alt: slide_title
+              -%}
+            </a>
+          {%- else -%}
+            <div
+              class="clip-path-slider__frame-img{% if forloop.first %} is-active{% endif %}"
+              data-clip-frame-item
+              data-index="{{ forloop.index0 }}"
+              aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+            >
+              {%- render 'responsive-image',
+                image: block.settings.image,
+                class: 'clip-path-slider__image',
+                sizes: '(min-width: 990px) 28vw, 58vw',
+                widths: '360, 533, 720, 940',
+                loading: slide_loading,
+                alt: slide_title
+              -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..3) -%}
+          <div
+            class="clip-path-slider__frame-img{% if forloop.first %} is-active{% endif %}"
+            data-clip-frame-item
+            data-index="{{ forloop.index0 }}"
+            aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+          >
+            {{ 'product-' | append: i | placeholder_svg_tag: 'clip-path-slider__image placeholder-svg' }}
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if section.settings.show_counter -%}
+    <div class="clip-path-slider__counter" aria-hidden="true">
+      <div class="clip-path-slider__count" data-clip-count>
+        {%- if section.blocks.size > 0 -%}
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign index_label = forloop.index
+              if forloop.index < 10
+                assign index_label = forloop.index | prepend: '0'
+              endif
+            -%}
+            <p class="{% if forloop.first %}is-active{% endif %}" data-clip-count-item data-index="{{ forloop.index0 }}">{{ index_label }}</p>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for i in (1..3) -%}
+            {%- liquid
+              assign index_label = forloop.index
+              if forloop.index < 10
+                assign index_label = forloop.index | prepend: '0'
+              endif
+            -%}
+            <p class="{% if forloop.first %}is-active{% endif %}" data-clip-count-item data-index="{{ forloop.index0 }}">{{ index_label }}</p>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+      <p class="clip-path-slider__sep">/</p>
+      <p class="clip-path-slider__total">{{ total_label }}</p>
+    </div>
+  {%- endif -%}
+</section>
+
+<style>
+  .section-{{ section.id }}.clip-path-slider {
+    position: relative;
+    width: 100%;
+    height: var(--clip-slider-height, 100svh);
+    min-height: 520px;
+    overflow: hidden;
+    background: #080808;
+    color: #fff;
+    isolation: isolate;
+    outline: none;
+  }
+
+  .section-{{ section.id }} .clip-path-slider__brand {
+    position: absolute;
+    top: clamp(18px, 3vw, 30px);
+    left: clamp(18px, 3vw, 32px);
+    z-index: 8;
+    display: inline-flex;
+    align-items: center;
+    max-width: min(42vw, 14rem);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-size: clamp(1.05rem, 2vw, 1.45rem);
+    font-weight: 800;
+    line-height: 1;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+  }
+
+  .section-{{ section.id }} .clip-path-slider__logo {
+    width: auto;
+    max-width: 132px;
+    max-height: 44px;
+  }
+
+  .section-{{ section.id }} .clip-path-slider__stage,
+  .section-{{ section.id }} .clip-path-slider__slides,
+  .section-{{ section.id }} .clip-path-slider__slide,
+  .section-{{ section.id }} .clip-path-slider__bg {
+    position: absolute;
+    inset: 0;
+  }
+
+  .section-{{ section.id }} .clip-path-slider__slide {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .section-{{ section.id }} .clip-path-slider__slide.is-active,
+  .section-{{ section.id }} .clip-path-slider__slide.is-visible {
+    visibility: visible;
+  }
+
+  .section-{{ section.id }} .clip-path-slider__bg {
+    overflow: hidden;
+    clip-path: inset(0% 0% 0% 0%);
+    will-change: clip-path;
+  }
+
+  .section-{{ section.id }} .clip-path-slider__bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(to right, rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0) 58%),
+      linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0) 34%);
+  }
+
+  .section-{{ section.id }} .clip-path-slider__image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
+  }
+
+  .section-{{ section.id }} .clip-path-slider__frame {
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    z-index: 4;
+    width: min(var(--clip-frame-width, 22vw), 380px);
+    height: min(calc(var(--clip-frame-width, 22vw) * var(--clip-frame-ratio, 1.25)), 480px);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.35);
+  }
+
+  .section-{{ section.id }} .clip-path-slider__frame-img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    overflow: hidden;
+    clip-path: inset(0% 0% 0% 0%);
+    visibility: hidden;
+    background: #1c1c1c;
+    color: rgba(255, 255, 255, 0.24);
+    will-change: clip-path;
+  }
+
+  .section-{{ section.id }} .clip-path-slider__frame-img.is-active,
+  .section-{{ section.id }} .clip-path-slider__frame-img.is-visible {
+    visibility: visible;
+  }
+
+  .section-{{ section.id }} .clip-path-slider__counter {
+    position: absolute;
+    right: clamp(18px, 3vw, 34px);
+    bottom: clamp(20px, 3vw, 30px);
+    z-index: 8;
+    display: flex;
+    align-items: baseline;
+    gap: 0.18em;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+  }
+
+  .section-{{ section.id }} .clip-path-slider__count {
+    position: relative;
+    width: 2ch;
+    height: 1.2em;
+    overflow: hidden;
+  }
+
+  .section-{{ section.id }} .clip-path-slider__count p {
+    position: absolute;
+    inset: 0;
+    line-height: 1.2;
+    visibility: hidden;
+    will-change: transform;
+  }
+
+  .section-{{ section.id }} .clip-path-slider__count p.is-active,
+  .section-{{ section.id }} .clip-path-slider__count p.is-visible {
+    visibility: visible;
+  }
+
+  .section-{{ section.id }} .clip-path-slider__sep,
+  .section-{{ section.id }} .clip-path-slider__total {
+    opacity: 0.55;
+  }
+
+  @media (max-width: 989px) {
+    .section-{{ section.id }}.clip-path-slider {
+      min-height: 620px;
+    }
+
+    .section-{{ section.id }} .clip-path-slider__frame {
+      top: 48%;
+      width: min(48vw, 280px);
+      height: min(60vw, 350px);
+    }
+  }
+
+  @media (max-width: 549px) {
+    .section-{{ section.id }}.clip-path-slider {
+      min-height: 560px;
+    }
+
+    .section-{{ section.id }} .clip-path-slider__brand {
+      max-width: 58vw;
+      font-size: 1.02rem;
+    }
+
+    .section-{{ section.id }} .clip-path-slider__frame {
+      width: min(58vw, 230px);
+      height: min(74vw, 292px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .section-{{ section.id }} .clip-path-slider__bg,
+    .section-{{ section.id }} .clip-path-slider__frame-img,
+    .section-{{ section.id }} .clip-path-slider__image,
+    .section-{{ section.id }} .clip-path-slider__count p {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const root = document.getElementById('ClipPathSlider-{{ section.id }}');
+    if (!root || root.dataset.clipPathReady === 'true') return;
+
+    root.dataset.clipPathReady = 'true';
+
+    const slides = Array.from(root.querySelectorAll('[data-clip-slide]'));
+    const frameItems = Array.from(root.querySelectorAll('[data-clip-frame-item]'));
+    const countItems = Array.from(root.querySelectorAll('[data-clip-count-item]'));
+    const duration = Number(root.dataset.duration || 1250);
+    const loopSlides = root.dataset.loop === 'true';
+    const wheelEnabled = root.dataset.wheel === 'true';
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const easing = 'cubic-bezier(0.76, 0, 0.24, 1)';
+    const openClip = 'inset(0% 0% 0% 0%)';
+    const fromBottom = 'inset(100% 0% 0% 0%)';
+    const fromTop = 'inset(0% 0% 100% 0%)';
+    let current = 0;
+    let busy = false;
+    let touchStartY = null;
+
+    if (slides.length < 2 || frameItems.length < 2) return;
+
+    const imageIn = (element) => element?.querySelector('.clip-path-slider__image');
+
+    const setVisible = (element, visible) => {
+      if (!element) return;
+      element.classList.toggle('is-visible', visible);
+      element.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    };
+
+    const setActive = (elements, index) => {
+      elements.forEach((element, itemIndex) => {
+        const active = itemIndex === index;
+        element.classList.toggle('is-active', active);
+        element.classList.remove('is-visible');
+        element.setAttribute('aria-hidden', active ? 'false' : 'true');
+        if (element.style) element.style.zIndex = active ? '2' : '1';
+      });
+    };
+
+    const animateTo = (element, frames) => {
+      if (!element) return Promise.resolve();
+      if (reduceMotion || !element.animate) {
+        Object.assign(element.style, frames[frames.length - 1]);
+        return Promise.resolve();
+      }
+
+      const animation = element.animate(frames, {
+        duration,
+        easing,
+        fill: 'forwards'
+      });
+
+      return animation.finished.catch(() => {});
+    };
+
+    const atEdge = (dir) => {
+      if (loopSlides) return false;
+      return (dir > 0 && current === slides.length - 1) || (dir < 0 && current === 0);
+    };
+
+    const go = (dir, source = 'manual') => {
+      if (busy || !dir) return false;
+      if (atEdge(dir)) return false;
+
+      busy = true;
+      const oldIndex = current;
+      const nextIndex = (current + dir + slides.length) % slides.length;
+      current = nextIndex;
+
+      const oldSlide = slides[oldIndex];
+      const nextSlide = slides[nextIndex];
+      const oldBg = oldSlide?.querySelector('[data-clip-bg]');
+      const nextBg = nextSlide?.querySelector('[data-clip-bg]');
+      const oldBgImage = imageIn(oldBg);
+      const nextBgImage = imageIn(nextBg);
+      const oldFrame = frameItems[oldIndex];
+      const nextFrame = frameItems[nextIndex];
+      const oldFrameImage = imageIn(oldFrame);
+      const nextFrameImage = imageIn(nextFrame);
+      const oldCount = countItems[oldIndex];
+      const nextCount = countItems[nextIndex];
+      const bgStart = dir > 0 ? fromBottom : fromTop;
+      const frameStart = dir > 0 ? fromTop : fromBottom;
+
+      setVisible(nextSlide, true);
+      setVisible(nextFrame, true);
+      setVisible(nextCount, true);
+      nextSlide.style.zIndex = '3';
+      oldSlide.style.zIndex = '2';
+
+      if (nextBg) nextBg.style.clipPath = bgStart;
+      if (nextFrame) nextFrame.style.clipPath = frameStart;
+      if (nextBgImage) nextBgImage.style.transform = 'scale(1.35)';
+      if (nextFrameImage) nextFrameImage.style.transform = `translateY(${-dir * 50}%)`;
+      if (nextCount) nextCount.style.transform = `translateY(${dir * 110}%)`;
+
+      const animations = [
+        animateTo(nextBg, [{ clipPath: bgStart }, { clipPath: openClip }]),
+        animateTo(nextBgImage, [{ transform: 'scale(1.35)' }, { transform: 'scale(1)' }]),
+        animateTo(oldBgImage, [{ transform: 'scale(1)' }, { transform: 'scale(1.15)' }]),
+        animateTo(nextFrame, [{ clipPath: frameStart }, { clipPath: openClip }]),
+        animateTo(oldFrameImage, [{ transform: 'translateY(0%)' }, { transform: `translateY(${dir * 50}%)` }]),
+        animateTo(nextFrameImage, [{ transform: `translateY(${-dir * 50}%)` }, { transform: 'translateY(0%)' }]),
+        animateTo(oldCount, [{ transform: 'translateY(0%)' }, { transform: `translateY(${-dir * 110}%)` }]),
+        animateTo(nextCount, [{ transform: `translateY(${dir * 110}%)` }, { transform: 'translateY(0%)' }])
+      ];
+
+      Promise.all(animations).then(() => {
+        [oldBg, nextBg, oldFrame, nextFrame].forEach((element) => {
+          if (element) element.style.clipPath = openClip;
+        });
+        [oldBgImage, nextBgImage, oldFrameImage, nextFrameImage, oldCount, nextCount].forEach((element) => {
+          if (element) element.style.transform = '';
+        });
+        setActive(slides, current);
+        setActive(frameItems, current);
+        setActive(countItems, current);
+        busy = false;
+      });
+
+      return true;
+    };
+
+    const onWheel = (event) => {
+      if (!wheelEnabled || Math.abs(event.deltaY) < 8) return;
+
+      const rect = root.getBoundingClientRect();
+      if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
+
+      const handled = go(event.deltaY > 0 ? 1 : -1, 'wheel');
+      if (handled) event.preventDefault();
+    };
+
+    const onKeydown = (event) => {
+      if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)) return;
+      const dir = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : -1;
+      if (go(dir, 'keyboard')) event.preventDefault();
+    };
+
+    const onTouchStart = (event) => {
+      touchStartY = event.touches[0]?.clientY ?? null;
+    };
+
+    const onTouchEnd = (event) => {
+      if (touchStartY == null) return;
+      const endY = event.changedTouches[0]?.clientY ?? touchStartY;
+      const delta = touchStartY - endY;
+      touchStartY = null;
+      if (Math.abs(delta) < 44) return;
+      go(delta > 0 ? 1 : -1, 'touch');
+    };
+
+    root.addEventListener('wheel', onWheel, { passive: false });
+    root.addEventListener('keydown', onKeydown);
+    root.addEventListener('touchstart', onTouchStart, { passive: true });
+    root.addEventListener('touchend', onTouchEnd, { passive: true });
+
+    root.clipPathSliderDestroy = () => {
+      root.removeEventListener('wheel', onWheel);
+      root.removeEventListener('keydown', onKeydown);
+      root.removeEventListener('touchstart', onTouchStart);
+      root.removeEventListener('touchend', onTouchEnd);
+      root.dataset.clipPathReady = 'false';
+    };
+
+    document.addEventListener('shopify:section:unload', (event) => {
+      if (event.target?.contains(root)) root.clipPathSliderDestroy?.();
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Clip-path slider hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility label",
+      "default": "Featured image slider"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand",
+      "label": "Show brand",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "brand_label",
+      "label": "Brand label",
+      "default": "Treadora"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo override"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_counter",
+      "label": "Show counter",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_wheel",
+      "label": "Enable wheel and swipe navigation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "loop_slides",
+      "label": "Loop slides",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "Section height",
+      "min": 70,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "frame_width",
+      "label": "Center frame width",
+      "min": 16,
+      "max": 34,
+      "step": 1,
+      "unit": "vw",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "frame_ratio",
+      "label": "Center frame height ratio",
+      "min": 100,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "default": 125
+    },
+    {
+      "type": "range",
+      "id": "transition_duration",
+      "label": "Transition duration",
+      "min": 700,
+      "max": 1800,
+      "step": 50,
+      "unit": "ms",
+      "default": 1250
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Image alt text",
+          "default": "Featured footwear"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Frame link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Clip-path slider hero",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
