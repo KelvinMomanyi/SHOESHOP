@@ -542,16 +542,17 @@ textarea.field__input {
   position: relative;
   display: flex;
   align-items: center;
-  width: 220px;
+  width: 168px;
 }
 
 .header-search__input {
   width: 100%;
-  min-height: 38px;
-  padding: 8px 38px 8px 12px;
+  min-height: 32px;
+  padding: 6px 32px 6px 10px;
   border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border-radius: 0;
   background: var(--color-surface);
+  font-size: 0.82rem;
 }
 
 .template-index .header-search__input,
@@ -571,7 +572,7 @@ textarea.field__input {
   width: 38px;
   height: 38px;
   border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border-radius: 0;
   background: transparent;
   color: currentColor;
 }
@@ -649,13 +650,18 @@ textarea.field__input {
 
 .localization-form {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .localization-form__select {
-  min-height: 36px;
-  padding: 6px 10px;
-  font-size: 0.82rem;
+  min-height: 32px;
+  padding: 5px 26px 5px 8px;
+  border-radius: 0;
+  font-size: 0.76rem;
+}
+
+.site-header__localization .localization-form__select {
+  max-width: 112px;
 }
 
 .site-header__action {

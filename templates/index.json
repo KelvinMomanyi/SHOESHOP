@@ -13,7 +13,7 @@
         "feature_1": {
           "type": "feature",
           "settings": {
-            "category": "Road",
+            "category": "",
             "title": "Daily miles",
             "text": "Lead with lightweight running shoes, cushioned trainers, and the styles customers reach for every day."
           }
@@ -21,7 +21,7 @@
         "feature_2": {
           "type": "feature",
           "settings": {
-            "category": "Fit",
+            "category": "",
             "title": "Built to feel right",
             "text": "Use this slide to frame cushioning, outsole grip, upper materials, and fit details that help shoppers choose."
           }
@@ -29,7 +29,7 @@
         "feature_3": {
           "type": "feature",
           "settings": {
-            "category": "Trail",
+            "category": "",
             "title": "Grip for every route",
             "text": "A cinematic panel for trail shoes, limited colorways, seasonal drops, and featured footwear collections."
           }

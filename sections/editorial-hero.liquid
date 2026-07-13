@@ -31,7 +31,7 @@
           assign panel_title = block.settings.title | default: panel_product.title | default: panel_collection.title | default: section.settings.heading
           assign panel_body = block.settings.text | default: panel_product.description | default: panel_collection.description | strip_html | truncatewords: 26 | default: section.settings.text
           assign panel_link = block.settings.link | default: panel_product.url | default: panel_collection.url | default: section.settings.button_link | default: routes.all_products_collection_url
-          assign panel_category = block.settings.category | default: section.settings.kicker
+          assign panel_category = block.settings.category
           assign fallback_index = forloop.index0 | modulo: 3
           assign fallback_asset = 'scroll-hero-01.png'
           if fallback_index == 1
@@ -70,8 +70,10 @@
           <div class="editorial-hero__panel-content page-width">
             <header class="editorial-hero__panel-header">
               <span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
-              <i aria-hidden="true"></i>
-              <em>{{ panel_category | default: 'Collection' }}</em>
+              {%- if panel_category != blank -%}
+                <i aria-hidden="true"></i>
+                <em>{{ panel_category }}</em>
+              {%- endif -%}
             </header>
 
             <div class="editorial-hero__panel-footer">
