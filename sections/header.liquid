@@ -78,7 +78,6 @@
       {%- if logo != blank -%}
         {{ logo | image_url: width: 280 | image_tag: widths: '120, 180, 240, 280', loading: 'eager', class: 'site-header__logo', alt: shop.name }}
       {%- else -%}
-        <span class="site-header__mark">{{ shop.name | slice: 0, 1 }}</span>
         <span class="site-header__name">{{ shop.name }}</span>
       {%- endif -%}
     </a>
