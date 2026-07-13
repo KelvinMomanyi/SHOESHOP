@@ -1,6 +1,13 @@
 {%- liquid
   assign menu = linklists[section.settings.menu]
   assign logo = section.settings.logo | default: settings.logo
+  assign account_link = routes.account_login_url
+  assign account_label = 'customer.login.submit' | t
+
+  if customer
+    assign account_link = routes.account_logout_url
+    assign account_label = 'customer.account.log_out' | t
+  endif
 -%}
 
 <header class="site-header" data-section-id="{{ section.id }}">
@@ -46,10 +53,24 @@
           {%- render 'localization-form', id: 'HeaderMobileLocalization' -%}
         {%- endif -%}
 
-        <a class="mobile-drawer__cart" href="{{ routes.cart_url }}">
-          <span>{{ 'accessibility.cart' | t }}</span>
-          <strong>{{ cart.item_count }}</strong>
-        </a>
+        <div class="mobile-drawer__actions">
+          {%- if shop.customer_accounts_enabled -%}
+            <a class="mobile-drawer__action" href="{{ account_link }}" aria-label="{{ account_label | escape }}">
+              <span class="mobile-drawer__action-label">
+                <span class="mobile-drawer__action-icon">{%- render 'icon-profile' -%}</span>
+                <span>{{ account_label }}</span>
+              </span>
+            </a>
+          {%- endif -%}
+
+          <a class="mobile-drawer__action mobile-drawer__cart" href="{{ routes.cart_url }}" aria-label="{{ 'accessibility.cart' | t }}: {{ cart.item_count }}">
+            <span class="mobile-drawer__action-label">
+              <span class="mobile-drawer__action-icon">{%- render 'icon-cart' -%}</span>
+              <span>{{ 'accessibility.cart' | t }}</span>
+            </span>
+            <strong>{{ cart.item_count }}</strong>
+          </a>
+        </div>
       </div>
     </details>
 
@@ -117,8 +138,16 @@
         </div>
       {%- endif -%}
 
-      <a class="site-header__cart" href="{{ routes.cart_url }}" aria-label="{{ 'accessibility.cart' | t }}">
-        <span>{{ 'accessibility.cart' | t }}</span>
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="site-header__action site-header__account" href="{{ account_link }}" aria-label="{{ account_label | escape }}" title="{{ account_label | escape }}">
+          {%- render 'icon-profile' -%}
+          <span class="visually-hidden">{{ account_label }}</span>
+        </a>
+      {%- endif -%}
+
+      <a class="site-header__action site-header__cart" href="{{ routes.cart_url }}" aria-label="{{ 'accessibility.cart' | t }}: {{ cart.item_count }}" title="{{ 'accessibility.cart' | t }}">
+        {%- render 'icon-cart' -%}
+        <span class="visually-hidden">{{ 'accessibility.cart' | t }}</span>
         <span class="site-header__cart-count">{{ cart.item_count }}</span>
       </a>
     </div>

@@ -605,23 +605,55 @@ textarea.field__input {
   font-size: 0.82rem;
 }
 
-.site-header__cart {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 800;
+.site-header__action {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 86%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-surface) 78%, transparent);
+  color: currentColor;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.site-header__action:hover {
+  transform: translateY(-1px);
+  border-color: currentColor;
+}
+
+.site-header__action .icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+}
+
+.template-index .site-header__action {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.34);
 }
 
 .site-header__cart-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
   display: inline-grid;
   place-items: center;
-  min-width: 24px;
-  height: 24px;
+  min-width: 22px;
+  height: 22px;
   padding-inline: 6px;
-  border-radius: 4px;
+  border: 2px solid var(--color-background);
+  border-radius: 999px;
   background: var(--color-foreground);
   color: var(--color-background);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.template-index .site-header__cart-count {
+  border-color: #080808;
 }
 
 .mobile-drawer {
@@ -779,7 +811,12 @@ textarea.field__input {
   min-height: 44px;
 }
 
-.mobile-drawer__cart {
+.mobile-drawer__actions {
+  display: grid;
+  gap: 10px;
+}
+
+.mobile-drawer__action {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -790,6 +827,28 @@ textarea.field__input {
   background: var(--color-surface);
   color: var(--color-surface-text);
   font-weight: 800;
+}
+
+.mobile-drawer__action-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.mobile-drawer__action-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-foreground) 10%, transparent);
+  color: var(--color-foreground);
+}
+
+.mobile-drawer__action-icon .icon {
+  width: 17px;
+  height: 17px;
 }
 
 .mobile-drawer__cart strong {
