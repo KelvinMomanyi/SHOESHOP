@@ -1,11 +1,14 @@
 <!doctype html>
 <html class="no-js" lang="{{ request.locale.iso_code }}" dir="{{ request.locale.direction }}">
   <head>
-    {%- assign gift_card_initial_value = gift_card.initial_value | money_without_trailing_zeros -%}
+    {%- liquid
+      assign gift_card_initial_value = gift_card.initial_value | money_without_trailing_zeros
+      assign brand_name = settings.brand_name | default: 'Treadora'
+    -%}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>{{ 'gift_cards.issued.title' | t: value: gift_card_initial_value, shop: shop.name }}</title>
+    <title>{{ 'gift_cards.issued.title' | t: value: gift_card_initial_value, shop: brand_name }}</title>
     {{ content_for_header }}
     {%- liquid
       assign body_font = settings.type_body_font

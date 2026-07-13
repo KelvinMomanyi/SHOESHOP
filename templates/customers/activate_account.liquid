@@ -1,7 +1,7 @@
 <section class="customer-page section-band">
   <div class="page-width customer-auth">
     <div class="section-heading">
-      <p class="eyebrow">{{ shop.name }}</p>
+      <p class="eyebrow">{{ settings.brand_name | default: 'Treadora' }}</p>
       <h1>Activate account</h1>
     </div>
     {%- form 'activate_customer_password', class: 'customer-form' -%}

@@ -11,6 +11,12 @@
     "name": "Brand",
     "settings": [
       {
+        "type": "text",
+        "id": "brand_name",
+        "label": "Brand name",
+        "default": "Treadora"
+      },
+      {
         "type": "image_picker",
         "id": "logo",
         "label": "Logo"

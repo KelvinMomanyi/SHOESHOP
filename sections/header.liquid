@@ -1,6 +1,7 @@
 {%- liquid
   assign menu = linklists[section.settings.menu]
   assign logo = section.settings.logo | default: settings.logo
+  assign brand_name = settings.brand_name | default: 'Treadora'
   assign account_link = routes.account_login_url
   assign account_label = 'customer.login.submit' | t
 
@@ -20,7 +21,7 @@
       <div class="mobile-drawer__panel">
         <div class="mobile-drawer__header">
           <span class="eyebrow">{{ 'accessibility.menu' | t }}</span>
-          <strong>{{ shop.name }}</strong>
+          <strong>{{ brand_name }}</strong>
         </div>
 
         <nav class="mobile-nav" aria-label="Mobile">
@@ -70,11 +71,11 @@
       </div>
     </details>
 
-    <a class="site-header__brand" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+    <a class="site-header__brand" href="{{ routes.root_url }}" aria-label="{{ brand_name | escape }}">
       {%- if logo != blank -%}
-        {{ logo | image_url: width: 280 | image_tag: widths: '120, 180, 240, 280', loading: 'eager', class: 'site-header__logo', alt: shop.name }}
+        {{ logo | image_url: width: 280 | image_tag: widths: '120, 180, 240, 280', loading: 'eager', class: 'site-header__logo', alt: brand_name }}
       {%- else -%}
-        <span class="site-header__name">{{ shop.name }}</span>
+        <span class="site-header__name">{{ brand_name }}</span>
       {%- endif -%}
     </a>
 

@@ -1,11 +1,12 @@
 {% layout 'gift_card' %}
+{%- assign brand_name = settings.brand_name | default: 'Treadora' -%}
 
 <section class="gift-card-page">
   <div class="gift-card-page__panel">
     {%- if settings.logo != blank -%}
-      {{ settings.logo | image_url: width: 220 | image_tag: widths: '120, 180, 220', class: 'gift-card-page__logo', alt: shop.name }}
+      {{ settings.logo | image_url: width: 220 | image_tag: widths: '120, 180, 220', class: 'gift-card-page__logo', alt: brand_name }}
     {%- else -%}
-      <p class="eyebrow">{{ shop.name }}</p>
+      <p class="eyebrow">{{ brand_name }}</p>
     {%- endif -%}
     <h1>{{ 'gift_cards.issued.subtext' | t }}</h1>
 

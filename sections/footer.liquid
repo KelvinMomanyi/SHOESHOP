@@ -1,5 +1,6 @@
 {%- liquid
   assign menu = linklists[section.settings.menu]
+  assign brand_name = settings.brand_name | default: 'Treadora'
 -%}
 
 <footer class="site-footer">
@@ -7,9 +8,9 @@
     <div class="site-footer__brand">
       <a href="{{ routes.root_url }}">
         {%- if section.settings.logo != blank -%}
-          {{ section.settings.logo | image_url: width: 280 | image_tag: widths: '120, 180, 240, 280', loading: 'lazy', class: 'site-footer__logo', alt: shop.name }}
+          {{ section.settings.logo | image_url: width: 280 | image_tag: widths: '120, 180, 240, 280', loading: 'lazy', class: 'site-footer__logo', alt: brand_name }}
         {%- else -%}
-          {{ shop.name }}
+          {{ brand_name }}
         {%- endif -%}
       </a>
       {%- if shop.description != blank -%}
@@ -75,7 +76,7 @@
     {%- endif -%}
 
     <div class="site-footer__bottom">
-      <small>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}</small>
+      <small>&copy; {{ 'now' | date: '%Y' }} {{ brand_name }}</small>
     </div>
   </div>
 </footer>
