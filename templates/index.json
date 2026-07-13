@@ -33,12 +33,21 @@
             "title": "Grip for every route",
             "text": "A cinematic panel for trail shoes, limited colorways, seasonal drops, and featured footwear collections."
           }
+        },
+        "feature_4": {
+          "type": "feature",
+          "settings": {
+            "category": "",
+            "title": "Recovery rotation",
+            "text": "Round out the hero with recovery slides, everyday sneakers, or a seasonal footwear story."
+          }
         }
       },
       "block_order": [
         "feature_1",
         "feature_2",
-        "feature_3"
+        "feature_3",
+        "feature_4"
       ]
     },
     "featured_products": {
