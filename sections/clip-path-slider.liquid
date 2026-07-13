@@ -8,6 +8,10 @@
   if slide_count < 10
     assign total_label = slide_count | prepend: '0'
   endif
+  assign section_height = section.settings.section_height | default: 100
+  assign scroll_per_slide = section.settings.scroll_per_slide | default: 110
+  assign scroll_steps = slide_count | minus: 1
+  assign scroll_height = scroll_steps | times: scroll_per_slide | plus: section_height
 -%}
 
 <section
@@ -21,30 +25,31 @@
   aria-label="{{ section.settings.accessibility_label | escape }}"
   tabindex="0"
   style="
-    --clip-slider-height: {{ section.settings.section_height }}svh;
+    --clip-slider-height: {{ section_height }}svh;
+    --clip-scroll-height: {{ scroll_height }}svh;
     --clip-frame-width: {{ section.settings.frame_width }}vw;
     --clip-frame-ratio: {{ section.settings.frame_ratio | divided_by: 100.0 }};
   "
 >
-  {%- if section.settings.show_brand -%}
-    <a class="clip-path-slider__brand" href="{{ routes.root_url }}" aria-label="{{ brand_name | escape }}">
-      {%- if section.settings.logo != blank -%}
-        {{
-          section.settings.logo
-          | image_url: width: 220
-          | image_tag:
-            widths: '96, 140, 180, 220',
-            loading: 'eager',
-            class: 'clip-path-slider__logo',
-            alt: brand_name
-        }}
-      {%- else -%}
-        <span>{{ brand_name }}</span>
-      {%- endif -%}
-    </a>
-  {%- endif -%}
-
   <div class="clip-path-slider__stage" data-clip-stage>
+    {%- if section.settings.show_brand -%}
+      <a class="clip-path-slider__brand" href="{{ routes.root_url }}" aria-label="{{ brand_name | escape }}">
+        {%- if section.settings.logo != blank -%}
+          {{
+            section.settings.logo
+            | image_url: width: 220
+            | image_tag:
+              widths: '96, 140, 180, 220',
+              loading: 'eager',
+              class: 'clip-path-slider__logo',
+              alt: brand_name
+          }}
+        {%- else -%}
+          <span>{{ brand_name }}</span>
+        {%- endif -%}
+      </a>
+    {%- endif -%}
+
     <div class="clip-path-slider__slides">
       {%- if section.blocks.size > 0 -%}
         {%- for block in section.blocks -%}
@@ -157,46 +162,45 @@
         {%- endfor -%}
       {%- endif -%}
     </div>
-  </div>
 
-  {%- if section.settings.show_counter -%}
-    <div class="clip-path-slider__counter" aria-hidden="true">
-      <div class="clip-path-slider__count" data-clip-count>
-        {%- if section.blocks.size > 0 -%}
-          {%- for block in section.blocks -%}
-            {%- liquid
-              assign index_label = forloop.index
-              if forloop.index < 10
-                assign index_label = forloop.index | prepend: '0'
-              endif
-            -%}
-            <p class="{% if forloop.first %}is-active{% endif %}" data-clip-count-item data-index="{{ forloop.index0 }}">{{ index_label }}</p>
-          {%- endfor -%}
-        {%- else -%}
-          {%- for i in (1..3) -%}
-            {%- liquid
-              assign index_label = forloop.index
-              if forloop.index < 10
-                assign index_label = forloop.index | prepend: '0'
-              endif
-            -%}
-            <p class="{% if forloop.first %}is-active{% endif %}" data-clip-count-item data-index="{{ forloop.index0 }}">{{ index_label }}</p>
-          {%- endfor -%}
-        {%- endif -%}
+    {%- if section.settings.show_counter -%}
+      <div class="clip-path-slider__counter" aria-hidden="true">
+        <div class="clip-path-slider__count" data-clip-count>
+          {%- if section.blocks.size > 0 -%}
+            {%- for block in section.blocks -%}
+              {%- liquid
+                assign index_label = forloop.index
+                if forloop.index < 10
+                  assign index_label = forloop.index | prepend: '0'
+                endif
+              -%}
+              <p class="{% if forloop.first %}is-active{% endif %}" data-clip-count-item data-index="{{ forloop.index0 }}">{{ index_label }}</p>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for i in (1..3) -%}
+              {%- liquid
+                assign index_label = forloop.index
+                if forloop.index < 10
+                  assign index_label = forloop.index | prepend: '0'
+                endif
+              -%}
+              <p class="{% if forloop.first %}is-active{% endif %}" data-clip-count-item data-index="{{ forloop.index0 }}">{{ index_label }}</p>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+        <p class="clip-path-slider__sep">/</p>
+        <p class="clip-path-slider__total">{{ total_label }}</p>
       </div>
-      <p class="clip-path-slider__sep">/</p>
-      <p class="clip-path-slider__total">{{ total_label }}</p>
-    </div>
-  {%- endif -%}
+    {%- endif -%}
+  </div>
 </section>
 
 <style>
   .section-{{ section.id }}.clip-path-slider {
     position: relative;
     width: 100%;
-    height: var(--clip-slider-height, 100svh);
-    min-height: 520px;
-    overflow: hidden;
+    min-height: max(var(--clip-scroll-height, 300svh), 520px);
+    overflow: visible;
     background: #080808;
     color: #fff;
     isolation: isolate;
@@ -225,7 +229,17 @@
     max-height: 44px;
   }
 
-  .section-{{ section.id }} .clip-path-slider__stage,
+  .section-{{ section.id }} .clip-path-slider__stage {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: var(--clip-slider-height, 100svh);
+    min-height: 520px;
+    overflow: hidden;
+    background: #080808;
+    isolation: isolate;
+  }
+
   .section-{{ section.id }} .clip-path-slider__slides,
   .section-{{ section.id }} .clip-path-slider__slide,
   .section-{{ section.id }} .clip-path-slider__bg {
@@ -340,7 +354,7 @@
   }
 
   @media (max-width: 989px) {
-    .section-{{ section.id }}.clip-path-slider {
+    .section-{{ section.id }} .clip-path-slider__stage {
       min-height: 620px;
     }
 
@@ -352,7 +366,7 @@
   }
 
   @media (max-width: 549px) {
-    .section-{{ section.id }}.clip-path-slider {
+    .section-{{ section.id }} .clip-path-slider__stage {
       min-height: 560px;
     }
 
@@ -390,7 +404,7 @@
     const countItems = Array.from(root.querySelectorAll('[data-clip-count-item]'));
     const duration = Number(root.dataset.duration || 1250);
     const loopSlides = root.dataset.loop === 'true';
-    const wheelEnabled = root.dataset.wheel === 'true';
+    const scrollEnabled = root.dataset.wheel === 'true';
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const easing = 'cubic-bezier(0.76, 0, 0.24, 1)';
     const gsapEase = 'power3.inOut';
@@ -400,7 +414,8 @@
     let gsapInstance = window.gsap || null;
     let current = 0;
     let busy = false;
-    let touchStartY = null;
+    let pendingIndex = null;
+    let ticking = false;
 
     if (slides.length < 2 || frameItems.length < 2) return;
 
@@ -534,7 +549,7 @@
 
     const go = (dir, source = 'manual') => {
       if (busy || !dir) return false;
-      if (atEdge(dir)) return false;
+      if (source !== 'scroll' && atEdge(dir)) return false;
 
       busy = true;
       const oldIndex = current;
@@ -597,21 +612,46 @@
         setActive(frameItems, current);
         setActive(countItems, current);
         busy = false;
+
+        if (pendingIndex !== null && pendingIndex !== current) {
+          const nextDir = pendingIndex > current ? 1 : -1;
+          pendingIndex = null;
+          go(nextDir, 'scroll');
+          return;
+        }
+
+        pendingIndex = null;
       });
 
       return true;
     };
 
-    const onWheel = (event) => {
-      if (!wheelEnabled || Math.abs(event.deltaY) < 8) return;
+    const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
+    const updateFromScroll = () => {
+      ticking = false;
+      if (!scrollEnabled) return;
       const rect = root.getBoundingClientRect();
-      if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
+      const scrollable = Math.max(root.offsetHeight - window.innerHeight, 1);
+      const progress = clamp(-rect.top / scrollable, 0, 1);
+      const targetIndex = Math.min(slides.length - 1, Math.round(progress * (slides.length - 1)));
 
-      const dir = event.deltaY > 0 ? 1 : -1;
-      if (atEdge(dir)) return;
-      event.preventDefault();
-      go(dir, 'wheel');
+      if (targetIndex === current) {
+        pendingIndex = null;
+        return;
+      }
+
+      pendingIndex = targetIndex;
+      if (!busy) {
+        const dir = targetIndex > current ? 1 : -1;
+        go(dir, 'scroll');
+      }
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(updateFromScroll);
     };
 
     const onKeydown = (event) => {
@@ -620,23 +660,10 @@
       if (go(dir, 'keyboard')) event.preventDefault();
     };
 
-    const onTouchStart = (event) => {
-      touchStartY = event.touches[0]?.clientY ?? null;
-    };
-
-    const onTouchEnd = (event) => {
-      if (touchStartY == null) return;
-      const endY = event.changedTouches[0]?.clientY ?? touchStartY;
-      const delta = touchStartY - endY;
-      touchStartY = null;
-      if (Math.abs(delta) < 44) return;
-      go(delta > 0 ? 1 : -1, 'touch');
-    };
-
-    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
     root.addEventListener('keydown', onKeydown);
-    root.addEventListener('touchstart', onTouchStart, { passive: true });
-    root.addEventListener('touchend', onTouchEnd, { passive: true });
+    updateFromScroll();
 
     loadGsap().then((gsap) => {
       gsapInstance = gsap;
@@ -644,10 +671,9 @@
     });
 
     root.clipPathSliderDestroy = () => {
-      window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
       root.removeEventListener('keydown', onKeydown);
-      root.removeEventListener('touchstart', onTouchStart);
-      root.removeEventListener('touchend', onTouchEnd);
       root.dataset.clipPathReady = 'false';
     };
 
@@ -694,7 +720,7 @@
     {
       "type": "checkbox",
       "id": "enable_wheel",
-      "label": "Enable wheel and swipe navigation",
+      "label": "Enable scroll-driven slide changes",
       "default": true
     },
     {
@@ -712,6 +738,16 @@
       "step": 5,
       "unit": "vh",
       "default": 100
+    },
+    {
+      "type": "range",
+      "id": "scroll_per_slide",
+      "label": "Scroll distance per slide",
+      "min": 70,
+      "max": 160,
+      "step": 10,
+      "unit": "vh",
+      "default": 110
     },
     {
       "type": "range",
