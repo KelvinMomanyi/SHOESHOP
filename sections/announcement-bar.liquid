@@ -6,9 +6,9 @@
     style="--announcement-background: {{ section.settings.color_background }}; --announcement-text: {{ section.settings.color_text }};"
   >
     {%- if section.settings.link != blank -%}
-      <a href="{{ section.settings.link }}" class="announcement-bar__link">{{ section.settings.text }}</a>
+      <a href="{{ section.settings.link }}" class="announcement-bar__link announcement-bar__message">{{ section.settings.text }}</a>
     {%- else -%}
-      <p>{{ section.settings.text }}</p>
+      <p class="announcement-bar__message">{{ section.settings.text }}</p>
     {%- endif -%}
   </aside>
 {%- endif -%}

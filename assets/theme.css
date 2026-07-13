@@ -288,12 +288,23 @@ textarea.field__input {
   top: 0;
   z-index: 85;
   display: flex;
+  align-items: center;
   justify-content: center;
+  overflow: hidden;
   padding: 8px 16px;
   background: var(--announcement-background, var(--color-accent));
   color: var(--announcement-text, var(--color-accent-text));
   font-size: 0.85rem;
   font-weight: 700;
+}
+
+.announcement-bar__message {
+  display: inline-flex;
+  width: max-content;
+  max-width: none;
+  white-space: nowrap;
+  animation: announcement-message-slide 8s ease-in-out infinite both;
+  will-change: transform, opacity;
 }
 
 .announcement-bar__link {
@@ -436,7 +447,7 @@ textarea.field__input {
 .site-header__nav > ul {
   display: flex;
   align-items: center;
-  gap: clamp(22px, 2.7vw, 40px);
+  gap: clamp(14px, 1.7vw, 26px);
 }
 
 .site-header__tools {
@@ -608,9 +619,9 @@ textarea.field__input {
 .header-search__glyph,
 .header-search__button > span {
   position: relative;
-  width: 15px;
-  height: 15px;
-  border: 2px solid currentColor;
+  width: 16px;
+  height: 16px;
+  border: 1.8px solid currentColor;
   border-radius: 999px;
   font-size: 0;
 }
@@ -620,9 +631,9 @@ textarea.field__input {
   content: "";
   position: absolute;
   right: -5px;
-  bottom: -3px;
+  bottom: -2px;
   width: 7px;
-  height: 2px;
+  height: 1.8px;
   background: currentColor;
   border-radius: 999px;
   transform: rotate(45deg);
@@ -741,8 +752,8 @@ textarea.field__input {
 }
 
 .site-header__action .icon {
-  width: 21px;
-  height: 21px;
+  width: 22px;
+  height: 22px;
   stroke: currentColor;
 }
 
@@ -1160,6 +1171,29 @@ textarea.field__input {
   background: var(--color-foreground);
   color: var(--color-background);
   font-size: 0.8rem;
+}
+
+@keyframes announcement-message-slide {
+  0% {
+    opacity: 0;
+    transform: translateX(calc(50vw + 100%));
+  }
+
+  14%,
+  86% {
+    opacity: 1;
+  }
+
+  42%,
+  58% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(calc(-50vw - 100%));
+  }
 }
 
 @keyframes drawer-slide-in {
@@ -3448,6 +3482,12 @@ textarea.field__input {
   }
 
   .scroll-reveal-enabled .reveal-item {
+    opacity: 1;
+    transform: none;
+  }
+
+  .announcement-bar__message {
+    animation: none !important;
     opacity: 1;
     transform: none;
   }
