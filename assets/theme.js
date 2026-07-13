@@ -138,7 +138,6 @@
         const activeIndex = Math.min(panels.length - 1, Math.floor(progress * panels.length));
 
         if (rect.bottom <= 0) hasPassedHero = true;
-        hero.style.setProperty('--hero-progress', progress.toFixed(4));
         hero.classList.toggle('is-in-view', inView);
 
         panels.forEach((panel, index) => {

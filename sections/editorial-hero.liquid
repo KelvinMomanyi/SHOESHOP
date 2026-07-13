@@ -10,8 +10,6 @@
 
 <section class="editorial-hero section-{{ section.id }}" data-scroll-hero style="--hero-height: {{ panel_height }}svh;">
   <div class="editorial-hero__stage">
-    <div class="editorial-hero__progress" aria-hidden="true"></div>
-
     <div class="editorial-hero__dots" aria-hidden="true">
       {%- if section.blocks.size > 0 -%}
         {%- for block in section.blocks -%}
@@ -68,13 +66,11 @@
           </div>
 
           <div class="editorial-hero__panel-content page-width">
-            <header class="editorial-hero__panel-header">
-              <span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
-              {%- if panel_category != blank -%}
-                <i aria-hidden="true"></i>
+            {%- if panel_category != blank -%}
+              <header class="editorial-hero__panel-header">
                 <em>{{ panel_category }}</em>
-              {%- endif -%}
-            </header>
+              </header>
+            {%- endif -%}
 
             <div class="editorial-hero__panel-footer">
               <div class="editorial-hero__body">
@@ -122,11 +118,11 @@
         </div>
 
         <div class="editorial-hero__panel-content page-width">
-          <header class="editorial-hero__panel-header">
-            <span>01</span>
-            <i aria-hidden="true"></i>
-            <em>{{ section.settings.kicker | default: 'Collection' }}</em>
-          </header>
+          {%- if section.settings.kicker != blank -%}
+            <header class="editorial-hero__panel-header">
+              <em>{{ section.settings.kicker }}</em>
+            </header>
+          {%- endif -%}
           <div class="editorial-hero__panel-footer">
             <div class="editorial-hero__body">
               <p>{{ section.settings.text }}</p>
