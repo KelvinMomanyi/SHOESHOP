@@ -1342,7 +1342,10 @@ textarea.field__input {
   min-height: 100svh;
   overflow: hidden;
   isolation: isolate;
-  will-change: clip-path;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  contain: paint;
+  will-change: transform;
 }
 
 .no-js .editorial-hero {
@@ -1381,7 +1384,8 @@ textarea.field__input {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.2);
+  transform: translateZ(0) scale(1.2);
+  backface-visibility: hidden;
   will-change: transform;
 }
 
@@ -1602,8 +1606,10 @@ textarea.field__input {
   background: #222;
   box-shadow: 0 22px 60px rgba(0, 0, 0, 0.26);
   opacity: 0;
-  transform: translate(-50%, -50%) translate3d(0, 0, -1000px) scale(0.05);
+  transform: translate3d(-50%, -50%, 0) translate3d(0, 0, -1000px) scale(0.05);
   transform-style: preserve-3d;
+  backface-visibility: hidden;
+  contain: paint;
   will-change: transform, opacity;
 }
 
@@ -1780,6 +1786,8 @@ textarea.field__input {
   transform: translateY(60px);
   transform-origin: center center;
   clip-path: inset(0 0 0 0);
+  backface-visibility: hidden;
+  contain: paint;
   pointer-events: auto;
   will-change: width, transform, opacity, clip-path;
 }
@@ -1958,8 +1966,10 @@ textarea.field__input {
   left: 62%;
   width: min(27rem, calc(100vw - 32px));
   opacity: 0;
-  transform: translate(-50%, -50%) translateY(120vh) rotate(0deg) scale(1.12);
+  transform: translate3d(-50%, -50%, 0) translate3d(0, 120vh, 0) rotate(0deg) scale(1.12);
   transform-origin: center center;
+  backface-visibility: hidden;
+  contain: layout paint;
   will-change: transform, opacity;
   pointer-events: none;
 }

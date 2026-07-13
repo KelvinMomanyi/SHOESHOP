@@ -25,6 +25,88 @@
       .replace(/\{\{\s*amount_with_comma_separator\s*\}\}/, amount.replace('.', ','));
   };
 
+  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+  const lerp = (start, end, progress) => start + (end - start) * progress;
+  const styleCache = new WeakMap();
+  const scrollEffects = [];
+  let scrollTicking = false;
+  let resizeTicking = false;
+
+  const getViewport = () => ({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
+
+  const isNearViewport = (rect, height, buffer = 0.35) => {
+    return rect.bottom > -height * buffer && rect.top < height * (1 + buffer);
+  };
+
+  const setStyleValue = (element, property, value) => {
+    let cache = styleCache.get(element);
+    if (!cache) {
+      cache = {};
+      styleCache.set(element, cache);
+    }
+
+    if (cache[property] === value) return;
+    element.style[property] = value;
+    cache[property] = value;
+  };
+
+  const setCustomProperty = (element, property, value) => {
+    let cache = styleCache.get(element);
+    if (!cache) {
+      cache = {};
+      styleCache.set(element, cache);
+    }
+
+    if (cache[property] === value) return;
+    element.style.setProperty(property, value);
+    cache[property] = value;
+  };
+
+  const toggleClass = (element, className, force) => {
+    if (element.classList.contains(className) === force) return;
+    element.classList.toggle(className, force);
+  };
+
+  const runScrollEffects = () => {
+    const viewport = getViewport();
+    scrollEffects.forEach((effect) => effect.update(viewport));
+    scrollTicking = false;
+  };
+
+  const requestScrollEffects = () => {
+    if (scrollTicking) return;
+    scrollTicking = true;
+    window.requestAnimationFrame(runScrollEffects);
+  };
+
+  const requestResizeEffects = () => {
+    if (resizeTicking) return;
+    resizeTicking = true;
+
+    window.requestAnimationFrame(() => {
+      const viewport = getViewport();
+      scrollEffects.forEach((effect) => effect.refresh?.(viewport));
+      resizeTicking = false;
+      requestScrollEffects();
+    });
+  };
+
+  const registerScrollEffect = (effect) => {
+    scrollEffects.push(effect);
+
+    if (scrollEffects.length === 1) {
+      window.addEventListener('scroll', requestScrollEffects, { passive: true });
+      window.addEventListener('resize', requestResizeEffects);
+    }
+
+    const viewport = getViewport();
+    effect.refresh?.(viewport);
+    effect.update(viewport);
+  };
+
   const initReveal = () => {
     const items = document.querySelectorAll('.reveal-item');
     if (!items.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -64,7 +146,13 @@
         const animate = () => {
           x += (targetX - x) * 0.18;
           y += (targetY - y) * 0.18;
-          floatingPreview.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${visible ? 1 : 0})`;
+          setStyleValue(floatingPreview, 'transform', `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${visible ? 1 : 0})`);
+
+          if (!visible && Math.abs(targetX - x) < 0.2 && Math.abs(targetY - y) < 0.2) {
+            rafId = null;
+            return;
+          }
+
           rafId = window.requestAnimationFrame(animate);
         };
 
@@ -84,7 +172,8 @@
             const index = Number(trigger.getAttribute('data-preview-index')) || 0;
             visible = true;
             floatingPreview.classList.add('is-visible');
-            previewTrack.style.transform = `translateY(${-100 * index}%)`;
+            setStyleValue(previewTrack, 'transform', `translateY(${-100 * index}%)`);
+            if (!rafId) animate();
           });
         });
 
@@ -118,56 +207,66 @@
     const heroes = document.querySelectorAll('[data-scroll-hero]');
     if (!heroes.length) return;
 
-    const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-    let ticking = false;
+    const heroStates = Array.from(heroes).map((hero) => {
+      const panels = Array.from(hero.querySelectorAll('.editorial-hero__panel')).map((panel) => ({
+        panel,
+        image: panel.querySelector('.editorial-hero__image')
+      }));
 
-    const update = () => {
+      return {
+        hero,
+        panels,
+        dots: Array.from(hero.querySelectorAll('.editorial-hero__dots span')),
+        scrollable: 1,
+        activeIndex: -1
+      };
+    }).filter((state) => state.panels.length);
+
+    if (!heroStates.length) return;
+
+    const refresh = ({ height }) => {
+      heroStates.forEach((state) => {
+        state.scrollable = Math.max(state.hero.offsetHeight - height, 1);
+      });
+    };
+
+    const update = ({ height }) => {
       let hasPassedHero = false;
 
-      heroes.forEach((hero) => {
-        const panels = Array.from(hero.querySelectorAll('.editorial-hero__panel'));
-        const dots = Array.from(hero.querySelectorAll('.editorial-hero__dots span'));
-        if (!panels.length) return;
-
-        const rect = hero.getBoundingClientRect();
-        const scrollable = Math.max(hero.offsetHeight - window.innerHeight, 1);
-        const progress = clamp(-rect.top / scrollable, 0, 1);
-        const inView = rect.bottom > 0 && rect.top < window.innerHeight;
-        const segments = Math.max(panels.length - 1, 1);
-        const timelinePosition = progress * segments;
-        const activeIndex = Math.min(panels.length - 1, Math.floor(progress * panels.length));
+      heroStates.forEach((state) => {
+        const rect = state.hero.getBoundingClientRect();
+        const inView = rect.bottom > 0 && rect.top < height;
 
         if (rect.bottom <= 0) hasPassedHero = true;
-        hero.classList.toggle('is-in-view', inView);
+        toggleClass(state.hero, 'is-in-view', inView);
 
-        panels.forEach((panel, index) => {
-          const image = panel.querySelector('.editorial-hero__image');
-          const clipProgress = index < panels.length - 1 ? clamp(timelinePosition - index, 0, 1) : 0;
+        if (!isNearViewport(rect, height, 0.25)) return;
+
+        const progress = clamp(-rect.top / state.scrollable, 0, 1);
+        const segments = Math.max(state.panels.length - 1, 1);
+        const timelinePosition = progress * segments;
+        const activeIndex = Math.min(state.panels.length - 1, Math.floor(progress * state.panels.length));
+
+        state.panels.forEach(({ panel, image }, index) => {
+          const slideProgress = index < state.panels.length - 1 ? clamp(timelinePosition - index, 0, 1) : 0;
           const imageProgress = index === 0 ? 1 : clamp(timelinePosition - (index - 1), 0, 1);
           const scale = 1.2 - imageProgress * 0.2;
 
-          panel.style.clipPath = `inset(0 0 ${clipProgress * 100}% 0)`;
-          panel.classList.toggle('is-active', index === activeIndex);
-          if (image) image.style.transform = `scale(${scale.toFixed(4)})`;
+          setStyleValue(panel, 'transform', `translate3d(0, ${(-slideProgress * 100).toFixed(3)}%, 0)`);
+          toggleClass(panel, 'is-active', index === activeIndex);
+          if (image) setStyleValue(image, 'transform', `translateZ(0) scale(${scale.toFixed(4)})`);
         });
 
-        dots.forEach((dot, index) => dot.classList.toggle('is-active', index === activeIndex));
+        if (state.activeIndex !== activeIndex) {
+          state.dots.forEach((dot, index) => toggleClass(dot, 'is-active', index === activeIndex));
+          state.activeIndex = activeIndex;
+        }
       });
 
-      document.body.classList.toggle('is-past-hero', hasPassedHero);
-      ticking = false;
+      toggleClass(document.body, 'is-past-hero', hasPassedHero);
     };
 
-    const requestUpdate = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(update);
-        ticking = true;
-      }
-    };
-
-    update();
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate);
+    registerScrollEffect({ update, refresh });
   };
 
   const initImageSpread = () => {
@@ -188,26 +287,39 @@
       { x: -0.4, y: -0.4 },
       { x: 0.3, y: 0.8 }
     ];
-    const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-    const lerp = (start, end, progress) => start + (end - start) * progress;
-    let ticking = false;
 
-    const update = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+    const spreadStates = Array.from(spreads).map((section) => ({
+      section,
+      items: Array.from(section.querySelectorAll('[data-flow-item]')).map((item, index) => ({
+        item,
+        index,
+        position: positions[index % positions.length],
+        isCover: item.classList.contains('is-cover')
+      })),
+      scrollable: 1
+    })).filter((state) => state.items.length);
+
+    if (!spreadStates.length) return;
+
+    const refresh = ({ height }) => {
+      spreadStates.forEach((state) => {
+        state.scrollable = Math.max(state.section.offsetHeight - height, 1);
+      });
+    };
+
+    const update = ({ width, height }) => {
       const isMobile = width < 800;
       const spread = isMobile ? 1.45 : 0.72;
 
-      spreads.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        const scrollable = Math.max(section.offsetHeight - height, 1);
-        const progress = clamp(-rect.top / scrollable, 0, 1);
-        const items = Array.from(section.querySelectorAll('[data-flow-item]'));
+      spreadStates.forEach((state) => {
+        const rect = state.section.getBoundingClientRect();
+        if (!isNearViewport(rect, height, 0.45)) return;
 
-        items.forEach((item, index) => {
-          const position = positions[index % positions.length];
+        const progress = clamp(-rect.top / state.scrollable, 0, 1);
+
+        state.items.forEach(({ item, index, position, isCover }) => {
           const totalDelay = 0.38;
-          const delay = items.length > 1 ? (index / (items.length - 1)) * totalDelay : 0;
+          const delay = state.items.length > 1 ? (index / (state.items.length - 1)) * totalDelay : 0;
           const itemProgress = clamp((progress - delay) / (1 - totalDelay), 0, 1);
           const finalX = position.x * width * spread;
           const finalY = position.y * height * spread;
@@ -217,30 +329,19 @@
           let scale = lerp(0.05, 1, itemProgress);
           let opacity = itemProgress > 0 ? clamp(itemProgress * 1.6, 0, 1) : 0;
 
-          if (item.classList.contains('is-cover')) {
+          if (isCover) {
             x = 0;
             y = 0;
             z = lerp(-900, 0, itemProgress);
           }
 
-          item.style.opacity = opacity.toFixed(3);
-          item.style.transform = `translate(-50%, -50%) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, ${z.toFixed(2)}px) scale(${scale.toFixed(4)})`;
+          setStyleValue(item, 'opacity', opacity.toFixed(3));
+          setStyleValue(item, 'transform', `translate3d(-50%, -50%, 0) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, ${z.toFixed(2)}px) scale(${scale.toFixed(4)})`);
         });
       });
-
-      ticking = false;
     };
 
-    const requestUpdate = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(update);
-        ticking = true;
-      }
-    };
-
-    update();
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate);
+    registerScrollEffect({ update, refresh });
   };
 
   const initAlexandraLoader = () => {
@@ -248,8 +349,6 @@
     if (!loaders.length) return;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-    const lerp = (start, end, progress) => start + (end - start) * progress;
     const segment = (progress, start, end) => clamp((progress - start) / (end - start), 0, 1);
     const easeOut = (progress) => 1 - Math.pow(1 - progress, 3);
     const easeInOut = (progress) => {
@@ -257,125 +356,161 @@
         ? 4 * progress * progress * progress
         : 1 - Math.pow(-2 * progress + 2, 3) / 2;
     };
-    let ticking = false;
 
-    const update = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+    const loaderStates = Array.from(loaders).map((section) => {
+      const allItems = Array.from(section.querySelectorAll('[data-loader-item]')).map((item) => ({
+        item,
+        isPreferredHero: item.classList.contains('is-hero')
+      }));
+
+      return {
+        section,
+        gallery: section.querySelector('[data-loader-gallery]'),
+        curtain: section.querySelector('[data-loader-curtain]'),
+        topbar: section.querySelector('[data-loader-topbar]'),
+        titleLines: Array.from(section.querySelectorAll('[data-loader-title-line]')),
+        allItems,
+        items: [],
+        hero: null,
+        scrollable: 1,
+        baseWidth: 0,
+        initialGap: 0,
+        finalGap: 0,
+        targetHeroWidth: 0
+      };
+    }).filter((state) => state.gallery && state.allItems.length);
+
+    if (!loaderStates.length) return;
+
+    const refresh = ({ width, height }) => {
       const isMobile = width < 768;
       const baseWidth = Math.min(Math.max(width * (isMobile ? 0.26 : 0.14), isMobile ? 82 : 76), isMobile ? 120 : 140);
 
-      loaders.forEach((section) => {
-        const gallery = section.querySelector('[data-loader-gallery]');
-        const curtain = section.querySelector('[data-loader-curtain]');
-        const topbar = section.querySelector('[data-loader-topbar]');
-        const titleLines = Array.from(section.querySelectorAll('[data-loader-title-line]'));
-        const items = Array.from(section.querySelectorAll('[data-loader-item]')).filter((item) => item.offsetWidth > 0);
-        if (!gallery || !items.length) return;
+      loaderStates.forEach((state) => {
+        const visibleItems = state.allItems.filter(({ item }) => item.offsetWidth > 0);
+        const hero = visibleItems.find((entry) => entry.isPreferredHero) || visibleItems[Math.floor(visibleItems.length / 2)] || null;
+        const sideItems = visibleItems.filter((entry) => entry !== hero);
+        const sideIndexMap = new Map(sideItems.map((entry, index) => [entry.item, index]));
+        const galleryWidth = state.gallery.clientWidth;
 
-        const rect = section.getBoundingClientRect();
-        const scrollable = Math.max(section.offsetHeight - height, 1);
-        const progress = reduceMotion ? 1 : clamp(-rect.top / scrollable, 0, 1);
+        state.scrollable = Math.max(state.section.offsetHeight - height, 1);
+        state.baseWidth = baseWidth;
+        state.initialGap = visibleItems.length > 1 ? Math.max(0, (galleryWidth - visibleItems.length * baseWidth) / (visibleItems.length - 1)) : 0;
+        state.finalGap = baseWidth * 0.4;
+        state.targetHeroWidth = Math.min(width * (isMobile ? 0.8 : 0.25), galleryWidth * 0.86);
+        state.hero = hero;
+        state.items = visibleItems.map((entry, index) => ({
+          ...entry,
+          index,
+          isHero: entry === hero,
+          sideIndex: sideIndexMap.get(entry.item) ?? -1
+        }));
+      });
+    };
+
+    const update = ({ height }) => {
+      loaderStates.forEach((state) => {
+        if (!state.items.length) return;
+
+        const rect = state.section.getBoundingClientRect();
         const inView = rect.bottom > 0 && rect.top < height;
-        const hero = section.querySelector('[data-loader-item].is-hero') || items[Math.floor(items.length / 2)];
-        const galleryWidth = gallery.clientWidth;
-        const initialGap = items.length > 1 ? Math.max(0, (galleryWidth - items.length * baseWidth) / (items.length - 1)) : 0;
-        const finalGap = baseWidth * 0.4;
+        toggleClass(state.section, 'is-in-view', inView);
+
+        if (!reduceMotion && !isNearViewport(rect, height, 0.45)) return;
+
+        const progress = reduceMotion ? 1 : clamp(-rect.top / state.scrollable, 0, 1);
         const gatherProgress = easeInOut(segment(progress, 0.24, 0.44));
-        const sideItems = items.filter((item) => item !== hero);
         const heroProgress = easeInOut(segment(progress, 0.58, 0.86));
-        const targetHeroWidth = Math.min(width * (isMobile ? 0.8 : 0.25), galleryWidth * 0.86);
         const revealProgress = easeInOut(segment(progress, 0.72, 0.9));
 
-        section.style.setProperty('--alexandra-progress', progress.toFixed(4));
-        section.classList.toggle('is-in-view', inView);
-        gallery.style.gap = `${lerp(initialGap, finalGap, gatherProgress).toFixed(2)}px`;
+        setCustomProperty(state.section, '--alexandra-progress', progress.toFixed(4));
+        setStyleValue(state.gallery, 'gap', `${lerp(state.initialGap, state.finalGap, gatherProgress).toFixed(2)}px`);
 
-        items.forEach((item, index) => {
+        state.items.forEach(({ item, index, isHero, sideIndex }) => {
           const appearProgress = easeOut(segment(progress, index * 0.03, 0.2 + index * 0.03));
-          const sideIndex = sideItems.indexOf(item);
-          const clipProgress = item === hero
+          const clipProgress = isHero
             ? 0
             : easeInOut(segment(progress, 0.48 + sideIndex * 0.025, 0.66 + sideIndex * 0.025));
-          const scale = item === hero
+          const scale = isHero
             ? lerp(lerp(1, 1.2, gatherProgress), 1, heroProgress)
             : lerp(1, 1.2, gatherProgress);
 
-          item.style.opacity = appearProgress.toFixed(3);
-          item.style.transform = `translateY(${lerp(60, 0, appearProgress).toFixed(2)}px) scale(${scale.toFixed(4)})`;
-          item.style.clipPath = `inset(0 0 ${(clipProgress * 100).toFixed(2)}% 0)`;
-          item.style.pointerEvents = item === hero || clipProgress < 0.98 ? 'auto' : 'none';
+          setStyleValue(item, 'opacity', appearProgress.toFixed(3));
+          setStyleValue(item, 'transform', `translate3d(0, ${lerp(60, 0, appearProgress).toFixed(2)}px, 0) scale(${scale.toFixed(4)})`);
+          setStyleValue(item, 'clipPath', `inset(0 0 ${(clipProgress * 100).toFixed(2)}% 0)`);
+          setStyleValue(item, 'pointerEvents', isHero || clipProgress < 0.98 ? 'auto' : 'none');
         });
 
-        if (hero) {
-          hero.style.width = `${lerp(baseWidth, targetHeroWidth, heroProgress).toFixed(2)}px`;
+        if (state.hero) {
+          setStyleValue(state.hero.item, 'width', `${lerp(state.baseWidth, state.targetHeroWidth, heroProgress).toFixed(2)}px`);
         }
 
-        if (curtain) {
-          curtain.style.transform = `scaleY(${(1 - revealProgress).toFixed(4)})`;
+        if (state.curtain) {
+          setStyleValue(state.curtain, 'transform', `scaleY(${(1 - revealProgress).toFixed(4)})`);
         }
 
-        if (topbar) {
-          topbar.style.opacity = revealProgress.toFixed(3);
-          topbar.style.transform = `translateY(${lerp(-8, 0, revealProgress).toFixed(2)}px)`;
+        if (state.topbar) {
+          setStyleValue(state.topbar, 'opacity', revealProgress.toFixed(3));
+          setStyleValue(state.topbar, 'transform', `translate3d(0, ${lerp(-8, 0, revealProgress).toFixed(2)}px, 0)`);
         }
 
-        titleLines.forEach((line, index) => {
+        state.titleLines.forEach((line, index) => {
           const lineProgress = easeOut(segment(progress, 0.76 + index * 0.04, 0.96 + index * 0.04));
-          line.style.transform = `translateY(${((1 - lineProgress) * 120).toFixed(2)}%)`;
+          setStyleValue(line, 'transform', `translate3d(0, ${((1 - lineProgress) * 120).toFixed(2)}%, 0)`);
         });
       });
-
-      ticking = false;
     };
 
-    const requestUpdate = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(update);
-        ticking = true;
-      }
-    };
-
-    update();
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate);
+    registerScrollEffect({ update, refresh });
   };
 
   const initFeaturedProductStacks = () => {
     const stacks = document.querySelectorAll('[data-featured-product-stack]');
     if (!stacks.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-    const lerp = (start, end, progress) => start + (end - start) * progress;
     const easeEdge = (progress) => {
       if (progress <= 0.08) return clamp(progress / 0.08, 0, 1);
       if (progress >= 0.96) return clamp((1.04 - progress) / 0.08, 0, 1);
       return 1;
     };
-    let ticking = false;
 
-    const update = () => {
-      const height = window.innerHeight;
-      const width = window.innerWidth;
+    const stackStates = Array.from(stacks).map((section) => ({
+      section,
+      cards: Array.from(section.querySelectorAll('[data-featured-product-card]')).map((card) => ({
+        card,
+        rotateFrom: Number(card.dataset.rotateFrom || 0),
+        rotateTo: Number(card.dataset.rotateTo || 0)
+      })),
+      scrollable: 1
+    })).filter((state) => state.cards.length);
+
+    if (!stackStates.length) return;
+
+    const refresh = ({ height }) => {
+      stackStates.forEach((state) => {
+        state.scrollable = Math.max(state.section.offsetHeight - height, 1);
+      });
+    };
+
+    const update = ({ width, height }) => {
       const isMobile = width < 750;
       const stagger = isMobile ? 0.62 : 0.55;
 
-      stacks.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        const scrollable = Math.max(section.offsetHeight - height, 1);
-        const progress = clamp(-rect.top / scrollable, 0, 1);
-        const cards = Array.from(section.querySelectorAll('[data-featured-product-card]'));
-        if (!cards.length) return;
+      stackStates.forEach((state) => {
+        const rect = state.section.getBoundingClientRect();
+        const inView = rect.bottom > 0 && rect.top < height;
+        toggleClass(state.section, 'is-in-view', inView);
 
-        const timelineLength = Math.max((cards.length - 1) * stagger + 1, 1);
+        if (!isNearViewport(rect, height, 0.45)) return;
+
+        const progress = clamp(-rect.top / state.scrollable, 0, 1);
+
+        const timelineLength = Math.max((state.cards.length - 1) * stagger + 1, 1);
         const timelinePosition = progress * timelineLength;
-        section.style.setProperty('--featured-stack-progress', progress.toFixed(4));
-        section.classList.toggle('is-in-view', rect.bottom > 0 && rect.top < height);
+        setCustomProperty(state.section, '--featured-stack-progress', progress.toFixed(4));
 
-        cards.forEach((card, index) => {
+        state.cards.forEach(({ card, rotateFrom, rotateTo }, index) => {
           const cardProgress = clamp(timelinePosition - index * stagger, 0, 1);
-          const rotateFrom = Number(card.dataset.rotateFrom || 0);
-          const rotateTo = Number(card.dataset.rotateTo || 0);
           const travelStart = height * (isMobile ? 1.12 : 1.22);
           const travelEnd = -height * (isMobile ? 0.86 : 0.76);
           const y = lerp(travelStart, travelEnd, cardProgress);
@@ -383,26 +518,15 @@
           const rotate = lerp(rotateFrom, rotateTo, cardProgress);
           const opacity = easeEdge(cardProgress);
 
-          card.style.zIndex = String(index + 1);
-          card.style.opacity = opacity.toFixed(3);
-          card.style.transform = `translate(-50%, -50%) translateY(${y.toFixed(2)}px) rotate(${rotate.toFixed(2)}deg) scale(${scale.toFixed(4)})`;
-          card.style.pointerEvents = opacity > 0.92 && cardProgress > 0.08 && cardProgress < 0.92 ? 'auto' : 'none';
+          setStyleValue(card, 'zIndex', String(index + 1));
+          setStyleValue(card, 'opacity', opacity.toFixed(3));
+          setStyleValue(card, 'transform', `translate3d(-50%, -50%, 0) translate3d(0, ${y.toFixed(2)}px, 0) rotate(${rotate.toFixed(2)}deg) scale(${scale.toFixed(4)})`);
+          setStyleValue(card, 'pointerEvents', opacity > 0.92 && cardProgress > 0.08 && cardProgress < 0.92 ? 'auto' : 'none');
         });
       });
-
-      ticking = false;
     };
 
-    const requestUpdate = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(update);
-        ticking = true;
-      }
-    };
-
-    update();
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate);
+    registerScrollEffect({ update, refresh });
   };
 
   const initPredictiveSearch = () => {
