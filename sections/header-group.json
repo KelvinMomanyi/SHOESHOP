@@ -6,6 +6,8 @@
       "type": "announcement-bar",
       "settings": {
         "text": "Free shipping over $100",
+        "text_2": "New arrivals just landed",
+        "text_3": "Easy returns within 30 days",
         "link": ""
       }
     },

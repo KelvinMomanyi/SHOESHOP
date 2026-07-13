@@ -1,4 +1,14 @@
-{%- if section.settings.text != blank -%}
+{%- liquid
+  assign message_1 = section.settings.text | default: 'Free shipping over $100'
+  assign message_2 = section.settings.text_2 | default: 'New arrivals just landed'
+  assign message_3 = section.settings.text_3 | default: 'Easy returns within 30 days'
+-%}
+
+{%- if message_1 != blank or message_2 != blank or message_3 != blank -%}
+  {%- capture announcement_label -%}
+    {{ message_1 }}. {{ message_2 }}. {{ message_3 }}
+  {%- endcapture -%}
+
   <aside
     class="announcement-bar"
     role="region"
@@ -6,9 +16,18 @@
     style="--announcement-background: {{ section.settings.color_background }}; --announcement-text: {{ section.settings.color_text }};"
   >
     {%- if section.settings.link != blank -%}
-      <a href="{{ section.settings.link }}" class="announcement-bar__link announcement-bar__message">{{ section.settings.text }}</a>
+      <a href="{{ section.settings.link }}" class="announcement-bar__link announcement-bar__items" aria-label="{{ announcement_label | strip | escape }}">
+        <span class="announcement-bar__message announcement-bar__message--first" style="--announcement-delay: 0s;" aria-hidden="true">{{ message_1 }}</span>
+        <span class="announcement-bar__message" style="--announcement-delay: 3.2s;" aria-hidden="true">{{ message_2 }}</span>
+        <span class="announcement-bar__message" style="--announcement-delay: 6.4s;" aria-hidden="true">{{ message_3 }}</span>
+      </a>
     {%- else -%}
-      <p class="announcement-bar__message">{{ section.settings.text }}</p>
+      <p class="announcement-bar__items">
+        <span class="visually-hidden">{{ announcement_label | strip }}</span>
+        <span class="announcement-bar__message announcement-bar__message--first" style="--announcement-delay: 0s;" aria-hidden="true">{{ message_1 }}</span>
+        <span class="announcement-bar__message" style="--announcement-delay: 3.2s;" aria-hidden="true">{{ message_2 }}</span>
+        <span class="announcement-bar__message" style="--announcement-delay: 6.4s;" aria-hidden="true">{{ message_3 }}</span>
+      </p>
     {%- endif -%}
   </aside>
 {%- endif -%}
@@ -20,8 +39,20 @@
     {
       "type": "text",
       "id": "text",
-      "label": "Text",
+      "label": "Text 1",
       "default": "Free shipping over $100"
+    },
+    {
+      "type": "text",
+      "id": "text_2",
+      "label": "Text 2",
+      "default": "New arrivals just landed"
+    },
+    {
+      "type": "text",
+      "id": "text_3",
+      "label": "Text 3",
+      "default": "Easy returns within 30 days"
     },
     {
       "type": "url",
