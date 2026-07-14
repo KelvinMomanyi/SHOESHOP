@@ -6,6 +6,15 @@
     assign panel_count = 1
   endif
   assign panel_height = panel_count | times: 100
+  assign static_body = section.settings.text
+  assign static_link = section.settings.button_link | default: routes.all_products_collection_url
+  if section.blocks.size > 0
+    assign static_block = section.blocks.first
+    assign static_product = static_block.settings.product
+    assign static_collection = static_block.settings.collection
+    assign static_body = static_block.settings.text | default: static_product.description | default: static_collection.description | strip_html | truncatewords: 26 | default: section.settings.text
+    assign static_link = static_block.settings.link | default: static_product.url | default: static_collection.url | default: section.settings.button_link | default: routes.all_products_collection_url
+  endif
 -%}
 
 <section class="editorial-hero section-{{ section.id }}" data-scroll-hero style="--hero-height: {{ panel_height }}svh;">
@@ -20,6 +29,26 @@
       {%- endif -%}
     </div>
 
+    {%- if static_body != blank or section.settings.button_label != blank or section.settings.secondary_button_label != blank -%}
+      <div class="editorial-hero__static page-width">
+        <div class="editorial-hero__body">
+          {%- if static_body != blank -%}
+            <p>{{ static_body }}</p>
+          {%- endif -%}
+          <div class="button-row">
+            {%- if section.settings.button_label != blank -%}
+              <a class="button button--light" href="{{ static_link }}">{{ section.settings.button_label }}</a>
+            {%- endif -%}
+            {%- if section.settings.secondary_button_label != blank -%}
+              <a class="button button--ghost button--hero" href="{{ section.settings.secondary_button_link | default: routes.collections_url }}">
+                {{ section.settings.secondary_button_label }}
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
     {%- if section.blocks.size > 0 -%}
       {%- for block in section.blocks -%}
         {%- liquid
@@ -27,8 +56,6 @@
           assign panel_collection = block.settings.collection
           assign panel_image = block.settings.image | default: panel_product.featured_media.preview_image | default: panel_product.featured_image | default: panel_collection.featured_image
           assign panel_title = block.settings.title | default: panel_product.title | default: panel_collection.title | default: section.settings.heading
-          assign panel_body = block.settings.text | default: panel_product.description | default: panel_collection.description | strip_html | truncatewords: 26 | default: section.settings.text
-          assign panel_link = block.settings.link | default: panel_product.url | default: panel_collection.url | default: section.settings.button_link | default: routes.all_products_collection_url
           assign panel_category = block.settings.category
           assign fallback_index = forloop.index0 | modulo: 3
           assign fallback_asset = 'scroll-hero-01.png'
@@ -73,22 +100,6 @@
             {%- endif -%}
 
             <div class="editorial-hero__panel-footer">
-              <div class="editorial-hero__body">
-                {%- if panel_body != blank -%}
-                  <p>{{ panel_body }}</p>
-                {%- endif -%}
-                <div class="button-row">
-                  {%- if section.settings.button_label != blank -%}
-                    <a class="button button--light" href="{{ panel_link }}">{{ section.settings.button_label }}</a>
-                  {%- endif -%}
-                  {%- if section.settings.secondary_button_label != blank -%}
-                    <a class="button button--ghost button--hero" href="{{ section.settings.secondary_button_link | default: routes.collections_url }}">
-                      {{ section.settings.secondary_button_label }}
-                    </a>
-                  {%- endif -%}
-                </div>
-              </div>
-
               <h1>{{ panel_title | default: 'Featured edit' }}</h1>
             </div>
           </div>
@@ -124,14 +135,6 @@
             </header>
           {%- endif -%}
           <div class="editorial-hero__panel-footer">
-            <div class="editorial-hero__body">
-              <p>{{ section.settings.text }}</p>
-              <div class="button-row">
-                <a class="button button--light" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
-                  {{ section.settings.button_label }}
-                </a>
-              </div>
-            </div>
             <h1>{{ section.settings.heading }}</h1>
           </div>
         </div>

@@ -1525,6 +1525,20 @@ textarea.field__input {
   pointer-events: none;
 }
 
+.editorial-hero__static {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: flex-end;
+  padding-block: clamp(28px, 5vw, 72px);
+  pointer-events: none;
+}
+
+.editorial-hero__static .editorial-hero__body {
+  pointer-events: auto;
+}
+
 .editorial-hero__panel-header {
   display: flex;
   align-items: center;
@@ -1562,6 +1576,7 @@ textarea.field__input {
 }
 
 .editorial-hero__panel-footer h1 {
+  grid-column: 2;
   max-width: 860px;
   margin-left: auto;
   color: #f0ebe4;
@@ -1640,12 +1655,17 @@ textarea.field__input {
     min-height: 100svh;
   }
 
+  .editorial-hero__panel-content {
+    padding-bottom: clamp(210px, 34vh, 300px);
+  }
+
   .editorial-hero__panel-footer {
     grid-template-columns: 1fr;
     gap: 24px;
   }
 
   .editorial-hero__panel-footer h1 {
+    grid-column: 1;
     margin-left: 0;
     text-align: left;
     font-size: 3.6rem;
