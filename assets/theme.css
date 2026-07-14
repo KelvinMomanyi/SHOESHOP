@@ -3143,16 +3143,15 @@ textarea.field__input {
 }
 
 .facets {
+  position: relative;
+  z-index: 8;
   display: grid;
-  gap: 16px;
-  margin-bottom: 32px;
-  padding: 16px;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background: var(--color-surface);
+  gap: 10px;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.facets__header,
 .cart-summary__row {
   display: flex;
   justify-content: space-between;
@@ -3160,69 +3159,289 @@ textarea.field__input {
   align-items: center;
 }
 
-.facets__title {
-  font-family: var(--font-body);
-  font-size: 1rem;
-}
-
-.facets__groups {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+.facets__toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 14px;
 }
 
-.facets__group {
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  padding: 10px;
+.facets__main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
 }
 
-.facets__group summary,
-.facets__sort label {
+.facets__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+
+.facets__title span,
+.facets__group summary em {
+  display: inline-grid;
+  place-items: center;
+  min-width: 19px;
+  height: 19px;
+  padding-inline: 5px;
+  border-radius: 999px;
+  background: var(--color-foreground);
+  color: var(--color-background);
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-style: normal;
+  line-height: 1;
+}
+
+.facets__groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.facets__group {
+  position: relative;
+}
+
+.facets__group summary {
+  list-style: none;
+}
+
+.facets__group summary::-webkit-details-marker {
+  display: none;
+}
+
+.facets__group summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-surface) 88%, var(--color-background));
   cursor: pointer;
-  font-weight: 800;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.facets__group summary::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 180ms ease;
+}
+
+.facets__group[open] summary {
+  border-color: var(--color-foreground);
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+
+.facets__group[open] summary::after {
+  transform: translateY(2px) rotate(225deg);
+}
+
+.facets__panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 25;
+  width: min(310px, calc(100vw - 32px));
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-surface-text);
+  box-shadow: 0 24px 60px rgba(17, 17, 17, 0.14);
 }
 
 .facets__list {
   display: grid;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 2px;
+  max-height: 280px;
+  overflow: auto;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 .facet-checkbox {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  min-height: 36px;
+  padding-block: 6px;
+  cursor: pointer;
+}
+
+.facet-checkbox input {
+  appearance: none;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: var(--color-surface);
+}
+
+.facet-checkbox input::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  transform: scale(0);
+  background: var(--color-foreground);
+  transition: transform 140ms ease;
+}
+
+.facet-checkbox input:checked::before {
+  transform: scale(1);
+}
+
+.facet-checkbox span {
+  min-width: 0;
+  line-height: 1.25;
 }
 
 .facet-checkbox small {
   margin-left: auto;
   color: var(--color-muted);
+  font-size: 0.78rem;
 }
 
 .facet-checkbox--disabled {
   opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .facets__price {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 10px;
+}
+
+.facets__price label,
+.facets__sort label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.facets__price .field__input {
+  min-height: 42px;
+}
+
+.facets__panel-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+.facets__sort {
+  display: grid;
+  min-width: min(230px, 100%);
+}
+
+.facets__sort .field__input {
+  min-height: 38px;
+  padding-block: 8px;
+  font-size: 0.88rem;
 }
 
 .facets__active {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 7px;
+  padding-top: 2px;
 }
 
 .active-filter {
   display: inline-flex;
-  padding: 6px 8px;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 5px 9px;
   border: 1px solid var(--color-border);
-  border-radius: 4px;
-  font-size: 0.86rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-surface) 72%, var(--color-background));
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.active-filter span:last-child {
+  color: var(--color-foreground);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+@media (max-width: 989px) {
+  .facets__toolbar,
+  .facets__main {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .facets__sort {
+    width: 100%;
+  }
+}
+
+@media (max-width: 749px) {
+  .facets {
+    margin-bottom: 18px;
+  }
+
+  .facets__groups {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .facets__group summary {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .facets__group[open] {
+    grid-column: 1 / -1;
+  }
+
+  .facets__panel {
+    position: static;
+    width: 100%;
+    margin-top: 8px;
+    box-shadow: 0 16px 34px rgba(17, 17, 17, 0.1);
+  }
+}
+
+@media (max-width: 479px) {
+  .facets__groups {
+    grid-template-columns: 1fr;
+  }
 }
 
 .collection-hero {

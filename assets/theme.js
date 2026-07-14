@@ -678,6 +678,37 @@
     });
   };
 
+  const initFacets = () => {
+    document.querySelectorAll('.facets').forEach((form) => {
+      const groups = Array.from(form.querySelectorAll('.facets__group'));
+      const sort = form.querySelector('[data-facets-sort]');
+
+      groups.forEach((group) => {
+        group.addEventListener('toggle', () => {
+          if (!group.open) return;
+          groups.forEach((otherGroup) => {
+            if (otherGroup !== group) otherGroup.removeAttribute('open');
+          });
+        });
+      });
+
+      sort?.addEventListener('change', () => {
+        if (form.requestSubmit) form.requestSubmit();
+        else form.submit();
+      });
+
+      document.addEventListener('click', (event) => {
+        if (form.contains(event.target)) return;
+        groups.forEach((group) => group.removeAttribute('open'));
+      });
+
+      form.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        groups.forEach((group) => group.removeAttribute('open'));
+      });
+    });
+  };
+
   const initHeaderDrawers = () => {
     const closeDetails = (details, restoreFocus = false) => {
       if (!details || !details.hasAttribute('open')) return;
@@ -906,6 +937,7 @@
     initAlexandraLoader();
     initFeaturedProductStacks();
     initPredictiveSearch();
+    initFacets();
     initHeaderDrawers();
     initAddressToggles();
   });
