@@ -409,7 +409,7 @@ textarea.field__input {
   min-width: 0;
   text-align: center;
   font-family: var(--font-heading);
-  font-size: 1.45rem;
+  font-size: 1.68rem;
   font-weight: 800;
   line-height: 1;
   max-width: min(100%, 18rem);
@@ -793,8 +793,8 @@ textarea.field__input {
   }
 
   .site-header__brand {
-    max-width: 12rem;
-    font-size: 1.26rem;
+    max-width: 13rem;
+    font-size: 1.42rem;
   }
 
   .site-header__nav > ul {
@@ -1297,8 +1297,8 @@ textarea.field__input {
     grid-column: 2;
     grid-row: 1;
     justify-self: center;
-    max-width: min(42vw, 11rem);
-    font-size: 1.15rem;
+    max-width: min(44vw, 12rem);
+    font-size: 1.28rem;
   }
 
   .site-header__logo {
@@ -1346,8 +1346,8 @@ textarea.field__input {
   }
 
   .site-header__brand {
-    max-width: min(38vw, 9.5rem);
-    font-size: 1.05rem;
+    max-width: min(40vw, 10rem);
+    font-size: 1.14rem;
   }
 
   .site-header__tools {
