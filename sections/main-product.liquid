@@ -14,7 +14,7 @@
             assign media_loading = 'eager'
           endif
         -%}
-        <div class="product-media media-frame" data-media-id="{{ section.id }}-{{ media.id }}">
+        <div class="product-media media-frame{% if forloop.first %} product-media--featured{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}">
           {%- case media.media_type -%}
             {%- when 'image' -%}
               {{
@@ -40,7 +40,7 @@
         </div>
       {%- endfor -%}
     {%- else -%}
-      <div class="product-media media-frame">
+      <div class="product-media media-frame product-media--featured">
         {{ 'product-1' | placeholder_svg_tag: 'media-frame__image placeholder-svg' }}
       </div>
     {%- endif -%}
