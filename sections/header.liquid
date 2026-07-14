@@ -125,6 +125,9 @@
                 value="{{ search.terms | escape }}"
                 placeholder="{{ 'general.search.placeholder' | t }}"
                 autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
                 aria-controls="PredictiveSearch-{{ section.id }}"
                 aria-expanded="false"
                 data-search-input
@@ -132,7 +135,7 @@
               <button class="icon-button header-search__button" type="submit" aria-label="{{ 'accessibility.search' | t }}">
                 <span aria-hidden="true"></span>
               </button>
-              <div id="PredictiveSearch-{{ section.id }}" class="predictive-search" data-predictive-search-results></div>
+              <div id="PredictiveSearch-{{ section.id }}" class="predictive-search" data-predictive-search-results aria-live="polite"></div>
             </form>
           </div>
         </details>

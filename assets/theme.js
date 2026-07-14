@@ -12,6 +12,8 @@
     return element.innerHTML;
   };
 
+  const escapeAttribute = (value) => escapeHTML(value).replace(/"/g, '&quot;');
+
   const formatMoney = (cents, format = moneyFormat) => {
     if (typeof cents === 'string') cents = cents.replace('.', '');
     const value = Number(cents || 0) / 100;
@@ -535,46 +537,142 @@
       const results = form.querySelector('[data-predictive-search-results]');
       if (!input || !results) return;
 
+      const labels = {
+        heading: strings.predictiveHeading || 'Suggested products',
+        loading: strings.searchLoading || 'Searching...',
+        noResults: strings.searchNoResults || 'No results found.',
+        viewAll: strings.searchViewAll || 'View all results'
+      };
+      const cache = new Map();
       let controller = null;
-      input.addEventListener('input', () => {
-        const query = input.value.trim();
-        input.setAttribute('aria-expanded', 'false');
-        results.classList.remove('is-open');
+      let debounceTimer = null;
 
-        if (controller) controller.abort();
-        if (query.length < 2) {
-          results.innerHTML = '';
+      const getSearchUrl = (query) => {
+        const predictiveRoute = window.Treadora?.routes?.predictiveSearch || '/search/suggest';
+        const predictivePath = predictiveRoute.endsWith('.json') ? predictiveRoute : `${predictiveRoute.replace(/\/$/, '')}.json`;
+        const url = new URL(predictivePath, window.location.origin);
+
+        url.searchParams.set('q', query);
+        url.searchParams.set('resources[type]', 'product');
+        url.searchParams.set('resources[limit]', '6');
+        url.searchParams.set('resources[options][unavailable_products]', 'last');
+        url.searchParams.set('resources[options][fields]', 'title,product_type,variants.title,vendor');
+
+        return url.toString();
+      };
+
+      const getResultsUrl = (query) => {
+        const url = new URL(window.Treadora?.routes?.search || '/search', window.location.origin);
+        url.searchParams.set('q', query);
+        url.searchParams.set('type', 'product,page,article');
+        return url.toString();
+      };
+
+      const setExpanded = (expanded) => {
+        input.setAttribute('aria-expanded', String(expanded));
+        results.classList.toggle('is-open', expanded);
+      };
+
+      const renderMessage = (message, modifier = '') => {
+        results.innerHTML = `<div class="predictive-search__status${modifier ? ` predictive-search__status--${modifier}` : ''}">${escapeHTML(message)}</div>`;
+        setExpanded(true);
+      };
+
+      const getProductImage = (product) => {
+        if (typeof product.image === 'string') return product.image;
+        return product.image?.url || product.featured_image?.url || product.featured_image || '';
+      };
+
+      const renderProductPrice = (product) => {
+        const price = product.price_min ?? product.price;
+        if (typeof price === 'number') return `<span class="predictive-search__price">${formatMoney(price)}</span>`;
+        if (typeof price === 'string' && price.trim()) return `<span class="predictive-search__price">${escapeHTML(price)}</span>`;
+        return '';
+      };
+
+      const renderProducts = (products, query) => {
+        if (!products.length) {
+          renderMessage(labels.noResults, 'empty');
           return;
         }
 
-        controller = new AbortController();
-        const url = `${window.Treadora.routes.predictiveSearch}?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=4&resources[options][unavailable_products]=last`;
+        const productMarkup = products.map((product) => {
+          const image = getProductImage(product);
+          const vendor = product.vendor || product.type || '';
+          const price = renderProductPrice(product);
 
-        fetch(url, { signal: controller.signal })
+          return `
+            <a class="predictive-search__item" href="${escapeAttribute(product.url || '#')}">
+              <span class="predictive-search__media">
+                ${
+                  image
+                    ? `<img src="${escapeAttribute(image)}" alt="${escapeAttribute(product.title || '')}" loading="lazy">`
+                    : '<span class="predictive-search__placeholder"></span>'
+                }
+              </span>
+              <span class="predictive-search__content">
+                ${vendor ? `<span class="predictive-search__meta">${escapeHTML(vendor)}</span>` : ''}
+                <span class="predictive-search__title">${escapeHTML(product.title || '')}</span>
+                ${price}
+              </span>
+            </a>
+          `;
+        }).join('');
+
+        results.innerHTML = `
+          <div class="predictive-search__header">${escapeHTML(labels.heading)}</div>
+          <div class="predictive-search__list">${productMarkup}</div>
+          <a class="predictive-search__view-all" href="${escapeAttribute(getResultsUrl(query))}">${escapeHTML(labels.viewAll)}</a>
+        `;
+        setExpanded(true);
+      };
+
+      const hideResults = () => {
+        results.innerHTML = '';
+        setExpanded(false);
+      };
+
+      const search = () => {
+        const query = input.value.trim();
+
+        if (controller) controller.abort();
+        if (query.length < 2) {
+          hideResults();
+          return;
+        }
+
+        if (cache.has(query)) {
+          renderProducts(cache.get(query), query);
+          return;
+        }
+
+        renderMessage(labels.loading, 'loading');
+        controller = new AbortController();
+
+        fetch(getSearchUrl(query), { signal: controller.signal })
           .then((response) => response.json())
           .then((data) => {
             const products = data.resources?.results?.products || [];
-            if (!products.length) {
-              results.innerHTML = '';
-              return;
-            }
-
-            results.innerHTML = products.map((product) => {
-              const image = product.image ? `<img src="${escapeHTML(product.image)}" alt="">` : '<span></span>';
-              return `<a href="${escapeHTML(product.url)}">${image}<span>${escapeHTML(product.title)}</span></a>`;
-            }).join('');
-            results.classList.add('is-open');
-            input.setAttribute('aria-expanded', 'true');
+            cache.set(query, products);
+            renderProducts(products, query);
           })
           .catch((error) => {
-            if (error.name !== 'AbortError') results.innerHTML = '';
+            if (error.name !== 'AbortError') renderMessage(labels.noResults, 'empty');
           });
+      };
+
+      input.addEventListener('input', () => {
+        window.clearTimeout(debounceTimer);
+        debounceTimer = window.setTimeout(search, 140);
+      });
+
+      input.addEventListener('focus', () => {
+        if (input.value.trim().length >= 2 && results.innerHTML.trim()) setExpanded(true);
       });
 
       document.addEventListener('click', (event) => {
         if (!form.contains(event.target)) {
-          results.classList.remove('is-open');
-          input.setAttribute('aria-expanded', 'false');
+          setExpanded(false);
         }
       });
     });
