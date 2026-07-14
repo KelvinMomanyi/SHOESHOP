@@ -4,18 +4,25 @@
       <p class="eyebrow">{{ settings.brand_name | default: 'Treadora' }}</p>
       <h1>Activate account</h1>
     </div>
+
     {%- form 'activate_customer_password', class: 'customer-form' -%}
       {{ form.errors | default_errors }}
       <div>
-        <label for="ActivatePassword">{{ 'customer.login.password' | t }}</label>
-        <input id="ActivatePassword" class="field__input" type="password" name="customer[password]" autocomplete="new-password" required>
+        <label for="ActivatePassword-{{ section.id }}">{{ 'customer.login.password' | t }}</label>
+        <input id="ActivatePassword-{{ section.id }}" class="field__input" type="password" name="customer[password]" autocomplete="new-password" required>
       </div>
       <div>
-        <label for="ActivatePasswordConfirmation">Confirm password</label>
-        <input id="ActivatePasswordConfirmation" class="field__input" type="password" name="customer[password_confirmation]" autocomplete="new-password" required>
+        <label for="ActivatePasswordConfirmation-{{ section.id }}">Confirm password</label>
+        <input id="ActivatePasswordConfirmation-{{ section.id }}" class="field__input" type="password" name="customer[password_confirmation]" autocomplete="new-password" required>
       </div>
       <button class="button" type="submit">Activate account</button>
       <button class="button button--secondary" type="submit" name="decline">Decline invitation</button>
     {%- endform -%}
   </div>
 </section>
+
+{% schema %}
+{
+  "name": "Customer activate account"
+}
+{% endschema %}

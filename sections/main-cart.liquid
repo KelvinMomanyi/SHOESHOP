@@ -62,8 +62,10 @@
 
             <button class="button button--secondary" type="submit" name="update">{{ 'cart.general.update' | t }}</button>
             <button class="button" type="submit" name="checkout">{{ 'cart.general.checkout' | t }}</button>
-            {%- if section.settings.show_dynamic_checkout -%}
-              {{ form | payment_button }}
+            {%- if section.settings.show_dynamic_checkout and additional_checkout_buttons -%}
+              <div class="cart-summary__accelerated-checkout additional-checkout-buttons">
+                {{ content_for_additional_checkout_buttons }}
+              </div>
             {%- endif -%}
           </div>
         </div>
