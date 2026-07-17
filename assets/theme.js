@@ -891,8 +891,9 @@
     updateMedia() {
       const mediaId = this.currentVariant?.featured_media?.id;
       if (!mediaId) return;
-      const target = document.querySelector(`[data-media-id="${this.sectionId}-${mediaId}"]`);
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      const gallery = this.form?.closest('.product')?.querySelector('[data-product-media-gallery]');
+      const thumbnail = gallery?.closest('.product__media-gallery')?.querySelector(`[data-media-thumbnail="${this.sectionId}-${mediaId}"]`);
+      if (thumbnail) thumbnail.click();
     }
 
     updatePickupAvailability() {
@@ -900,6 +901,40 @@
       if (pickup && this.currentVariant) pickup.update(this.currentVariant.id);
     }
   }
+
+  const initProductMediaGalleries = () => {
+    document.querySelectorAll('[data-product-media-gallery]').forEach((stage) => {
+      const gallery = stage.closest('.product__media-gallery');
+      if (!gallery || gallery.dataset.mediaGalleryReady) return;
+
+      const mediaItems = [...stage.querySelectorAll('[data-media-id]')];
+      const thumbnails = [...gallery.querySelectorAll('[data-media-thumbnail]')];
+      if (!mediaItems.length || !thumbnails.length) return;
+
+      gallery.dataset.mediaGalleryReady = 'true';
+
+      const selectMedia = (mediaId) => {
+        const selectedMedia = stage.querySelector(`[data-media-id="${mediaId}"]`);
+        if (!selectedMedia) return;
+
+        mediaItems.forEach((item) => {
+          const isSelected = item === selectedMedia;
+          item.classList.toggle('product-media--active', isSelected);
+          if (!isSelected) item.querySelectorAll('video').forEach((video) => video.pause());
+        });
+
+        thumbnails.forEach((thumbnail) => {
+          const isSelected = thumbnail.dataset.mediaThumbnail === mediaId;
+          thumbnail.classList.toggle('is-active', isSelected);
+          thumbnail.setAttribute('aria-pressed', String(isSelected));
+        });
+      };
+
+      thumbnails.forEach((thumbnail) => {
+        thumbnail.addEventListener('click', () => selectMedia(thumbnail.dataset.mediaThumbnail));
+      });
+    });
+  };
 
   const initAddressToggles = () => {
     document.querySelectorAll('[data-address-toggle]').forEach((button) => {
@@ -939,6 +974,7 @@
     initPredictiveSearch();
     initFacets();
     initHeaderDrawers();
+    initProductMediaGalleries();
     initAddressToggles();
   });
 })();

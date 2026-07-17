@@ -4,44 +4,73 @@
 -%}
 
 <section class="product product--main page-width" data-section-id="{{ section.id }}">
-  <div class="product__media-gallery">
+  <div class="product__media-gallery{% if product.media.size > 1 %} product__media-gallery--has-thumbnails{% endif %}">
     {%- if product.media.size > 0 -%}
-      {%- for media in product.media -%}
-        {%- liquid
-          assign media_loading = 'lazy'
-          assign media_alt = media.alt | escape
-          if forloop.first
-            assign media_loading = 'eager'
-          endif
-        -%}
-        <div class="product-media media-frame{% if forloop.first %} product-media--featured{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}">
-          {%- case media.media_type -%}
-            {%- when 'image' -%}
+      {%- if product.media.size > 1 -%}
+        <div class="product__media-thumbnails" data-product-media-thumbnails aria-label="Product media">
+          {%- for media in product.media -%}
+            <button
+              type="button"
+              class="product__media-thumbnail{% if forloop.first %} is-active{% endif %}"
+              data-media-thumbnail="{{ section.id }}-{{ media.id }}"
+              aria-label="View {{ media.alt | default: product.title | escape }}"
+              aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+            >
               {{
                 media.preview_image
-                | image_url: width: 1800
+                | image_url: width: 180
                 | image_tag:
-                  widths: '360, 533, 720, 940, 1200, 1500, 1800',
-                  sizes: '(min-width: 990px) 55vw, 100vw',
-                  loading: media_loading,
-                  class: 'media-frame__image',
-                  alt: media_alt,
-                  style: media.preview_image.presentation.focal_point
+                  widths: '80, 120, 180',
+                  sizes: '72px',
+                  loading: 'lazy',
+                  class: 'product__media-thumbnail-image',
+                  alt: ''
               }}
-            {%- when 'external_video' -%}
-              {{ media | external_video_tag: class: 'product-media__video' }}
-            {%- when 'video' -%}
-              {{ media | video_tag: controls: true, image_size: '1200x', class: 'product-media__video' }}
-            {%- when 'model' -%}
-              {{ media | model_viewer_tag: class: 'product-media__model', reveal: 'interaction' }}
-            {%- else -%}
-              {{ media | media_tag }}
-          {%- endcase -%}
+            </button>
+          {%- endfor -%}
         </div>
-      {%- endfor -%}
+      {%- endif -%}
+
+      <div class="product__media-stage" data-product-media-gallery>
+        {%- for media in product.media -%}
+          {%- liquid
+            assign media_loading = 'lazy'
+            assign media_alt = media.alt | escape
+            if forloop.first
+              assign media_loading = 'eager'
+            endif
+          -%}
+          <div class="product-media media-frame{% if forloop.first %} product-media--active{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}">
+            {%- case media.media_type -%}
+              {%- when 'image' -%}
+                {{
+                  media.preview_image
+                  | image_url: width: 1800
+                  | image_tag:
+                    widths: '360, 533, 720, 940, 1200, 1500, 1800',
+                    sizes: '(min-width: 990px) 50vw, 100vw',
+                    loading: media_loading,
+                    class: 'media-frame__image',
+                    alt: media_alt,
+                    style: media.preview_image.presentation.focal_point
+                }}
+              {%- when 'external_video' -%}
+                {{ media | external_video_tag: class: 'product-media__video' }}
+              {%- when 'video' -%}
+                {{ media | video_tag: controls: true, image_size: '1200x', class: 'product-media__video' }}
+              {%- when 'model' -%}
+                {{ media | model_viewer_tag: class: 'product-media__model', reveal: 'interaction' }}
+              {%- else -%}
+                {{ media | media_tag }}
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+      </div>
     {%- else -%}
-      <div class="product-media media-frame product-media--featured">
-        {{ 'product-1' | placeholder_svg_tag: 'media-frame__image placeholder-svg' }}
+      <div class="product__media-stage">
+        <div class="product-media media-frame product-media--active">
+          {{ 'product-1' | placeholder_svg_tag: 'media-frame__image placeholder-svg' }}
+        </div>
       </div>
     {%- endif -%}
   </div>
