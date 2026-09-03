@@ -1,0 +1,184 @@
+{%- liquid
+  assign item_count = section.blocks.size
+  if item_count == 0
+    assign item_count = 8
+  endif
+  assign section_height = section.settings.scroll_length
+-%}
+
+<section class="image-spread section-{{ section.id }}" data-image-spread style="--image-spread-height: {{ section_height }}svh;">
+  <div class="image-spread__stage">
+    <div class="image-spread__text">
+      {%- if section.settings.kicker != blank -%}
+        <p class="eyebrow">{{ section.settings.kicker }}</p>
+      {%- endif -%}
+      <h2>{{ section.settings.heading }}</h2>
+      {%- if section.settings.text != blank -%}
+        <p>{{ section.settings.text }}</p>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <a class="button button--light" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
+          {{ section.settings.button_label }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="image-spread__items" style="--image-spread-count: {{ item_count }};">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign spread_product = block.settings.product
+            assign spread_collection = block.settings.collection
+            assign spread_image = block.settings.image | default: spread_product.featured_media.preview_image | default: spread_product.featured_image | default: spread_collection.featured_image
+            assign spread_title = block.settings.title | default: spread_product.title | default: spread_collection.title
+            assign spread_link = block.settings.link | default: spread_product.url | default: spread_collection.url | default: section.settings.button_link | default: routes.all_products_collection_url
+          -%}
+          <a
+            class="image-spread__item{% if forloop.last and section.settings.last_image_cover %} is-cover{% endif %}"
+            href="{{ spread_link }}"
+            data-flow-item
+            style="--flow-index: {{ forloop.index0 }};"
+            {{ block.shopify_attributes }}
+          >
+            {%- if spread_image != blank -%}
+              {%- render 'responsive-image',
+                image: spread_image,
+                class: 'image-spread__img',
+                sizes: '(min-width: 990px) 500px, 70vw',
+                alt: spread_title
+              -%}
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'image-spread__img placeholder-svg' }}
+            {%- endif -%}
+            <span>{{ spread_title | default: 'Featured shoe' }}</span>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..8) -%}
+          <a
+            class="image-spread__item{% if forloop.last and section.settings.last_image_cover %} is-cover{% endif %}"
+            href="{{ section.settings.button_link | default: routes.all_products_collection_url }}"
+            data-flow-item
+            style="--flow-index: {{ forloop.index0 }};"
+          >
+            {{ 'product-1' | placeholder_svg_tag: 'image-spread__img placeholder-svg' }}
+            <span>{{ 'general.onboarding.featured_shoe' | t }}</span>
+          </a>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.image_spread.s001",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "t:sections.image_spread.s002",
+      "default": "Shop in motion"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.image_spread.s003",
+      "default": "Every step opens into its own world"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "t:sections.image_spread.s004",
+      "default": "A footwear journey where featured shoes move from one focal point into a full seasonal edit."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.image_spread.s005",
+      "default": "Shop footwear"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.image_spread.s006"
+    },
+    {
+      "type": "range",
+      "id": "scroll_length",
+      "label": "t:sections.image_spread.s007",
+      "min": 300,
+      "max": 900,
+      "step": 50,
+      "unit": "vh",
+      "default": 450
+    },
+    {
+      "type": "checkbox",
+      "id": "last_image_cover",
+      "label": "t:sections.image_spread.s008",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "t:sections.image_spread.s009",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.image_spread.s010"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.image_spread.s011"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.image_spread.s012"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.image_spread.s013"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.image_spread.s014"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.image_spread.s015",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

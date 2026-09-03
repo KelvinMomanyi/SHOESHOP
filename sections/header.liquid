@@ -1,0 +1,290 @@
+{%- liquid
+  assign menu = linklists[section.settings.menu]
+  assign logo = section.settings.logo | default: settings.logo
+  assign brand_name = settings.brand_name | default: 'Treadora'
+  assign account_link = routes.account_login_url
+  assign account_label = 'customer.login.submit' | t
+
+  if customer
+    assign account_link = routes.account_logout_url
+    assign account_label = 'customer.account.log_out' | t
+  endif
+-%}
+
+<header class="site-header" data-section-id="{{ section.id }}">
+  <div class="site-header__inner page-width">
+    <details class="mobile-drawer" data-modal-drawer>
+      <summary class="site-header__action mobile-drawer__summary" aria-label="{{ 'accessibility.menu' | t }}" title="{{ 'accessibility.menu' | t }}">
+        {%- render 'icon-menu' -%}
+        <span class="visually-hidden">{{ 'accessibility.menu' | t }}</span>
+      </summary>
+      <div
+        class="mobile-drawer__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="{{ 'accessibility.mobile_navigation' | t }}"
+        tabindex="-1"
+        data-modal-panel
+      >
+        <div class="mobile-drawer__header">
+          <span class="eyebrow">{{ 'accessibility.menu' | t }}</span>
+          <strong>{{ brand_name }}</strong>
+        </div>
+
+        <nav class="mobile-nav" aria-label="{{ 'accessibility.mobile_navigation' | t }}">
+          <ul role="list">
+            {%- for link in menu.links -%}
+              <li class="{% if link.links != blank %}mobile-nav__item--has-children{% endif %}">
+                <a href="{{ link.url }}">{{ link.title }}</a>
+                {%- if link.links != blank -%}
+                  <ul role="list">
+                    {%- for child_link in link.links -%}
+                      <li class="{% if child_link.links != blank %}mobile-nav__item--has-children{% endif %}">
+                        <a href="{{ child_link.url }}">{{ child_link.title }}</a>
+                        {%- if child_link.links != blank -%}
+                          <ul role="list">
+                            {%- for grandchild_link in child_link.links -%}
+                              <li><a href="{{ grandchild_link.url }}">{{ grandchild_link.title }}</a></li>
+                            {%- endfor -%}
+                          </ul>
+                        {%- endif -%}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+
+        <div class="mobile-drawer__actions">
+          {%- if shop.customer_accounts_enabled -%}
+            <a class="mobile-drawer__action" href="{{ account_link }}" aria-label="{{ account_label | escape }}">
+              <span class="mobile-drawer__action-label">
+                <span class="mobile-drawer__action-icon">{%- render 'icon-profile' -%}</span>
+                <span>{{ account_label }}</span>
+              </span>
+            </a>
+          {%- endif -%}
+
+          <button class="mobile-drawer__action mobile-drawer__cart" type="button" data-cart-open aria-label="{{ 'accessibility.cart' | t }}: {{ cart.item_count }}">
+            <span class="mobile-drawer__action-label">
+              <span class="mobile-drawer__action-icon">{%- render 'icon-cart' -%}</span>
+              <span>{{ 'accessibility.cart' | t }}</span>
+            </span>
+            <strong>{{ cart.item_count }}</strong>
+          </button>
+        </div>
+      </div>
+    </details>
+
+    <a class="site-header__brand" href="{{ routes.root_url }}" aria-label="{{ brand_name | escape }}">
+      {%- if logo != blank -%}
+        {{ logo | image_url: width: 280 | image_tag: widths: '120, 180, 240, 280', loading: 'eager', class: 'site-header__logo', alt: brand_name }}
+      {%- else -%}
+        <span class="site-header__name">{{ brand_name }}</span>
+      {%- endif -%}
+    </a>
+
+    <nav class="site-header__nav" aria-label="{{ 'accessibility.primary_navigation' | t }}">
+      <ul role="list">
+        {%- for link in menu.links -%}
+          <li class="{% if link.links != blank %}has-submenu{% endif %}">
+            <a href="{{ link.url }}">{{ link.title }}</a>
+            {%- if link.links != blank -%}
+              <ul class="site-header__submenu" role="list">
+                {%- for child_link in link.links -%}
+                  <li>
+                    <a href="{{ child_link.url }}">{{ child_link.title }}</a>
+                    {%- if child_link.links != blank -%}
+                      <ul role="list">
+                        {%- for grandchild_link in child_link.links -%}
+                          <li><a href="{{ grandchild_link.url }}">{{ grandchild_link.title }}</a></li>
+                        {%- endfor -%}
+                      </ul>
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="site-header__tools">
+      {%- if section.settings.show_search -%}
+        <details class="header-search" data-search-drawer>
+          <summary class="site-header__action header-search__summary" aria-label="{{ 'accessibility.search' | t }}" title="{{ 'accessibility.search' | t }}">
+            <span class="header-search__glyph" aria-hidden="true"></span>
+            <span class="visually-hidden">{{ 'accessibility.search' | t }}</span>
+          </summary>
+
+          <div class="header-search__panel">
+            <form action="{{ routes.search_url }}" method="get" role="search" class="header-search__form" data-predictive-search>
+              <input type="hidden" name="type" value="product,page,article">
+              <label class="visually-hidden" for="HeaderSearch-{{ section.id }}">{{ 'accessibility.search' | t }}</label>
+              <input
+                id="HeaderSearch-{{ section.id }}"
+                class="header-search__input"
+                type="search"
+                name="q"
+                value="{{ search.terms | escape }}"
+                placeholder="{{ 'general.search.placeholder' | t }}"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+                aria-controls="PredictiveSearch-{{ section.id }}"
+                aria-expanded="false"
+                data-search-input
+              >
+              <button class="icon-button header-search__button" type="submit" aria-label="{{ 'accessibility.search' | t }}">
+                <span aria-hidden="true"></span>
+              </button>
+              <div id="PredictiveSearch-{{ section.id }}" class="predictive-search" data-predictive-search-results aria-live="polite"></div>
+            </form>
+          </div>
+        </details>
+      {%- endif -%}
+
+      {%- if shop.customer_accounts_enabled -%}
+        <shopify-account
+          class="site-header__action site-header__account"
+          menu="{{ section.settings.customer_account_menu }}"
+        >
+          <span class="site-header__account-icon" slot="signed-out-avatar">
+            {%- render 'icon-profile' -%}
+          </span>
+        </shopify-account>
+      {%- endif -%}
+
+      <details class="cart-drawer" data-cart-drawer data-modal-drawer>
+        <summary class="site-header__action site-header__cart" aria-label="{{ 'accessibility.cart' | t }}: {{ cart.item_count }}" title="{{ 'accessibility.cart' | t }}">
+          {%- render 'icon-cart' -%}
+          <span class="visually-hidden">{{ 'accessibility.cart' | t }}</span>
+          <span class="site-header__cart-count">{{ cart.item_count }}</span>
+        </summary>
+
+        <button class="cart-drawer__overlay" type="button" data-details-close aria-label="{{ 'accessibility.close' | t }}"></button>
+        <aside
+          class="cart-drawer__panel"
+          role="dialog"
+          aria-modal="true"
+          aria-label="{{ 'cart.general.title' | t }}"
+          tabindex="-1"
+          data-modal-panel
+        >
+          <div class="cart-drawer__header">
+            <div>
+              <p class="eyebrow">{{ 'cart.general.item_count' | t: count: cart.item_count }}</p>
+              <h2>{{ 'cart.general.title' | t }}</h2>
+            </div>
+            <button class="cart-drawer__close" type="button" data-details-close aria-label="{{ 'accessibility.close' | t }}">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+            </button>
+          </div>
+
+          {%- if cart.item_count == 0 -%}
+            <div class="cart-drawer__empty">
+              <p>{{ 'cart.general.empty' | t }}</p>
+              <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'cart.general.continue_shopping' | t }}</a>
+            </div>
+          {%- else -%}
+            <div class="cart-drawer__items">
+              {%- for item in cart.items -%}
+                {%- assign cart_item_image_alt = item.image.alt | default: item.product.title -%}
+                <article class="cart-drawer__item">
+                  <a class="cart-drawer__item-media" href="{{ item.url }}">
+                    {%- if item.image -%}
+                      {{
+                        item.image
+                        | image_url: width: 180
+                        | image_tag:
+                          widths: '90, 140, 180',
+                          loading: 'lazy',
+                          alt: cart_item_image_alt
+                      }}
+                    {%- else -%}
+                      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    {%- endif -%}
+                  </a>
+                  <div class="cart-drawer__item-details">
+                    <a class="cart-drawer__item-title" href="{{ item.url }}">{{ item.product.title }}</a>
+                    {%- if item.options_with_values.size > 0 -%}
+                      <dl class="cart-drawer__options">
+                        {%- for option in item.options_with_values -%}
+                          <div>
+                            <dt>{{ option.name }}</dt>
+                            <dd>{{ option.value }}</dd>
+                          </div>
+                        {%- endfor -%}
+                      </dl>
+                    {%- endif -%}
+                    {%- if item.selling_plan_allocation -%}
+                      <p class="cart-drawer__meta">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+                    {%- endif -%}
+                    <div class="cart-drawer__item-bottom">
+                      <span>{{ 'accessibility.quantity' | t }}: {{ item.quantity }}</span>
+                      <strong>{{ item.final_line_price | money }}</strong>
+                    </div>
+                  </div>
+                </article>
+              {%- endfor -%}
+            </div>
+
+            <div class="cart-drawer__footer">
+              {%- for discount_application in cart.cart_level_discount_applications -%}
+                <div class="cart-drawer__row">
+                  <span>{{ discount_application.title }}</span>
+                  <strong>-{{ discount_application.total_allocated_amount | money }}</strong>
+                </div>
+              {%- endfor -%}
+              <div class="cart-drawer__row cart-drawer__row--total">
+                <span>{{ 'cart.general.subtotal' | t }}</span>
+                <strong>{{ cart.total_price | money_with_currency }}</strong>
+              </div>
+              <p>{{ 'cart.general.shipping_at_checkout' | t }}</p>
+              <form action="{{ routes.cart_url }}" method="post" class="cart-drawer__checkout">
+                <button class="button" type="submit" name="checkout">{{ 'cart.general.checkout' | t }}</button>
+              </form>
+              <a class="button button--secondary" href="{{ routes.cart_url }}">{{ 'cart.general.title' | t }}</a>
+            </div>
+          {%- endif -%}
+        </aside>
+      </details>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "t:sections.header.s001",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:sections.header.s002"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "t:sections.header.s003",
+      "default": "main-menu"
+    },
+    {
+      "type": "link_list",
+      "id": "customer_account_menu",
+      "label": "t:sections.header.s004",
+      "default": "customer-account-main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "t:sections.header.s005",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

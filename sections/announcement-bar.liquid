@@ -1,0 +1,76 @@
+{%- liquid
+  assign message_1 = section.settings.text | default: 'Free shipping over $100'
+  assign message_2 = section.settings.text_2 | default: 'New arrivals just landed'
+  assign message_3 = section.settings.text_3 | default: 'Easy returns within 30 days'
+-%}
+
+{%- if message_1 != blank or message_2 != blank or message_3 != blank -%}
+  {%- capture announcement_label -%}
+    {{ message_1 }}. {{ message_2 }}. {{ message_3 }}
+  {%- endcapture -%}
+
+  <aside
+    class="announcement-bar"
+    role="region"
+    aria-label="{{ 'accessibility.announcement' | t }}"
+    style="--announcement-background: {{ section.settings.color_background }}; --announcement-text: {{ section.settings.color_text }};"
+  >
+    {%- if section.settings.link != blank -%}
+      <a href="{{ section.settings.link }}" class="announcement-bar__link announcement-bar__items" aria-label="{{ announcement_label | strip | escape }}">
+        <span class="announcement-bar__message announcement-bar__message--first" style="--announcement-delay: 0s;" aria-hidden="true">{{ message_1 }}</span>
+        <span class="announcement-bar__message" style="--announcement-delay: 3.2s;" aria-hidden="true">{{ message_2 }}</span>
+        <span class="announcement-bar__message" style="--announcement-delay: 6.4s;" aria-hidden="true">{{ message_3 }}</span>
+      </a>
+    {%- else -%}
+      <p class="announcement-bar__items">
+        <span class="visually-hidden">{{ announcement_label | strip }}</span>
+        <span class="announcement-bar__message announcement-bar__message--first" style="--announcement-delay: 0s;" aria-hidden="true">{{ message_1 }}</span>
+        <span class="announcement-bar__message" style="--announcement-delay: 3.2s;" aria-hidden="true">{{ message_2 }}</span>
+        <span class="announcement-bar__message" style="--announcement-delay: 6.4s;" aria-hidden="true">{{ message_3 }}</span>
+      </p>
+    {%- endif -%}
+  </aside>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.announcement_bar.s001",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:sections.announcement_bar.s002",
+      "default": "Free shipping over $100"
+    },
+    {
+      "type": "text",
+      "id": "text_2",
+      "label": "t:sections.announcement_bar.s003",
+      "default": "New arrivals just landed"
+    },
+    {
+      "type": "text",
+      "id": "text_3",
+      "label": "t:sections.announcement_bar.s004",
+      "default": "Easy returns within 30 days"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:sections.announcement_bar.s005"
+    },
+    {
+      "type": "color",
+      "id": "color_background",
+      "label": "t:sections.announcement_bar.s006",
+      "default": "#a6bd2f"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "t:sections.announcement_bar.s007",
+      "default": "#111111"
+    }
+  ]
+}
+{% endschema %}

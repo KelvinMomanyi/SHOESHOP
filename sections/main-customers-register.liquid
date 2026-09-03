@@ -1,0 +1,35 @@
+<section class="customer-page section-band">
+  <div class="page-width customer-auth">
+    <div class="section-heading">
+      <p class="eyebrow">{{ settings.brand_name | default: 'Treadora' }}</p>
+      <h1>{{ 'customer.register.title' | t }}</h1>
+    </div>
+
+    {%- form 'create_customer', class: 'customer-form' -%}
+      {{ form.errors | default_errors }}
+      <div>
+        <label for="RegisterFirstName-{{ section.id }}">{{ 'customer.register.first_name' | t }}</label>
+        <input id="RegisterFirstName-{{ section.id }}" class="field__input" type="text" name="customer[first_name]" autocomplete="given-name">
+      </div>
+      <div>
+        <label for="RegisterLastName-{{ section.id }}">{{ 'customer.register.last_name' | t }}</label>
+        <input id="RegisterLastName-{{ section.id }}" class="field__input" type="text" name="customer[last_name]" autocomplete="family-name">
+      </div>
+      <div>
+        <label for="RegisterEmail-{{ section.id }}">{{ 'customer.register.email' | t }}</label>
+        <input id="RegisterEmail-{{ section.id }}" class="field__input" type="email" name="customer[email]" autocomplete="email" required>
+      </div>
+      <div>
+        <label for="RegisterPassword-{{ section.id }}">{{ 'customer.register.password' | t }}</label>
+        <input id="RegisterPassword-{{ section.id }}" class="field__input" type="password" name="customer[password]" autocomplete="new-password" required>
+      </div>
+      <button class="button" type="submit">{{ 'customer.register.submit' | t }}</button>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.main_customers_register.s001"
+}
+{% endschema %}

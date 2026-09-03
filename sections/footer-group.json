@@ -1,0 +1,25 @@
+{
+  "type": "footer",
+  "name": "t:section_groups.footer_group.s001",
+  "sections": {
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "New drops, fit notes, and care tips",
+        "text": "Footwear launches, restocks, limited colorways, and practical notes for finding the right pair."
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "menu": "footer",
+        "show_localization": true,
+        "show_follow_on_shop": true
+      }
+    }
+  },
+  "order": [
+    "newsletter",
+    "footer"
+  ]
+}

@@ -1,0 +1,37 @@
+{%- liquid
+  assign form_id = id | default: 'localization'
+  assign has_country_selector = false
+  assign has_language_selector = false
+  if localization.available_countries.size > 1
+    assign has_country_selector = true
+  endif
+  if localization.available_languages.size > 1
+    assign has_language_selector = true
+  endif
+-%}
+
+{%- if has_country_selector or has_language_selector -%}
+  {%- form 'localization', id: form_id, class: 'localization-form' -%}
+    {%- if has_country_selector -%}
+      <label class="visually-hidden" for="{{ form_id }}-country">{{ 'localization.country_label' | t }}</label>
+      <select id="{{ form_id }}-country" name="country_code" class="field__input localization-form__select" onchange="this.form.submit()">
+        {%- for country in localization.available_countries -%}
+          <option value="{{ country.iso_code }}" {%- if country.iso_code == localization.country.iso_code %} selected{% endif %}>
+            {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+          </option>
+        {%- endfor -%}
+      </select>
+    {%- endif -%}
+
+    {%- if has_language_selector -%}
+      <label class="visually-hidden" for="{{ form_id }}-language">{{ 'localization.language_label' | t }}</label>
+      <select id="{{ form_id }}-language" name="locale_code" class="field__input localization-form__select" onchange="this.form.submit()">
+        {%- for language in localization.available_languages -%}
+          <option value="{{ language.iso_code }}" {%- if language.iso_code == localization.language.iso_code %} selected{% endif %}>
+            {{ language.endonym_name | capitalize }}
+          </option>
+        {%- endfor -%}
+      </select>
+    {%- endif -%}
+  {%- endform -%}
+{%- endif -%}

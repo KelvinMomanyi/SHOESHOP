@@ -1,0 +1,276 @@
+{
+  "accessibility": {
+    "skip_to_text": "Skip to content",
+    "close": "Close",
+    "search": "Search",
+    "search_products": "Search products",
+    "menu": "Menu",
+    "announcement": "Announcement",
+    "primary_navigation": "Primary navigation",
+    "mobile_navigation": "Mobile navigation",
+    "footer_navigation": "Footer navigation",
+    "pagination": "Pagination",
+    "payment_methods": "Payment methods",
+    "cart": "Cart",
+    "image": "Image",
+    "product_media": "Product media",
+    "view_media": "View {{ title }}",
+    "read_article": "Read {{ title }}",
+    "quantity": "Quantity",
+    "increase_quantity": "Increase quantity for {{ title }}",
+    "decrease_quantity": "Decrease quantity for {{ title }}"
+  },
+  "general": {
+    "actions": {
+      "submit": "Submit",
+      "send": "Send",
+      "edit": "Edit",
+      "delete": "Delete",
+      "update": "Update"
+    },
+    "404": {
+      "title": "Page not found",
+      "subtext": "The page you requested does not exist.",
+      "link": "Continue shopping"
+    },
+    "search": {
+      "title": "Search",
+      "search": "Search",
+      "placeholder": "Search the store",
+      "results_with_count": "{{ count }} results for \"{{ terms }}\"",
+      "no_results": "No results found.",
+      "predictive_heading": "Suggested products",
+      "loading": "Searching...",
+      "view_all": "View all results"
+    },
+    "newsletter": {
+      "label": "Email",
+      "placeholder": "Email address",
+      "button": "Subscribe",
+      "success": "Thanks for subscribing."
+    },
+    "contact": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "success": "Thanks for contacting us."
+    },
+    "onboarding": {
+      "collection_title": "Collection title",
+      "curated_edit": "Curated edit",
+      "featured_shoe": "Featured shoe",
+      "featured_collection": "Featured collection",
+      "shop_now": "Shop now",
+      "footwear_chapter": "Footwear chapter",
+      "footwear_description": "Use this block for shoe fit notes, material stories, collection launches, or performance details.",
+      "layered_shoe": "Layered shoe"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "social": {
+      "share_on_facebook": "Share on Facebook",
+      "share_on_x": "Share on X",
+      "share_on_pinterest": "Share on Pinterest"
+    }
+  },
+  "localization": {
+    "country_label": "Country/region",
+    "language_label": "Language"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "sale": "Sale",
+      "unavailable": "Unavailable",
+      "quantity": "Quantity",
+      "title_placeholder": "Product title",
+      "in_stock": "{{ count }} in stock",
+      "quantity_rule_minimum": "Minimum {{ quantity }}",
+      "quantity_rule_maximum": "Maximum {{ quantity }}",
+      "quantity_rule_increment": "Increments of {{ quantity }}",
+      "volume_pricing": "Volume pricing",
+      "volume_price_break": "{{ quantity }}+",
+      "each": "each",
+      "sale_price": "Sale price",
+      "regular_price": "Regular price",
+      "unit_price": "Unit price",
+      "vendor": "Vendor",
+      "sku": "SKU",
+      "selling_plan": "Purchase option",
+      "one_time_purchase": "One-time purchase",
+      "tax_included": "Tax included.",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Shipping</a> calculated at checkout.",
+      "pickup_availability": {
+        "loading": "Checking pickup availability",
+        "available": "Pickup available",
+        "unavailable": "Pickup currently unavailable",
+        "view_store_info": "View store information"
+      },
+      "recipient": {
+        "checkbox": "Send as a gift",
+        "email": "Recipient email",
+        "name": "Recipient name",
+        "message": "Message",
+        "send_on": "Send on"
+      },
+      "share": "Share",
+      "recommendations": "You may also like",
+      "complementary": "Complete the set"
+    },
+    "collection": {
+      "product_count": {
+        "one": "{{ count }} product",
+        "other": "{{ count }} products"
+      },
+      "no_products": "No products found."
+    },
+    "facets": {
+      "filter_and_sort": "Filter and sort",
+      "filter_by_label": "Filter by",
+      "sort_by_label": "Sort by",
+      "min_price": "Min",
+      "max_price": "Max",
+      "apply": "Apply",
+      "clear": "Clear",
+      "clear_all": "Clear all"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Cart",
+      "item_count": {
+        "one": "{{ count }} item",
+        "other": "{{ count }} items"
+      },
+      "empty": "Your cart is empty.",
+      "continue_shopping": "Continue shopping",
+      "remove": "Remove",
+      "subtotal": "Subtotal",
+      "checkout": "Check out",
+      "discount": "Discount",
+      "tax_included": "Tax included.",
+      "shipping_at_checkout": "Shipping calculated at checkout.",
+      "update": "Update cart",
+      "note": "Order note",
+      "product": "Product",
+      "unit_price": "Unit price",
+      "total": "Total"
+    }
+  },
+  "blog": {
+    "articles": {
+      "story_count": {
+        "one": "{{ count }} story",
+        "other": "{{ count }} stories"
+      },
+      "read_story": "Read story",
+      "latest_news": "Latest news",
+      "editors_picks": "Editor's picks",
+      "selected_stories": "Selected stories from the {{ blog }} journal.",
+      "empty": "There are no stories here yet. Check back soon."
+    },
+    "comments": {
+      "title": {
+        "one": "{{ count }} comment",
+        "other": "{{ count }} comments"
+      },
+      "leave": "Leave a comment",
+      "name": "Name",
+      "email": "Email",
+      "comment": "Comment",
+      "post": "Post comment",
+      "success": "Comment posted."
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "Account",
+      "details": "Account details",
+      "view_addresses": "View addresses",
+      "log_out": "Log out",
+      "orders": "Orders",
+      "order": "Order",
+      "date": "Date",
+      "payment": "Payment",
+      "fulfillment": "Fulfillment",
+      "total": "Total",
+      "no_orders": "No orders yet."
+    },
+    "login": {
+      "title": "Log in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Log in",
+      "forgot_password": "Forgot your password?",
+      "create_account": "Create account",
+      "recover_submit": "Submit"
+    },
+    "register": {
+      "title": "Create account",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create"
+    },
+    "addresses": {
+      "title": "Addresses",
+      "add_new": "Add a new address",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "company": "Company",
+      "address1": "Address 1",
+      "address2": "Address 2",
+      "city": "City",
+      "country": "Country",
+      "province": "Province",
+      "postal_code": "Postal code",
+      "phone": "Phone",
+      "set_default": "Set as default address",
+      "default": "Default",
+      "add": "Add address",
+      "delete_confirm": "Delete address?"
+    },
+    "activate_account": {
+      "title": "Activate account",
+      "password_confirmation": "Confirm password",
+      "submit": "Activate account",
+      "decline": "Decline invitation"
+    },
+    "reset_password": {
+      "title": "Reset password",
+      "password_confirmation": "Confirm password",
+      "submit": "Reset password"
+    },
+    "order": {
+      "title": "Order {{ name }}",
+      "date": "Placed on {{ date }}",
+      "product": "Product",
+      "sku": "SKU",
+      "price": "Price",
+      "quantity": "Quantity",
+      "billing_address": "Billing address",
+      "shipping_address": "Shipping address",
+      "shipping": "Shipping",
+      "tax": "Tax",
+      "total": "Total"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "{{ value }} gift card for {{ shop }}",
+      "subtext": "Your gift card",
+      "remaining_html": "{{ balance }} remaining",
+      "expired": "Expired on {{ expiry }}",
+      "active": "Expires on {{ expiry }}",
+      "redeem": "Use this code at checkout",
+      "qr_image_alt": "QR code for gift card",
+      "shop_now": "Shop now",
+      "print": "Print",
+      "add_to_apple_wallet": "Add to Apple Wallet"
+    }
+  }
+}

@@ -1,0 +1,119 @@
+{%- liquid
+  assign menu = linklists[section.settings.menu]
+  assign brand_name = settings.brand_name | default: 'Treadora'
+-%}
+
+<footer class="site-footer">
+  <div class="site-footer__inner page-width">
+    <div class="site-footer__brand">
+      <a href="{{ routes.root_url }}">
+        {%- if section.settings.logo != blank -%}
+          {{ section.settings.logo | image_url: width: 280 | image_tag: widths: '120, 180, 240, 280', loading: 'lazy', class: 'site-footer__logo', alt: brand_name }}
+        {%- else -%}
+          {{ brand_name }}
+        {%- endif -%}
+      </a>
+      {%- if shop.description != blank -%}
+        <p>{{ shop.description }}</p>
+      {%- else -%}
+        <p>{{ section.settings.text }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="site-footer__nav">
+      {%- if menu.links != blank -%}
+      <nav aria-label="{{ 'accessibility.footer_navigation' | t }}">
+          <ul role="list">
+            {%- for link in menu.links -%}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+    </div>
+
+    <div class="site-footer__meta">
+      <div class="site-footer__social">
+        {%- if settings.social_instagram_link != blank -%}
+          <a href="{{ settings.social_instagram_link }}" rel="noopener nofollow" target="_blank" aria-label="Instagram">
+            {%- render 'icon-social', icon: 'instagram' -%}
+          </a>
+        {%- endif -%}
+        {%- if settings.social_tiktok_link != blank -%}
+          <a href="{{ settings.social_tiktok_link }}" rel="noopener nofollow" target="_blank" aria-label="TikTok">
+            {%- render 'icon-social', icon: 'tiktok' -%}
+          </a>
+        {%- endif -%}
+        {%- if settings.social_youtube_link != blank -%}
+          <a href="{{ settings.social_youtube_link }}" rel="noopener nofollow" target="_blank" aria-label="YouTube">
+            {%- render 'icon-social', icon: 'youtube' -%}
+          </a>
+        {%- endif -%}
+        {%- if settings.social_pinterest_link != blank -%}
+          <a href="{{ settings.social_pinterest_link }}" rel="noopener nofollow" target="_blank" aria-label="Pinterest">
+            {%- render 'icon-social', icon: 'pinterest' -%}
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_localization -%}
+        {%- render 'localization-form', id: 'FooterLocalization' -%}
+      {%- endif -%}
+
+      {%- if shop.features.follow_on_shop? and section.settings.show_follow_on_shop -%}
+        <div class="site-footer__follow-on-shop">
+          {{ shop | login_button: action: 'follow' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+        <ul class="site-footer__payments" role="list" aria-label="{{ 'accessibility.payment_methods' | t }}">
+        {%- for type in shop.enabled_payment_types -%}
+          <li>{{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    <div class="site-footer__bottom">
+      <small>&copy; {{ 'now' | date: '%Y' }} {{ brand_name }}</small>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "t:sections.footer.s001",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:sections.footer.s002"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "t:sections.footer.s003",
+      "default": "Performance shoes, everyday sneakers, and recovery essentials for every pace."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "t:sections.footer.s004",
+      "default": "footer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_localization",
+      "label": "t:sections.footer.s005",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_follow_on_shop",
+      "label": "t:sections.footer.s006",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

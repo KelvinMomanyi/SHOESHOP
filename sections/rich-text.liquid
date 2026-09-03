@@ -1,0 +1,87 @@
+<section class="rich-text-section section-band">
+  <div class="rich-text-section__inner rich-text-section__inner--{{ section.settings.alignment }} page-width reveal-item">
+    {%- if section.settings.image != blank -%}
+      <div class="rich-text-section__media media-frame">
+        {%- render 'responsive-image',
+          image: section.settings.image,
+          class: 'media-frame__image',
+          sizes: '(min-width: 990px) 48vw, 100vw'
+        -%}
+      </div>
+    {%- endif -%}
+    {%- if section.settings.kicker != blank -%}
+      <p class="eyebrow">{{ section.settings.kicker }}</p>
+    {%- endif -%}
+    <h2>{{ section.settings.heading }}</h2>
+    {%- if section.settings.text != blank -%}
+      <div class="rte">{{ section.settings.text }}</div>
+    {%- endif -%}
+    {%- if section.settings.button_label != blank -%}
+      <a class="button" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
+        {{ section.settings.button_label }}
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.rich_text.s001",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "t:sections.rich_text.s002",
+      "default": "Note"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.rich_text.s003"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.rich_text.s004",
+      "default": "Built for Treadora"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:sections.rich_text.s005",
+      "default": "<p>Use this section for fit guidance, material notes, footwear care, sizing details, and campaign messaging.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.rich_text.s006"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.rich_text.s007"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:sections.rich_text.s008",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.rich_text.s009"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.rich_text.s010"
+        }
+      ],
+      "default": "center"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.rich_text.s011"
+    }
+  ]
+}
+{% endschema %}

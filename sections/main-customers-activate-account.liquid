@@ -1,0 +1,28 @@
+<section class="customer-page section-band">
+  <div class="page-width customer-auth">
+    <div class="section-heading">
+      <p class="eyebrow">{{ settings.brand_name | default: 'Treadora' }}</p>
+      <h1>{{ 'customer.activate_account.title' | t }}</h1>
+    </div>
+
+    {%- form 'activate_customer_password', class: 'customer-form' -%}
+      {{ form.errors | default_errors }}
+      <div>
+        <label for="ActivatePassword-{{ section.id }}">{{ 'customer.login.password' | t }}</label>
+        <input id="ActivatePassword-{{ section.id }}" class="field__input" type="password" name="customer[password]" autocomplete="new-password" required>
+      </div>
+      <div>
+        <label for="ActivatePasswordConfirmation-{{ section.id }}">{{ 'customer.activate_account.password_confirmation' | t }}</label>
+        <input id="ActivatePasswordConfirmation-{{ section.id }}" class="field__input" type="password" name="customer[password_confirmation]" autocomplete="new-password" required>
+      </div>
+      <button class="button" type="submit">{{ 'customer.activate_account.submit' | t }}</button>
+      <button class="button button--secondary" type="submit" name="decline">{{ 'customer.activate_account.decline' | t }}</button>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.main_customers_activate_account.s001"
+}
+{% endschema %}

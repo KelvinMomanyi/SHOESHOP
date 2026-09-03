@@ -1,0 +1,105 @@
+<article class="article-page section-band">
+  <div class="page-width article-page__inner">
+    <header class="article-page__header">
+      {%- if section.settings.show_date -%}
+        <p class="eyebrow">{{ article.published_at | date: format: 'abbreviated_date' }}</p>
+      {%- endif -%}
+      <h1>{{ article.title }}</h1>
+      {%- if section.settings.show_author and article.author != blank -%}
+        <p>{{ article.author }}</p>
+      {%- endif -%}
+    </header>
+
+    {%- if section.settings.show_image and article.image != blank -%}
+      <div class="article-page__image media-frame">
+        {%- render 'responsive-image',
+          image: article.image,
+          class: 'media-frame__image',
+          sizes: '(min-width: 990px) 80vw, 100vw',
+          loading: 'eager'
+        -%}
+      </div>
+    {%- endif -%}
+
+    <div class="rte article-page__content">
+      {{ article.content }}
+    </div>
+
+    {%- if section.settings.show_comments and blog.comments_enabled? -%}
+      <section class="comments">
+        <h2>{{ 'blog.comments.title' | t: count: article.comments_count }}</h2>
+        {%- paginate article.comments by section.settings.comments_per_page -%}
+          {%- for comment in article.comments -%}
+            <article class="comment">
+              <p>{{ comment.content }}</p>
+              <footer>{{ comment.author }} &middot; {{ comment.created_at | date: format: 'abbreviated_date' }}</footer>
+            </article>
+          {%- endfor -%}
+          {%- render 'pagination', paginate: paginate -%}
+        {%- endpaginate -%}
+
+        {%- form 'new_comment', article, class: 'comment-form' -%}
+          <h3>{{ 'blog.comments.leave' | t }}</h3>
+          {%- if form.posted_successfully? -%}
+            <p class="form-status">{{ 'blog.comments.success' | t }}</p>
+          {%- endif -%}
+          {{ form.errors | default_errors }}
+          <div>
+            <label for="CommentAuthor-{{ section.id }}">{{ 'blog.comments.name' | t }}</label>
+            <input id="CommentAuthor-{{ section.id }}" class="field__input" type="text" name="comment[author]" value="{{ form.author }}" required>
+          </div>
+          <div>
+            <label for="CommentEmail-{{ section.id }}">{{ 'blog.comments.email' | t }}</label>
+            <input id="CommentEmail-{{ section.id }}" class="field__input" type="email" name="comment[email]" value="{{ form.email }}" required>
+          </div>
+          <div>
+            <label for="CommentBody-{{ section.id }}">{{ 'blog.comments.comment' | t }}</label>
+            <textarea id="CommentBody-{{ section.id }}" class="field__input" name="comment[body]" rows="5" required>{{ form.body }}</textarea>
+          </div>
+          <button class="button" type="submit">{{ 'blog.comments.post' | t }}</button>
+        {%- endform -%}
+      </section>
+    {%- endif -%}
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "t:sections.main_article.s001",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "t:sections.main_article.s002",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "t:sections.main_article.s003",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "t:sections.main_article.s004",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_comments",
+      "label": "t:sections.main_article.s005",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "comments_per_page",
+      "label": "t:sections.main_article.s006",
+      "min": 4,
+      "max": 20,
+      "step": 4,
+      "default": 12
+    }
+  ]
+}
+{% endschema %}

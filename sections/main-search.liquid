@@ -1,0 +1,107 @@
+<section class="search-page section-band">
+  <div class="page-width">
+    <div class="section-heading">
+      <p class="eyebrow">{{ 'general.search.title' | t }}</p>
+      <h1>
+        {%- if search.performed -%}
+          {{ 'general.search.results_with_count' | t: count: search.results_count, terms: search.terms }}
+        {%- else -%}
+          {{ 'general.search.title' | t }}
+        {%- endif -%}
+      </h1>
+    </div>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="main-search-form">
+      <input type="hidden" name="type" value="product,page,article">
+      <label class="visually-hidden" for="SearchInput">{{ 'accessibility.search' | t }}</label>
+      <input id="SearchInput" class="field__input" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
+      <button class="button" type="submit">{{ 'general.search.search' | t }}</button>
+    </form>
+
+      {%- if search.performed -%}
+      {%- render 'facets',
+        results: search,
+        show_filters: section.settings.show_filters,
+        show_sorting: section.settings.show_sorting
+      -%}
+
+      {%- paginate search.results by section.settings.results_per_page -%}
+        {%- if search.results_count > 0 -%}
+          <div class="search-results">
+            {%- for item in search.results -%}
+              {%- if item.object_type == 'product' -%}
+                {%- render 'product-card', product: item, loading: 'lazy' -%}
+              {%- elsif item.object_type == 'article' -%}
+                <article class="search-result-card">
+                  {%- if section.settings.show_result_type -%}
+                    <p class="eyebrow">{{ item.object_type | capitalize }}</p>
+                  {%- endif -%}
+                  <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
+                  {%- if section.settings.show_excerpt and item.excerpt_or_content != blank -%}
+                    <p>{{ item.excerpt_or_content | strip_html | truncatewords: 24 }}</p>
+                  {%- endif -%}
+                </article>
+              {%- elsif item.object_type == 'page' -%}
+                <article class="search-result-card">
+                  {%- if section.settings.show_result_type -%}
+                    <p class="eyebrow">{{ item.object_type | capitalize }}</p>
+                  {%- endif -%}
+                  <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
+                  {%- if section.settings.show_excerpt and item.content != blank -%}
+                    <p>{{ item.content | strip_html | truncatewords: 24 }}</p>
+                  {%- endif -%}
+                </article>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <div class="empty-state">
+            <p>{{ 'general.search.no_results' | t }}</p>
+          </div>
+        {%- endif -%}
+        {%- render 'pagination', paginate: paginate -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.main_search.s001",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_filters",
+      "label": "t:sections.main_search.s002",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sorting",
+      "label": "t:sections.main_search.s003",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_result_type",
+      "label": "t:sections.main_search.s004",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "t:sections.main_search.s005",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "results_per_page",
+      "label": "t:sections.main_search.s006",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 16
+    }
+  ]
+}
+{% endschema %}

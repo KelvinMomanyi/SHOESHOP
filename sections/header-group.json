@@ -1,0 +1,27 @@
+{
+  "type": "header",
+  "name": "t:section_groups.header_group.s001",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "settings": {
+        "text": "Free shipping over $100",
+        "text_2": "New arrivals just landed",
+        "text_3": "Easy returns within 30 days",
+        "link": ""
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "menu": "main-menu",
+        "customer_account_menu": "customer-account-main-menu",
+        "show_search": true
+      }
+    }
+  },
+  "order": [
+    "announcement",
+    "header"
+  ]
+}

@@ -1,0 +1,221 @@
+<section class="blog-page blog-newsroom">
+  {%- paginate blog.articles by section.settings.articles_per_page -%}
+    {%- liquid
+      assign show_featured_article = false
+      assign latest_offset = 0
+      if section.settings.show_featured_article and paginate.current_page == 1 and blog.articles_count > 0
+        assign show_featured_article = true
+        assign featured_article = blog.articles.first
+        assign latest_offset = 1
+      endif
+      assign article_count = blog.articles | size
+      assign latest_count = article_count | minus: latest_offset
+      assign picks_offset = latest_offset | plus: 6
+      assign picks_count = article_count | minus: picks_offset
+    -%}
+
+    {%- if show_featured_article -%}
+      <article class="blog-newsroom__hero reveal-item">
+        {%- if section.settings.show_images -%}
+          <a class="blog-newsroom__hero-media" href="{{ featured_article.url }}" aria-label="{{ 'accessibility.read_article' | t: title: featured_article.title | escape }}">
+            {%- render 'responsive-image',
+              image: featured_article.image,
+              class: 'blog-newsroom__hero-image',
+              sizes: '100vw',
+              loading: 'eager',
+              alt: featured_article.title
+            -%}
+          </a>
+        {%- endif -%}
+        <div class="blog-newsroom__hero-shade"></div>
+        <div class="page-width blog-newsroom__hero-content{% unless section.settings.show_images %} blog-newsroom__hero-content--no-image{% endunless %}">
+          <div class="blog-newsroom__hero-meta">
+            <span>{{ blog.title }}</span>
+            {%- if section.settings.show_date -%}
+              <span>{{ featured_article.published_at | date: format: 'abbreviated_date' }}</span>
+            {%- endif -%}
+          </div>
+          <h1><a href="{{ featured_article.url }}">{{ featured_article.title }}</a></h1>
+          {%- if section.settings.show_excerpt and featured_article.excerpt_or_content != blank -%}
+            <p>{{ featured_article.excerpt_or_content | strip_html | truncatewords: section.settings.excerpt_words }}</p>
+          {%- endif -%}
+          <a class="blog-newsroom__hero-link" href="{{ featured_article.url }}">{{ 'blog.articles.read_story' | t }} <span aria-hidden="true">&#8594;</span></a>
+        </div>
+      </article>
+    {%- else -%}
+      <header class="blog-newsroom__masthead">
+        <div class="page-width reveal-item">
+          <p class="eyebrow">{{ 'blog.articles.story_count' | t: count: blog.articles_count }}</p>
+          <h1>{{ blog.title }}</h1>
+          {%- if blog.description != blank -%}
+            <div class="rte">{{ blog.description }}</div>
+          {%- endif -%}
+        </div>
+      </header>
+    {%- endif -%}
+
+    <div class="blog-newsroom__content">
+      {%- if latest_count > 0 -%}
+        <section class="blog-newsroom__latest page-width" aria-labelledby="LatestNews-{{ section.id }}">
+          <header class="blog-newsroom__section-header reveal-item">
+            <h2 id="LatestNews-{{ section.id }}">{{ 'blog.articles.latest_news' | t }}</h2>
+            <p>{{ section.settings.stories_intro }}</p>
+          </header>
+
+          <div class="blog-newsroom__latest-grid">
+            {%- for article in blog.articles offset: latest_offset limit: 6 -%}
+              <article class="news-card reveal-item">
+                {%- if section.settings.show_images -%}
+                  <a class="news-card__media" href="{{ article.url }}" aria-label="{{ 'accessibility.read_article' | t: title: article.title | escape }}">
+                    {%- render 'responsive-image',
+                      image: article.image,
+                      class: 'news-card__image',
+                      sizes: '(min-width: 990px) 33vw, 100vw',
+                      alt: article.title
+                    -%}
+                  </a>
+                {%- endif -%}
+                <div class="news-card__content">
+                  {%- if section.settings.show_date -%}
+                    <p class="news-card__meta">{{ article.published_at | date: format: 'abbreviated_date' }}</p>
+                  {%- endif -%}
+                  <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+                  {%- if section.settings.show_excerpt and article.excerpt_or_content != blank -%}
+                    <p class="news-card__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: section.settings.excerpt_words }}</p>
+                  {%- endif -%}
+                </div>
+              </article>
+            {%- endfor -%}
+          </div>
+        </section>
+      {%- endif -%}
+
+      {%- if picks_count > 0 -%}
+        <section class="blog-newsroom__picks" aria-labelledby="EditorsPicks-{{ section.id }}">
+          <div class="page-width">
+            <header class="blog-newsroom__section-header blog-newsroom__section-header--picks reveal-item">
+              <h2 id="EditorsPicks-{{ section.id }}">{{ 'blog.articles.editors_picks' | t }}</h2>
+              <p>{{ 'blog.articles.selected_stories' | t: blog: blog.title }}</p>
+            </header>
+
+            <div class="blog-picks{% if picks_count == 1 %} blog-picks--single{% endif %}">
+              {%- for article in blog.articles offset: picks_offset limit: 1 -%}
+                <article class="blog-picks__lead reveal-item">
+                  {%- if section.settings.show_images -%}
+                    <a class="blog-picks__lead-media" href="{{ article.url }}" aria-label="{{ 'accessibility.read_article' | t: title: article.title | escape }}">
+                      {%- render 'responsive-image',
+                        image: article.image,
+                        class: 'blog-picks__lead-image',
+                        sizes: '(min-width: 990px) 55vw, 100vw',
+                        alt: article.title
+                      -%}
+                    </a>
+                  {%- endif -%}
+                  <div class="blog-picks__lead-content">
+                    {%- if section.settings.show_date -%}
+                      <p>{{ article.published_at | date: format: 'abbreviated_date' }}</p>
+                    {%- endif -%}
+                    <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+                    {%- if section.settings.show_excerpt and article.excerpt_or_content != blank -%}
+                      <p>{{ article.excerpt_or_content | strip_html | truncatewords: section.settings.excerpt_words }}</p>
+                    {%- endif -%}
+                  </div>
+                </article>
+              {%- endfor -%}
+
+              {%- if picks_count > 1 -%}
+                <div class="blog-picks__list">
+                  {%- for article in blog.articles offset: picks_offset limit: 5 -%}
+                    {%- unless forloop.first -%}
+                      <article class="blog-pick-card reveal-item">
+                        {%- if section.settings.show_images -%}
+                          <a class="blog-pick-card__media" href="{{ article.url }}" aria-label="{{ 'accessibility.read_article' | t: title: article.title | escape }}">
+                            {%- render 'responsive-image',
+                              image: article.image,
+                              class: 'blog-pick-card__image',
+                              sizes: '(min-width: 990px) 25vw, 100vw',
+                              alt: article.title
+                            -%}
+                          </a>
+                        {%- endif -%}
+                        <div>
+                          {%- if section.settings.show_date -%}
+                            <p class="news-card__meta">{{ article.published_at | date: format: 'abbreviated_date' }}</p>
+                          {%- endif -%}
+                          <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+                        </div>
+                      </article>
+                    {%- endunless -%}
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        </section>
+      {%- endif -%}
+      {%- if article_count == 0 -%}
+        <div class="page-width"><p class="blog-newsroom__empty">{{ 'blog.articles.empty' | t }}</p></div>
+      {%- endif -%}
+
+      <div class="page-width">
+        {%- render 'pagination', paginate: paginate -%}
+      </div>
+    </div>
+  {%- endpaginate -%}
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.main_blog.s001",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_images",
+      "label": "t:sections.main_blog.s002",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_featured_article",
+      "label": "t:sections.main_blog.s003",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "t:sections.main_blog.s004",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "t:sections.main_blog.s005",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "excerpt_words",
+      "label": "t:sections.main_blog.s006",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "textarea",
+      "id": "stories_intro",
+      "label": "t:sections.main_blog.s007",
+      "default": "Notes on movement, footwear, and the moments in between."
+    },
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "label": "t:sections.main_blog.s008",
+      "min": 3,
+      "max": 24,
+      "step": 3,
+      "default": 9
+    }
+  ]
+}
+{% endschema %}

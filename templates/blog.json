@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "settings": {
+        "articles_per_page": 12
+      }
+    },
+    "journal_note": {
+      "type": "rich-text",
+      "settings": {
+        "kicker": "Inside the journal",
+        "heading": "The stories behind every stride",
+        "text": "<p>Follow the details that shape the way we move: new footwear, fit notes, material stories, and the people who wear them.</p>",
+        "button_label": "Shop new arrivals",
+        "button_link": "/collections/all",
+        "alignment": "center"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "journal_note"
+  ]
+}

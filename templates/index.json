@@ -1,0 +1,310 @@
+{
+  "sections": {
+    "hero": {
+      "type": "editorial-hero",
+      "settings": {
+        "heading": "Treadora footwear with momentum",
+        "text": "A fast, editorial storefront for Treadora running shoes, everyday sneakers, and recovery essentials built around movement.",
+        "button_label": "Shop Treadora",
+        "secondary_button_label": "View collections"
+      },
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "title": "Daily miles",
+            "text": "Lead with lightweight running shoes, cushioned trainers, and the styles customers reach for every day."
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "title": "Built to feel right",
+            "text": "Use this slide to frame cushioning, outsole grip, upper materials, and fit details that help shoppers choose."
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "title": "Grip for every route",
+            "text": "A cinematic panel for trail shoes, limited colorways, seasonal drops, and featured footwear collections."
+          }
+        },
+        "feature_4": {
+          "type": "feature",
+          "settings": {
+            "title": "Recovery rotation",
+            "text": "Round out the hero with recovery slides, everyday sneakers, or a seasonal footwear story."
+          }
+        }
+      },
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3",
+        "feature_4"
+      ]
+    },
+    "featured_products": {
+      "type": "featured-products",
+      "settings": {
+        "heading": "Treadora picks worth a closer look",
+        "products_to_show": 8
+      }
+    },
+    "image_spread": {
+      "type": "image-spread",
+      "settings": {
+        "kicker": "Shop in motion",
+        "heading": "Every step opens into its own world",
+        "text": "A footwear journey where featured shoes move from one focal point into a full seasonal edit.",
+        "button_label": "Shop footwear",
+        "scroll_length": 450,
+        "last_image_cover": true
+      },
+      "blocks": {
+        "spread_1": {
+          "type": "product",
+          "settings": {
+            "title": "Signature trainer"
+          }
+        },
+        "spread_2": {
+          "type": "product",
+          "settings": {
+            "title": "New-season upper"
+          }
+        },
+        "spread_3": {
+          "type": "product",
+          "settings": {
+            "title": "Daily miles"
+          }
+        },
+        "spread_4": {
+          "type": "product",
+          "settings": {
+            "title": "Road-ready cushion"
+          }
+        },
+        "spread_5": {
+          "type": "product",
+          "settings": {
+            "title": "Trail grip"
+          }
+        },
+        "spread_6": {
+          "type": "product",
+          "settings": {
+            "title": "Recovery finish"
+          }
+        }
+      },
+      "block_order": [
+        "spread_1",
+        "spread_2",
+        "spread_3",
+        "spread_4",
+        "spread_5",
+        "spread_6"
+      ]
+    },
+    "story": {
+      "type": "scroll-story",
+      "settings": {
+        "heading": "Footwear stories built for browsing"
+      },
+      "blocks": {
+        "chapter_1": {
+          "type": "chapter",
+          "settings": {
+            "title": "The daily trainer",
+            "text": "Highlight cushion, support, and the road-ready details that make a shoe easy to choose."
+          }
+        },
+        "chapter_2": {
+          "type": "chapter",
+          "settings": {
+            "title": "Materials that move",
+            "text": "Show breathable uppers, durable overlays, outsole grip, and the construction details shoppers compare."
+          }
+        },
+        "chapter_3": {
+          "type": "chapter",
+          "settings": {
+            "title": "Complete the rotation",
+            "text": "Move customers from running shoes into slides, socks, care kits, and seasonal footwear pairings."
+          }
+        }
+      },
+      "block_order": [
+        "chapter_1",
+        "chapter_2",
+        "chapter_3"
+      ]
+    },
+    "alexandra_loader": {
+      "type": "alexandra-loader",
+      "settings": {
+        "brand_label": "Treadora",
+        "meta_label_1": "New arrivals",
+        "meta_label_2": "Bestsellers",
+        "meta_label_3": "Fit guide",
+        "heading_line_1": "Treadora",
+        "heading_line_2": "Edit",
+        "scroll_length": 400
+      },
+      "blocks": {
+        "alexandra_1": {
+          "type": "image",
+          "settings": {
+            "title": "Road runner"
+          }
+        },
+        "alexandra_2": {
+          "type": "image",
+          "settings": {
+            "title": "Trail grip"
+          }
+        },
+        "alexandra_3": {
+          "type": "image",
+          "settings": {
+            "title": "Everyday sneaker"
+          }
+        },
+        "alexandra_4": {
+          "type": "image",
+          "settings": {
+            "title": "Recovery slide"
+          }
+        },
+        "alexandra_5": {
+          "type": "image",
+          "settings": {
+            "title": "Training shoe"
+          }
+        }
+      },
+      "block_order": [
+        "alexandra_1",
+        "alexandra_2",
+        "alexandra_3",
+        "alexandra_4",
+        "alexandra_5"
+      ]
+    },
+    "collections": {
+      "type": "collection-showcase",
+      "settings": {
+        "heading": "Find the right pair"
+      },
+      "blocks": {
+        "collection_1": {
+          "type": "collection",
+          "settings": {
+            "title": "New shoes",
+            "caption": "Freshly landed"
+          }
+        },
+        "collection_2": {
+          "type": "collection",
+          "settings": {
+            "title": "Bestsellers",
+            "caption": "Most worn"
+          }
+        },
+        "collection_3": {
+          "type": "collection",
+          "settings": {
+            "title": "Slides and recovery",
+            "caption": "After the run"
+          }
+        }
+      },
+      "block_order": [
+        "collection_1",
+        "collection_2",
+        "collection_3"
+      ]
+    },
+    "hover_preview": {
+      "type": "hover-preview",
+      "settings": {
+        "heading": "Shop by pace",
+        "show_heading": false
+      },
+      "blocks": {
+        "row_1": {
+          "type": "row",
+          "settings": {
+            "title": "Daily trainers",
+            "caption": "Lightweight support"
+          }
+        },
+        "row_2": {
+          "type": "row",
+          "settings": {
+            "title": "Road running",
+            "caption": "Responsive cushioning"
+          }
+        },
+        "row_3": {
+          "type": "row",
+          "settings": {
+            "title": "Trail grip",
+            "caption": "All-terrain traction"
+          }
+        },
+        "row_4": {
+          "type": "row",
+          "settings": {
+            "title": "Recovery slides",
+            "caption": "Post-run comfort"
+          }
+        }
+      },
+      "block_order": [
+        "row_1",
+        "row_2",
+        "row_3",
+        "row_4"
+      ]
+    },
+    "stacked": {
+      "type": "stacked-media",
+      "settings": {
+        "heading": "Build a footwear rotation"
+      },
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {}
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {}
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "featured_products",
+    "image_spread",
+    "story",
+    "alexandra_loader",
+    "collections",
+    "hover_preview",
+    "stacked"
+  ]
+}

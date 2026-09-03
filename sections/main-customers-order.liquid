@@ -1,0 +1,106 @@
+<section class="customer-page section-band">
+  {%- assign order_date = order.created_at | date: format: 'abbreviated_date' -%}
+  <div class="page-width">
+    <div class="section-heading">
+      <p class="eyebrow">{{ 'customer.order.date' | t: date: order_date }}</p>
+      <h1>{{ 'customer.order.title' | t: name: order.name }}</h1>
+      <a class="text-link" href="{{ routes.account_url }}">{{ 'customer.account.title' | t }}</a>
+    </div>
+
+    <div class="customer-table-wrap">
+      <table class="customer-table">
+        <thead>
+          <tr>
+            <th scope="col">{{ 'customer.order.product' | t }}</th>
+            <th scope="col">{{ 'customer.order.sku' | t }}</th>
+            <th scope="col">{{ 'customer.order.price' | t }}</th>
+            <th scope="col">{{ 'customer.order.quantity' | t }}</th>
+            <th scope="col">{{ 'customer.order.total' | t }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for line_item in order.line_items -%}
+            <tr>
+              <td>
+                {{ line_item.title | link_to: line_item.product.url }}
+                {%- if line_item.selling_plan_allocation -%}
+                  <p>{{ line_item.selling_plan_allocation.selling_plan.name }}</p>
+                {%- endif -%}
+                {%- for property in line_item.properties -%}
+                  {%- assign property_first_char = property.first | slice: 0 -%}
+                  {%- if property.last != blank and property_first_char != '_' -%}
+                    <p>{{ property.first }}: {{ property.last }}</p>
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- for discount in line_item.line_level_discount_allocations -%}
+                  <p>{{ discount.discount_application.title }} (-{{ discount.amount | money }})</p>
+                {%- endfor -%}
+              </td>
+              <td>{{ line_item.sku }}</td>
+              <td>
+                {{ line_item.final_price | money }}
+                {%- if line_item.unit_price_measurement -%}
+                  <small>
+                    {{ line_item.unit_price | money }}/
+                    {%- if line_item.unit_price_measurement.reference_value != 1 -%}
+                      {{ line_item.unit_price_measurement.reference_value }}
+                    {%- endif -%}
+                    {{ line_item.unit_price_measurement.reference_unit }}
+                  </small>
+                {%- endif -%}
+              </td>
+              <td>{{ line_item.quantity }}</td>
+              <td>{{ line_item.final_line_price | money }}</td>
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cart-summary customer-order-summary">
+      <div class="cart-summary__row">
+        <span>{{ 'cart.general.subtotal' | t }}</span>
+        <strong>{{ order.subtotal_price | money_with_currency }}</strong>
+      </div>
+      {%- if order.total_discounts > 0 -%}
+        <div class="cart-summary__row">
+          <span>{{ 'cart.general.discount' | t }}</span>
+          <strong>-{{ order.total_discounts | money }}</strong>
+        </div>
+      {%- endif -%}
+      {%- if order.shipping_price > 0 -%}
+        <div class="cart-summary__row">
+          <span>{{ 'customer.order.shipping' | t }}</span>
+          <strong>{{ order.shipping_price | money }}</strong>
+        </div>
+      {%- endif -%}
+      {%- if order.tax_price > 0 -%}
+        <div class="cart-summary__row">
+          <span>{{ 'customer.order.tax' | t }}</span>
+          <strong>{{ order.tax_price | money }}</strong>
+        </div>
+      {%- endif -%}
+      <div class="cart-summary__row cart-summary__row--total">
+        <span>{{ 'customer.order.total' | t }}</span>
+        <strong>{{ order.total_price | money_with_currency }}</strong>
+      </div>
+    </div>
+
+    <div class="customer-grid">
+      <aside class="customer-card">
+        <h2>{{ 'customer.order.billing_address' | t }}</h2>
+        <div>{{ order.billing_address | format_address }}</div>
+      </aside>
+      <aside class="customer-card">
+        <h2>{{ 'customer.order.shipping_address' | t }}</h2>
+        <div>{{ order.shipping_address | format_address }}</div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.main_customers_order.s001"
+}
+{% endschema %}

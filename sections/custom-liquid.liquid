@@ -1,0 +1,25 @@
+<section class="custom-liquid-section section-band">
+  <div class="page-width">
+    <div class="custom-liquid">
+      {{ section.settings.custom_liquid }}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.custom_liquid.s001",
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "custom_liquid",
+      "label": "t:sections.custom_liquid.s002"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.custom_liquid.s003"
+    }
+  ]
+}
+{% endschema %}

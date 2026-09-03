@@ -1,0 +1,209 @@
+{%- liquid
+  assign item_count = section.blocks.size
+  if item_count == 0
+    assign item_count = 5
+  endif
+  assign hero_index = item_count | plus: 1 | divided_by: 2
+-%}
+
+<section
+  class="alexandra-loader section-{{ section.id }}"
+  data-alexandra-loader
+  aria-label="{{ section.settings.heading_line_1 }} {{ section.settings.heading_line_2 }}"
+  style="--alexandra-loader-height: {{ section.settings.scroll_length }}svh;"
+>
+  <div class="alexandra-loader__stage">
+    <div class="alexandra-loader__curtain" data-loader-curtain aria-hidden="true"></div>
+
+    <header class="alexandra-loader__topbar" data-loader-topbar>
+      {%- if section.settings.brand_label != blank -%}
+        <span>{{ section.settings.brand_label }}</span>
+      {%- endif -%}
+      <div class="alexandra-loader__links">
+        {%- if section.settings.meta_label_1 != blank -%}
+          <span>{{ section.settings.meta_label_1 }}</span>
+        {%- endif -%}
+        {%- if section.settings.meta_label_2 != blank -%}
+          <span>{{ section.settings.meta_label_2 }}</span>
+        {%- endif -%}
+        {%- if section.settings.meta_label_3 != blank -%}
+          <span>{{ section.settings.meta_label_3 }}</span>
+        {%- endif -%}
+      </div>
+    </header>
+
+    <div class="alexandra-loader__title" aria-hidden="true">
+      {%- if section.settings.heading_line_1 != blank -%}
+        <div class="alexandra-loader__title-line">
+          <span data-loader-title-line>{{ section.settings.heading_line_1 }}</span>
+        </div>
+      {%- endif -%}
+      {%- if section.settings.heading_line_2 != blank -%}
+        <div class="alexandra-loader__title-line alexandra-loader__title-line--muted">
+          <span data-loader-title-line>{{ section.settings.heading_line_2 }}</span>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="alexandra-loader__gallery" data-loader-gallery>
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign loader_product = block.settings.product
+            assign loader_collection = block.settings.collection
+            assign loader_image = block.settings.image | default: loader_product.featured_media.preview_image | default: loader_product.featured_image | default: loader_collection.featured_image
+            assign loader_title = block.settings.title | default: loader_product.title | default: loader_collection.title | default: 'Featured shoe'
+            assign loader_link = block.settings.link | default: loader_product.url | default: loader_collection.url | default: section.settings.link | default: routes.all_products_collection_url
+          -%}
+
+          <a
+            class="alexandra-loader__item{% if forloop.index == hero_index %} is-hero{% endif %}"
+            href="{{ loader_link }}"
+            data-loader-item
+            {{ block.shopify_attributes }}
+          >
+            {%- if loader_image != blank -%}
+              {%- render 'responsive-image',
+                image: loader_image,
+                class: 'alexandra-loader__image',
+                sizes: '(min-width: 990px) 25vw, 70vw',
+                widths: '220, 360, 533, 720, 940, 1200',
+                alt: loader_title
+              -%}
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'alexandra-loader__image placeholder-svg' }}
+            {%- endif -%}
+            <span class="visually-hidden">{{ loader_title }}</span>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..5) -%}
+          <a
+            class="alexandra-loader__item{% if forloop.index == hero_index %} is-hero{% endif %}"
+            href="{{ section.settings.link | default: routes.all_products_collection_url }}"
+            data-loader-item
+          >
+            {{ 'product-1' | placeholder_svg_tag: 'alexandra-loader__image placeholder-svg' }}
+            <span class="visually-hidden">Product reveal image {{ forloop.index }}</span>
+          </a>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.alexandra_loader.s001",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_label",
+      "label": "t:sections.alexandra_loader.s002",
+      "default": "Treadora"
+    },
+    {
+      "type": "text",
+      "id": "meta_label_1",
+      "label": "t:sections.alexandra_loader.s003",
+      "default": "New arrivals"
+    },
+    {
+      "type": "text",
+      "id": "meta_label_2",
+      "label": "t:sections.alexandra_loader.s004",
+      "default": "Bestsellers"
+    },
+    {
+      "type": "text",
+      "id": "meta_label_3",
+      "label": "t:sections.alexandra_loader.s005",
+      "default": "Fit guide"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "t:sections.alexandra_loader.s006",
+      "default": "Treadora"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "t:sections.alexandra_loader.s007",
+      "default": "Edit"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:sections.alexandra_loader.s008"
+    },
+    {
+      "type": "range",
+      "id": "scroll_length",
+      "label": "t:sections.alexandra_loader.s009",
+      "min": 250,
+      "max": 700,
+      "step": 50,
+      "unit": "vh",
+      "default": 400
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "t:sections.alexandra_loader.s010",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.alexandra_loader.s011"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.alexandra_loader.s012"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.alexandra_loader.s013"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.alexandra_loader.s014"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.alexandra_loader.s015"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.alexandra_loader.s016",
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

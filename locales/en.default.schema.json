@@ -1,0 +1,399 @@
+{
+  "settings_schema": {
+    "s001": "Brand",
+    "s002": "Brand name",
+    "s003": "Logo",
+    "s004": "Favicon",
+    "s005": "Social media image",
+    "s006": "Typography",
+    "s007": "Body font",
+    "s008": "Heading font",
+    "s009": "Utility font",
+    "s010": "Colors",
+    "s011": "Background",
+    "s012": "Text",
+    "s013": "Muted text",
+    "s014": "Surface",
+    "s015": "Surface text",
+    "s016": "Borders",
+    "s017": "Accent",
+    "s018": "Accent text",
+    "s019": "Secondary accent",
+    "s020": "Secondary accent text",
+    "s021": "Button",
+    "s022": "Button text",
+    "s023": "Layout",
+    "s024": "Page width",
+    "s025": "Enable scroll reveal animation",
+    "s026": "Show payment icons",
+    "s027": "Social media",
+    "s028": "Instagram",
+    "s029": "TikTok",
+    "s030": "YouTube",
+    "s031": "Pinterest"
+  },
+  "sections": {
+    "alexandra_loader": {
+      "s001": "Product reveal",
+      "s002": "Top left label",
+      "s003": "Top right label 1",
+      "s004": "Top right label 2",
+      "s005": "Top right label 3",
+      "s006": "Heading line 1",
+      "s007": "Heading line 2",
+      "s008": "Fallback image link",
+      "s009": "Scroll length",
+      "s010": "Image",
+      "s011": "Product",
+      "s012": "Collection",
+      "s013": "Image override",
+      "s014": "Heading override",
+      "s015": "Link override",
+      "s016": "Product reveal"
+    },
+    "announcement_bar": {
+      "s001": "Announcement bar",
+      "s002": "Text 1",
+      "s003": "Text 2",
+      "s004": "Text 3",
+      "s005": "Link",
+      "s006": "Background",
+      "s007": "Text"
+    },
+    "clip_path_slider": {
+      "s001": "Clip-path slideshow",
+      "s002": "Accessibility label",
+      "s003": "Show brand",
+      "s004": "Brand label",
+      "s005": "Logo override",
+      "s006": "Show counter",
+      "s007": "Enable scroll-driven slide changes",
+      "s008": "Loop slides",
+      "s009": "Section height",
+      "s010": "Scroll distance per slide",
+      "s011": "Center frame width",
+      "s012": "Center frame height ratio",
+      "s013": "Transition duration",
+      "s014": "Slide",
+      "s015": "Image",
+      "s016": "Image alt text",
+      "s017": "Frame link",
+      "s018": "Clip-path slideshow"
+    },
+    "collection_showcase": {
+      "s001": "Collection showcase",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "Text",
+      "s005": "Collection",
+      "s006": "Collection",
+      "s007": "Heading override",
+      "s008": "Caption",
+      "s009": "Image override",
+      "s010": "Link override",
+      "s011": "Collection showcase",
+      "s012": "Main image",
+      "s013": "Overrides the image shown for the first collection."
+    },
+    "complementary_products": {
+      "s001": "Complementary products",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "Products to show",
+      "s005": "Fallback products",
+      "s006": "Shown when automatic complementary products are unavailable.",
+      "s007": "Complementary products"
+    },
+    "contact_form": {
+      "s001": "Contact form",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "Text",
+      "s005": "Contact form"
+    },
+    "custom_liquid": {
+      "s001": "Custom liquid",
+      "s002": "Custom liquid",
+      "s003": "Custom liquid"
+    },
+    "editorial_hero": {
+      "s001": "Editorial hero",
+      "s002": "Heading",
+      "s003": "Text",
+      "s004": "Hero image",
+      "s005": "Fallback collection",
+      "s006": "Primary button",
+      "s007": "Primary link",
+      "s008": "Secondary button",
+      "s009": "Secondary link",
+      "s010": "Hero panel",
+      "s011": "Product",
+      "s012": "Collection",
+      "s013": "Image override",
+      "s014": "Heading",
+      "s015": "Body text",
+      "s016": "Link override",
+      "s017": "Editorial hero"
+    },
+    "featured_product": {
+      "s001": "Featured product",
+      "s002": "Product",
+      "s003": "Placeholder heading",
+      "s004": "Vendor",
+      "s005": "Title",
+      "s006": "Price",
+      "s007": "Variant picker",
+      "s008": "Quantity selector",
+      "s009": "Selling plan picker",
+      "s010": "Buy buttons",
+      "s011": "Show dynamic checkout buttons",
+      "s012": "Description",
+      "s013": "Pickup availability",
+      "s014": "Custom liquid",
+      "s015": "Custom liquid",
+      "s016": "Featured product"
+    },
+    "featured_products": {
+      "s001": "Featured products",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "Text",
+      "s005": "Collection",
+      "s006": "Collection products to show",
+      "s007": "Product",
+      "s008": "Product",
+      "s009": "Featured products"
+    },
+    "footer": {
+      "s001": "Footer",
+      "s002": "Logo",
+      "s003": "Fallback text",
+      "s004": "Footer menu",
+      "s005": "Show country and language selectors",
+      "s006": "Show Follow on Shop"
+    },
+    "header": {
+      "s001": "Header",
+      "s002": "Logo override",
+      "s003": "Main menu",
+      "s004": "Customer account menu",
+      "s005": "Show search"
+    },
+    "hover_preview": {
+      "s001": "Hover preview",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "Show heading",
+      "s005": "Row",
+      "s006": "Heading",
+      "s007": "Caption",
+      "s008": "Preview image",
+      "s009": "Link",
+      "s010": "Hover preview"
+    },
+    "image_spread": {
+      "s001": "Image spread",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "Text",
+      "s005": "Button label",
+      "s006": "Button link",
+      "s007": "Scroll length",
+      "s008": "Let the final image become a cover frame",
+      "s009": "Product image",
+      "s010": "Product",
+      "s011": "Collection",
+      "s012": "Image override",
+      "s013": "Heading override",
+      "s014": "Link override",
+      "s015": "Image spread"
+    },
+    "main_404": {
+      "s001": "404",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "Text",
+      "s005": "Show search",
+      "s006": "Button label",
+      "s007": "Button link"
+    },
+    "main_article": {
+      "s001": "Main article",
+      "s002": "Show publish date",
+      "s003": "Show author",
+      "s004": "Show article image",
+      "s005": "Show comments",
+      "s006": "Comments per page"
+    },
+    "main_blog": {
+      "s001": "Main blog",
+      "s002": "Show article images",
+      "s003": "Show lead story",
+      "s004": "Show publish date",
+      "s005": "Show excerpts",
+      "s006": "Excerpt words",
+      "s007": "Stories introduction",
+      "s008": "Articles per page"
+    },
+    "main_cart": {
+      "s001": "Main cart",
+      "s002": "Empty cart text",
+      "s003": "Continue shopping button label",
+      "s004": "Continue shopping button link",
+      "s005": "Show cart note",
+      "s006": "Show dynamic checkout buttons"
+    },
+    "main_collection": {
+      "s001": "Main collection",
+      "s002": "Kicker",
+      "s003": "Show product count",
+      "s004": "Show description",
+      "s005": "Show image",
+      "s006": "Show filters",
+      "s007": "Show sorting",
+      "s008": "Products per page"
+    },
+    "main_customers_account": {
+      "s001": "Customer account"
+    },
+    "main_customers_activate_account": {
+      "s001": "Customer activate account"
+    },
+    "main_customers_addresses": {
+      "s001": "Customer addresses"
+    },
+    "main_customers_login": {
+      "s001": "Customer login"
+    },
+    "main_customers_order": {
+      "s001": "Customer order"
+    },
+    "main_customers_register": {
+      "s001": "Customer register"
+    },
+    "main_customers_reset_password": {
+      "s001": "Customer reset password"
+    },
+    "main_list_collections": {
+      "s001": "List collections",
+      "s002": "Heading",
+      "s003": "Selected collections",
+      "s004": "Leave empty to show all collections.",
+      "s005": "Show images",
+      "s006": "Show product count",
+      "s007": "Collections per page"
+    },
+    "main_page": {
+      "s001": "Main page",
+      "s002": "Kicker",
+      "s003": "Show page title",
+      "s004": "Show page content",
+      "s005": "Image"
+    },
+    "main_password": {
+      "s001": "Password page",
+      "s002": "Image",
+      "s003": "Heading",
+      "s004": "Text",
+      "s005": "Button label"
+    },
+    "main_product": {
+      "s001": "Main product",
+      "s002": "Vendor",
+      "s003": "Title",
+      "s004": "Price",
+      "s005": "SKU",
+      "s006": "Inventory",
+      "s007": "Low stock threshold",
+      "s008": "Variant picker",
+      "s009": "Quantity selector",
+      "s010": "Selling plan picker",
+      "s011": "Buy buttons",
+      "s012": "Show dynamic checkout buttons",
+      "s013": "Show gift card recipient form",
+      "s014": "Description",
+      "s015": "Pickup availability",
+      "s016": "Share",
+      "s017": "Collapsible row",
+      "s018": "Heading",
+      "s019": "Content",
+      "s020": "Custom liquid",
+      "s021": "Custom liquid"
+    },
+    "main_search": {
+      "s001": "Main search",
+      "s002": "Show filters",
+      "s003": "Show sorting",
+      "s004": "Show result type",
+      "s005": "Show excerpts",
+      "s006": "Results per page"
+    },
+    "newsletter": {
+      "s001": "Newsletter",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "Text",
+      "s005": "Image",
+      "s006": "Button label",
+      "s007": "Newsletter"
+    },
+    "product_recommendations": {
+      "s001": "Related products",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "Products to show",
+      "s005": "Fallback products",
+      "s006": "Shown when automatic recommendations are unavailable.",
+      "s007": "Related products"
+    },
+    "rich_text": {
+      "s001": "Rich text",
+      "s002": "Kicker",
+      "s003": "Image",
+      "s004": "Heading",
+      "s005": "Text",
+      "s006": "Button label",
+      "s007": "Button link",
+      "s008": "Content alignment",
+      "s009": "Left",
+      "s010": "Center",
+      "s011": "Rich text"
+    },
+    "scroll_story": {
+      "s001": "Scroll story",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "Text",
+      "s005": "Chapter",
+      "s006": "Product",
+      "s007": "Collection",
+      "s008": "Image",
+      "s009": "Heading",
+      "s010": "Text",
+      "s011": "Link",
+      "s012": "Link label",
+      "s013": "Scroll story"
+    },
+    "stacked_media": {
+      "s001": "Stacked media",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "Text",
+      "s005": "Card",
+      "s006": "Product",
+      "s007": "Collection",
+      "s008": "Image",
+      "s009": "Heading",
+      "s010": "Link",
+      "s011": "Stacked media"
+    }
+  },
+  "section_groups": {
+    "header_group": {
+      "s001": "Header group"
+    },
+    "footer_group": {
+      "s001": "Footer group"
+    }
+  }
+}

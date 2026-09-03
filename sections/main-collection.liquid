@@ -1,0 +1,99 @@
+<section class="collection-page section-band">
+  <div class="page-width">
+    <header class="collection-hero">
+      <div>
+        {%- if section.settings.show_product_count -%}
+          <p class="eyebrow">{{ 'products.collection.product_count' | t: count: collection.products_count }}</p>
+        {%- elsif section.settings.kicker != blank -%}
+          <p class="eyebrow">{{ section.settings.kicker }}</p>
+        {%- endif -%}
+        <h1>{{ collection.title }}</h1>
+        {%- if section.settings.show_description and collection.description != blank -%}
+          <div class="rte">{{ collection.description }}</div>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.show_image and collection.image != blank -%}
+        <div class="collection-hero__image media-frame">
+          {%- render 'responsive-image',
+            image: collection.image,
+            class: 'media-frame__image',
+            sizes: '(min-width: 990px) 35vw, 100vw',
+            loading: 'eager'
+          -%}
+        </div>
+      {%- endif -%}
+    </header>
+
+    {%- render 'facets',
+      results: collection,
+      show_filters: section.settings.show_filters,
+      show_sorting: section.settings.show_sorting
+    -%}
+
+    {%- paginate collection.products by section.settings.products_per_page -%}
+      <div class="product-grid">
+        {%- for product in collection.products -%}
+          {%- render 'product-card', product: product, collection: collection, loading: 'lazy' -%}
+        {%- else -%}
+          <div class="empty-state">
+            <p>{{ 'products.collection.no_products' | t }}</p>
+          </div>
+        {%- endfor -%}
+      </div>
+      {%- render 'pagination', paginate: paginate -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.main_collection.s001",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "t:sections.main_collection.s002",
+      "default": "Collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_count",
+      "label": "t:sections.main_collection.s003",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "t:sections.main_collection.s004",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "t:sections.main_collection.s005",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filters",
+      "label": "t:sections.main_collection.s006",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sorting",
+      "label": "t:sections.main_collection.s007",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "t:sections.main_collection.s008",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 16
+    }
+  ]
+}
+{% endschema %}
