@@ -1729,7 +1729,9 @@ textarea.field__input {
   transition: transform 280ms ease, filter 280ms ease;
 }
 
-.deck-card:hover {
+.deck-card:hover,
+.deck-card:focus-visible {
+  z-index: 1;
   transform: translateX(calc(var(--stack-index) * -70px)) translateY(calc(var(--stack-index) * -46px)) rotate(calc(var(--stack-index) * -2deg));
   filter: brightness(1.05);
 }
@@ -2777,7 +2779,8 @@ textarea.field__input {
   box-shadow: 0 30px 70px rgba(17, 17, 17, 0.18);
 }
 
-.deck-card:hover {
+.deck-card:hover,
+.deck-card:focus-visible {
   transform: translate(-50%, -54%) translateX(calc(var(--stack-index) * 48px)) translateY(calc(var(--stack-index) * -44px)) rotate(calc(var(--stack-index) * -3deg));
 }
 
