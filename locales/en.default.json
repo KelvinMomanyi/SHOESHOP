@@ -1,5 +1,7 @@
 {
   "accessibility": {
+    "breadcrumbs": "Breadcrumbs",
+    "enlarge_product_image": "View full image of {{ title }} (opens in a new tab)",
     "skip_to_text": "Skip to content",
     "close": "Close",
     "search": "Search",
@@ -21,6 +23,10 @@
     "decrease_quantity": "Decrease quantity for {{ title }}"
   },
   "general": {
+    "navigation": {
+      "home": "Home",
+      "shop_all": "Shop all"
+    },
     "actions": {
       "submit": "Submit",
       "send": "Send",
@@ -81,6 +87,13 @@
   },
   "products": {
     "product": {
+      "gallery": "A closer look",
+      "view_full_image": "View full image",
+      "about_product": "The details",
+      "product_type": "Category",
+      "shipping_and_returns": "Shipping & returns",
+      "shipping_details": "Delivery information",
+      "return_details": "Returns policy",
       "add_to_cart": "Add to cart",
       "sold_out": "Sold out",
       "sale": "Sale",

@@ -4,21 +4,87 @@
   assign quantity_min = current_variant.quantity_rule.min | default: 1
   assign quantity_increment = current_variant.quantity_rule.increment | default: 1
   assign quantity_max = current_variant.quantity_rule.max
+  assign featured_media = current_variant.featured_media | default: product.featured_media
 -%}
 
 <section class="product product--main page-width" data-section-id="{{ section.id }}" data-product-url="{{ product.url }}">
+  <nav class="product__breadcrumb" aria-label="{{ 'accessibility.breadcrumbs' | t }}">
+    <a href="{{ routes.root_url }}">{{ 'general.navigation.home' | t }}</a>
+    <span aria-hidden="true">/</span>
+    {%- if collection != blank -%}
+      <a href="{{ collection.url }}">{{ collection.title | escape }}</a>
+    {%- else -%}
+      <a href="{{ routes.all_products_collection_url }}">{{ 'general.navigation.shop_all' | t }}</a>
+    {%- endif -%}
+    <span aria-hidden="true">/</span>
+    <span aria-current="page">{{ product.title | escape }}</span>
+  </nav>
+
   <div class="product__media-gallery{% if product.media.size > 1 %} product__media-gallery--has-thumbnails{% endif %}">
+    <div class="product__gallery-heading">
+      <span>{{ 'products.product.gallery' | t }}</span>
+      {%- if product.type != blank -%}<span>{{ product.type | escape }}</span>{%- endif -%}
+    </div>
     {%- if product.media.size > 0 -%}
+
+
+      <div class="product__media-stage" data-product-media-gallery>
+        {%- for media in product.media -%}
+          {%- liquid
+            assign media_loading = 'lazy'
+            assign media_alt = media.alt | default: product.title
+            if media.id == featured_media.id
+              assign media_loading = 'eager'
+            endif
+          -%}
+          <div class="product-media media-frame{% if media.id == featured_media.id %} product-media--active{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}">
+            <div class="product-media__content">
+            {%- case media.media_type -%}
+              {%- when 'image' -%}
+                <a class="product-media__image-link" href="{{ media.preview_image | image_url: width: 2400 }}" target="_blank" rel="noopener" aria-label="{{ 'accessibility.enlarge_product_image' | t: title: media_alt | escape }}">
+                {{
+                  media.preview_image
+                  | image_url: width: 1800
+                  | image_tag:
+                    widths: '360, 533, 720, 940, 1200, 1500, 1800',
+                    sizes: '(min-width: 990px) 50vw, 100vw',
+                    loading: media_loading,
+                    class: 'media-frame__image',
+                    alt: media_alt
+                }}
+                </a>
+              {%- when 'external_video' -%}
+                {{ media | external_video_tag: class: 'product-media__video' }}
+              {%- when 'video' -%}
+                {{ media | video_tag: controls: true, image_size: '1200x', class: 'product-media__video' }}
+              {%- when 'model' -%}
+                {{ media | model_viewer_tag: class: 'product-media__model', reveal: 'interaction' }}
+              {%- else -%}
+                {{ media | media_tag }}
+            {%- endcase -%}
+            </div>
+            <div class="product-media__caption">
+              <span>{{ forloop.index }} / {{ product.media.size }}</span>
+              {%- if media.media_type == 'image' -%}
+                <a href="{{ media.preview_image | image_url: width: 2400 }}" target="_blank" rel="noopener" aria-label="{{ 'accessibility.enlarge_product_image' | t: title: media_alt | escape }}">{{ 'products.product.view_full_image' | t }} <span aria-hidden="true">&#8599;</span></a>
+              {%- else -%}
+                <span>{{ media_alt | escape }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
       {%- if product.media.size > 1 -%}
         <div class="product__media-thumbnails" data-product-media-thumbnails aria-label="{{ 'accessibility.product_media' | t }}">
           {%- for media in product.media -%}
             {%- assign media_accessible_title = media.alt | default: product.title -%}
             <button
               type="button"
-              class="product__media-thumbnail{% if forloop.first %} is-active{% endif %}"
+              class="product__media-thumbnail{% if media.id == featured_media.id %} is-active{% endif %}"
               data-media-thumbnail="{{ section.id }}-{{ media.id }}"
               aria-label="{{ 'accessibility.view_media' | t: title: media_accessible_title | escape }}"
-              aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-pressed="{% if media.id == featured_media.id %}true{% else %}false{% endif %}"
             >
               {{
                 media.preview_image
@@ -34,41 +100,6 @@
           {%- endfor -%}
         </div>
       {%- endif -%}
-
-      <div class="product__media-stage" data-product-media-gallery>
-        {%- for media in product.media -%}
-          {%- liquid
-            assign media_loading = 'lazy'
-            assign media_alt = media.alt | escape
-            if forloop.first
-              assign media_loading = 'eager'
-            endif
-          -%}
-          <div class="product-media media-frame{% if forloop.first %} product-media--active{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}">
-            {%- case media.media_type -%}
-              {%- when 'image' -%}
-                {{
-                  media.preview_image
-                  | image_url: width: 1800
-                  | image_tag:
-                    widths: '360, 533, 720, 940, 1200, 1500, 1800',
-                    sizes: '(min-width: 990px) 50vw, 100vw',
-                    loading: media_loading,
-                    class: 'media-frame__image',
-                    alt: media_alt
-                }}
-              {%- when 'external_video' -%}
-                {{ media | external_video_tag: class: 'product-media__video' }}
-              {%- when 'video' -%}
-                {{ media | video_tag: controls: true, image_size: '1200x', class: 'product-media__video' }}
-              {%- when 'model' -%}
-                {{ media | model_viewer_tag: class: 'product-media__model', reveal: 'interaction' }}
-              {%- else -%}
-                {{ media | media_tag }}
-            {%- endcase -%}
-          </div>
-        {%- endfor -%}
-      </div>
     {%- else -%}
       <div class="product__media-stage">
         <div class="product-media media-frame product-media--active">
@@ -86,7 +117,7 @@
         {%- case block.type -%}
           {%- when 'vendor' -%}
             {%- if product.vendor != blank -%}
-              <p class="eyebrow" {{ block.shopify_attributes }}>{{ product.vendor }}</p>
+              <p class="eyebrow product__vendor" {{ block.shopify_attributes }}>{{ product.vendor | escape }}</p>
             {%- endif -%}
 
           {%- when 'title' -%}
@@ -278,6 +309,7 @@
                     {{ 'products.product.sold_out' | t }}
                   {%- endif -%}
                 </span>
+                <svg class="product-form__submit-arrow" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.5"/></svg>
               </button>
 
               {%- if block.settings.show_dynamic_checkout -%}
@@ -293,8 +325,14 @@
 
           {%- when 'description' -%}
             {%- if product.description != blank -%}
-              <div class="product__description rte" {{ block.shopify_attributes }}>
-                {{ product.description }}
+              <div class="product__description" {{ block.shopify_attributes }}>
+                <h2 class="product__detail-heading">{{ 'products.product.about_product' | t }}</h2>
+                <div class="rte">{{ product.description }}</div>
+                {%- if product.type != blank -%}
+                  <dl class="product__specifications">
+                    <div><dt>{{ 'products.product.product_type' | t }}</dt><dd>{{ product.type | escape }}</dd></div>
+                  </dl>
+                {%- endif -%}
               </div>
             {%- endif -%}
 
@@ -334,11 +372,493 @@
       {%- endfor -%}
     {%- endform -%}
 
+    {%- if shop.shipping_policy.body != blank or shop.refund_policy.body != blank -%}
+      <div class="product__policies">
+        <h2 class="product__detail-heading">{{ 'products.product.shipping_and_returns' | t }}</h2>
+        <div class="product__policy-links">
+          {%- if shop.shipping_policy.body != blank -%}
+            <a href="{{ shop.shipping_policy.url }}">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M3 7h11v10H3zM14 10h4l3 4v3h-7M5 7V4h7M6 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm12 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke="currentColor" stroke-width="1.5"/></svg>
+              <span>{{ 'products.product.shipping_details' | t }}</span><span aria-hidden="true">&#8599;</span>
+            </a>
+          {%- endif -%}
+          {%- if shop.refund_policy.body != blank -%}
+            <a href="{{ shop.refund_policy.url }}">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="m8 4-5 5 5 5M3 9h11a6 6 0 0 1 0 12h-4" stroke="currentColor" stroke-width="1.5"/></svg>
+              <span>{{ 'products.product.return_details' | t }}</span><span aria-hidden="true">&#8599;</span>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
     <script type="application/json" id="ProductJson-{{ section.id }}">
       {{ product.variants | json }}
     </script>
   </div>
 </section>
+
+{% stylesheet %}
+  .product.product--main {
+    font-family: var(--font-body);
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+    column-gap: clamp(32px, 5vw, 76px);
+    row-gap: 30px;
+    padding-block: 28px clamp(64px, 8vw, 112px);
+  }
+
+  .product--main .product__breadcrumb {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.78rem;
+    color: var(--color-muted);
+  }
+
+  .product--main .product__breadcrumb a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+  }
+
+  .product--main .product__breadcrumb [aria-current] {
+    color: var(--color-foreground);
+    overflow-wrap: anywhere;
+  }
+
+  .product--main .product__breadcrumb a:hover,
+  .product--main .product-media__caption a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .product--main .product__media-gallery {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .product--main .product__gallery-heading {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 20px;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    overflow-wrap: anywhere;
+  }
+
+  .product--main .product__gallery-heading > :last-child:not(:first-child) {
+    color: var(--color-muted);
+  }
+
+  .product--main .product-media {
+    aspect-ratio: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 0;
+    background: color-mix(in srgb, var(--color-background) 90%, var(--color-border));
+    box-shadow: none;
+  }
+
+  .product--main .product-media::after {
+    content: none;
+  }
+
+  .product--main .product-media__content {
+    aspect-ratio: 1;
+    overflow: hidden;
+  }
+
+  .product--main .product-media__image-link {
+    display: block;
+    height: 100%;
+    cursor: zoom-in;
+  }
+
+  .product--main .product-media__image-link:focus-visible {
+    outline-offset: -5px;
+  }
+
+  .product--main .product-media .media-frame__image {
+    object-fit: contain;
+    will-change: auto;
+  }
+
+  .product--main .product-media:hover .media-frame__image {
+    transform: none;
+    filter: none;
+  }
+
+  .product--main .product-media__image-link:hover .media-frame__image {
+    transform: scale(1.025);
+  }
+
+  .product--main .product-media__caption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 46px;
+    padding: 9px 16px;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-size: 0.74rem;
+    overflow-wrap: anywhere;
+  }
+
+  .product--main .product-media__caption > :first-child {
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .product--main .product-media__caption > :last-child {
+    text-align: end;
+  }
+
+  .product--main .product-media__caption a {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 28px;
+  }
+
+  .product--main .product__media-thumbnails {
+    flex-direction: row;
+    gap: 10px;
+    max-height: none;
+    padding: 4px;
+    overflow: auto;
+    scroll-snap-type: x proximity;
+  }
+
+  .product--main .product__media-thumbnail {
+    flex: 0 0 72px;
+    width: 72px;
+    border-radius: 0;
+    opacity: 1;
+    scroll-snap-align: start;
+  }
+
+  .product--main .product__media-thumbnail.is-active {
+    outline: 2px solid var(--color-foreground);
+    outline-offset: 2px;
+  }
+
+  .product--main .product__info {
+    position: static;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .product--main .product-form {
+    gap: 20px;
+  }
+
+  .product--main .product__vendor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 18px;
+    opacity: 1;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+  }
+
+  .product--main .product__vendor::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    background: var(--color-accent);
+  }
+
+  .product--main .product__title h1 {
+    max-width: 13ch;
+    font-size: clamp(2.6rem, 4.5vw, 4.6rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+  }
+
+  .product--main .product__price {
+    display: grid;
+    gap: 5px;
+    padding-block: 0 20px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .product--main .product__price .price {
+    font-size: 1.5rem;
+    margin-bottom: 3px;
+  }
+
+  .product--main .product__tax,
+  .product--main .product__meta,
+  .product--main .product__inventory {
+    font-size: 0.78rem;
+  }
+
+  .product--main .product__tax a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .product--main .product__meta:empty,
+  .product--main .product__inventory:empty,
+  .product--main .pickup-availability:not(:has(*)) {
+    display: none;
+  }
+
+  .product--main .product-form__input legend,
+  .product--main .quantity-field > label,
+  .product--main .selling-plan-picker > label {
+    margin-bottom: 10px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.035em;
+  }
+
+  .product--main .product-form__input {
+    min-width: 0;
+  }
+
+  .product--main .option-value {
+    justify-content: center;
+    min-width: 48px;
+    min-height: 46px;
+    padding: 10px 15px;
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+    max-width: 100%;
+  }
+
+  .product--main .option-values input:checked + .option-value {
+    background: var(--color-foreground);
+    color: var(--color-background);
+  }
+
+  .product--main .option-value--unavailable {
+    text-decoration: line-through;
+  }
+
+  .product--main .quantity-field .field__input {
+    max-width: 120px;
+    min-height: 46px;
+    font-weight: 500;
+  }
+
+  .product--main [data-add-to-cart] {
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 58px;
+    padding-inline: 22px;
+    font-weight: 500;
+  }
+
+  .product--main .product-form__submit-arrow {
+    flex-shrink: 0;
+  }
+
+  .product--main .product__detail-heading {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    line-height: 1.4;
+    font-weight: 500;
+    letter-spacing: 0.035em;
+    text-transform: uppercase;
+  }
+
+  .product--main .product__description {
+    display: grid;
+    gap: 16px;
+    padding-top: 24px;
+  }
+
+  .product--main .product__description .rte {
+    font-size: 0.94rem;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+  }
+
+  .product--main .rte {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .product--main .product__specifications {
+    margin: 0;
+    font-size: 0.8rem;
+  }
+
+  .product--main .product__specifications > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 20px;
+    padding-block: 12px;
+    border-block: 1px solid var(--color-border);
+  }
+
+  .product--main .product__specifications dt {
+    color: var(--color-muted);
+  }
+
+  .product--main .product__specifications dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .product--main .product-accordion {
+    padding: 0;
+  }
+
+  .product--main .product-accordion summary {
+    position: relative;
+    min-height: 56px;
+    padding: 18px 32px 18px 0;
+    list-style: none;
+    font-size: 0.92rem;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+
+  .product--main .product-accordion summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .product--main .product-accordion summary::before,
+  .product--main .product-accordion summary::after {
+    content: '';
+    position: absolute;
+    inset-inline-end: 4px;
+    top: 27px;
+    width: 12px;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .product--main .product-accordion summary::after {
+    transform: rotate(90deg);
+    transition: transform 180ms ease;
+  }
+
+  .product--main .product-accordion[open] summary::after {
+    transform: rotate(0);
+  }
+
+  .product--main .product-accordion .rte {
+    margin-top: 0;
+    padding-bottom: 18px;
+    font-size: 0.94rem;
+  }
+
+  .product--main .product__share {
+    gap: 6px 16px;
+    font-size: 0.75rem;
+  }
+
+  .product--main .product__share a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+  }
+
+  .product--main .product__policies {
+    display: grid;
+    gap: 16px;
+    margin-top: 24px;
+    padding: 20px;
+    border: 1px solid var(--color-border);
+  }
+
+  .product--main .product__policy-links {
+    display: grid;
+    gap: 4px;
+  }
+
+  .product--main .product__policy-links a {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    font-size: 0.83rem;
+  }
+
+  .product--main .product__policy-links a:hover > span:first-of-type {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .no-js .product--main .product-media:not(.product-media--active) {
+    display: block;
+    margin-top: 14px;
+  }
+
+  .no-js .product--main .product__media-thumbnails {
+    display: none;
+  }
+
+  @media (min-width: 990px) and (min-height: 1100px) {
+    .product--main .product__media-gallery {
+      position: sticky;
+      top: 110px;
+    }
+  }
+
+  @media (max-width: 989px) {
+    .product.product--main {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 28px;
+    }
+
+    .product--main .product__title h1 {
+      max-width: 18ch;
+      font-size: clamp(2.5rem, 7vw, 4.4rem);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .product.product--main {
+      width: min(100% - 32px, var(--page-width));
+      padding-top: 14px;
+      row-gap: 22px;
+    }
+
+    .product--main .product__breadcrumb {
+      padding-bottom: 12px;
+      font-size: 0.7rem;
+      gap: 2px 8px;
+    }
+
+    .product--main .product__media-thumbnail {
+      flex-basis: 60px;
+      width: 60px;
+    }
+
+    .product--main .product__title h1 {
+      font-size: clamp(2.35rem, 10vw, 3.8rem);
+    }
+
+    .product--main .product__policies {
+      padding: 16px;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
