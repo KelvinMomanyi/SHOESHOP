@@ -1,5 +1,7 @@
 {
   "accessibility": {
+    "previous_product_media": "Previous product image or media",
+    "next_product_media": "Next product image or media",
     "breadcrumbs": "Breadcrumbs",
     "enlarge_product_image": "View full image of {{ title }} (opens in a new tab)",
     "skip_to_text": "Skip to content",
@@ -87,6 +89,18 @@
   },
   "products": {
     "product": {
+      "savings": "Save {{ percent }}%",
+      "available_to_order": "Available to order",
+      "rating_label": "{{ rating }} / {{ scale }}",
+      "review_count": { "one": "{{ count }} review", "other": "{{ count }} reviews" },
+      "size_guide": "Size guide",
+      "explore_details": "Explore the details",
+      "description_label": "Description",
+      "product_information": "Product information",
+      "at_a_glance": "At a glance.",
+      "good_to_know": "Good to know",
+      "read_shipping_policy": "Read shipping policy",
+      "read_return_policy": "Read returns policy",
       "gallery": "A closer look",
       "view_full_image": "View full image",
       "about_product": "The details",

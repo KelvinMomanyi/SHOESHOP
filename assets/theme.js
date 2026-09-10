@@ -949,6 +949,10 @@
       this.currentVariant = this.variants.find((variant) => {
         return variant.options.every((option, index) => option === this.options[index]);
       });
+      this.querySelectorAll('fieldset').forEach((fieldset) => {
+        const selectedLabel = fieldset.querySelector('[data-selected-option]');
+        if (selectedLabel) selectedLabel.textContent = fieldset.querySelector('input:checked')?.value || '';
+      });
       this.updateForm();
       this.updatePrice();
       this.updateAvailability();
@@ -1046,6 +1050,17 @@
         compare.innerHTML = showCompare ? `<s>${formatMoney(this.currentVariant.compare_at_price)}</s>` : '';
       }
 
+      const savings = this.form.querySelector('[data-product-savings]');
+      if (savings) {
+        const comparePrice = this.currentVariant.compare_at_price;
+        const hasSavings = comparePrice > this.currentVariant.price;
+        savings.hidden = !hasSavings;
+        if (hasSavings) {
+          const percent = Math.round((comparePrice - this.currentVariant.price) * 100 / comparePrice);
+          savings.textContent = savings.dataset.savingsLabel.replace('[percent]', String(percent));
+        }
+      }
+
       if (unit) {
         const measurement = this.currentVariant.unit_price_measurement;
         if (measurement && this.currentVariant.unit_price) {
@@ -1074,6 +1089,15 @@
         else text.textContent = strings.addToCart;
       }
       if (sku) sku.textContent = this.currentVariant?.sku ? `${strings.sku}: ${this.currentVariant.sku}` : '';
+      const availability = this.form.querySelector('[data-main-availability]');
+      if (availability) {
+        availability.classList.toggle('is-unavailable', unavailable || soldOut);
+        availability.textContent = unavailable ? strings.unavailable : soldOut ? strings.soldOut : availability.dataset.availableLabel;
+      }
+      if (unavailable) {
+        const savings = this.form.querySelector('[data-product-savings]');
+        if (savings) savings.hidden = true;
+      }
     }
 
     updateMedia() {
@@ -1120,6 +1144,20 @@
 
       thumbnails.forEach((thumbnail) => {
         thumbnail.addEventListener('click', () => selectMedia(thumbnail.dataset.mediaThumbnail));
+      });
+      gallery.querySelectorAll('[data-media-step]').forEach((button) => {
+        button.hidden = false;
+        button.addEventListener('click', () => {
+          const currentIndex = mediaItems.findIndex((item) => item.classList.contains('product-media--active'));
+          const nextIndex = (currentIndex + Number(button.dataset.mediaStep) + mediaItems.length) % mediaItems.length;
+          const mediaId = mediaItems[nextIndex].dataset.mediaId;
+          selectMedia(mediaId);
+          const thumbnail = thumbnails.find((item) => item.dataset.mediaThumbnail === mediaId);
+          if (thumbnail) {
+            const offset = thumbnail.offsetLeft - thumbnail.parentElement.offsetLeft;
+            thumbnail.parentElement.scrollTo({ left: offset - thumbnail.parentElement.clientWidth / 2 + thumbnail.clientWidth / 2 });
+          }
+        });
       });
     });
   };
