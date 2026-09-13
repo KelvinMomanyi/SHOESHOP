@@ -1,0 +1,237 @@
+<section class="blog-editorial-guide section-band">
+  <div class="page-width">
+    <header class="blog-editorial-guide__header reveal-item">
+      <div>
+        {%- if section.settings.kicker != blank -%}
+          <p class="eyebrow">{{ section.settings.kicker }}</p>
+        {%- endif -%}
+        <h2>{{ section.settings.heading }}</h2>
+      </div>
+      {%- if section.settings.text != blank -%}
+        <p>{{ section.settings.text }}</p>
+      {%- endif -%}
+    </header>
+
+    <div class="blog-editorial-guide__grid">
+      {%- for block in section.blocks -%}
+        <article class="blog-editorial-guide__item reveal-item" {{ block.shopify_attributes }}>
+          <span class="blog-editorial-guide__number">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          <div>
+            <h3>{{ block.settings.heading }}</h3>
+            {%- if block.settings.text != blank -%}
+              <p>{{ block.settings.text }}</p>
+            {%- endif -%}
+          </div>
+          {%- if block.settings.link != blank and block.settings.link_label != blank -%}
+            <a href="{{ block.settings.link }}">
+              {{ block.settings.link_label }}
+              <span aria-hidden="true">&#8594;</span>
+            </a>
+          {%- endif -%}
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .blog-editorial-guide {
+    background: #f0eee9;
+    color: #111;
+  }
+
+  .blog-editorial-guide__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.55fr);
+    gap: clamp(28px, 7vw, 100px);
+    align-items: end;
+    margin-bottom: clamp(40px, 6vw, 76px);
+  }
+
+  .blog-editorial-guide__header > div {
+    display: grid;
+    gap: 16px;
+  }
+
+  .blog-editorial-guide__header h2 {
+    max-width: 10ch;
+    font-size: clamp(3rem, 7vw, 7.4rem);
+    line-height: 0.86;
+    letter-spacing: -0.06em;
+    text-transform: uppercase;
+  }
+
+  .blog-editorial-guide__header > p {
+    max-width: 33rem;
+    color: rgba(17, 17, 17, 0.64);
+    font-size: clamp(1rem, 1.35vw, 1.15rem);
+    line-height: 1.55;
+  }
+
+  .blog-editorial-guide__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid rgba(17, 17, 17, 0.34);
+    border-bottom: 1px solid rgba(17, 17, 17, 0.34);
+  }
+
+  .blog-editorial-guide__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: clamp(16rem, 25vw, 22rem);
+    padding: clamp(22px, 3vw, 40px);
+  }
+
+  .blog-editorial-guide__item + .blog-editorial-guide__item {
+    border-left: 1px solid rgba(17, 17, 17, 0.34);
+  }
+
+  .blog-editorial-guide__number {
+    margin-bottom: auto;
+    color: rgba(17, 17, 17, 0.54);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .blog-editorial-guide__item > div {
+    display: grid;
+    gap: 14px;
+    margin-top: 44px;
+  }
+
+  .blog-editorial-guide__item h3 {
+    max-width: 12ch;
+    font-size: clamp(1.7rem, 2.8vw, 2.8rem);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+  }
+
+  .blog-editorial-guide__item p {
+    max-width: 28rem;
+    color: rgba(17, 17, 17, 0.64);
+    font-size: 0.96rem;
+  }
+
+  .blog-editorial-guide__item > a {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid currentColor;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  .blog-editorial-guide__item > a span {
+    transition: transform 180ms ease;
+  }
+
+  .blog-editorial-guide__item > a:hover span {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 749px) {
+    .blog-editorial-guide__header {
+      grid-template-columns: 1fr;
+    }
+
+    .blog-editorial-guide__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .blog-editorial-guide__item {
+      min-height: 15rem;
+      padding-inline: 0;
+    }
+
+    .blog-editorial-guide__item + .blog-editorial-guide__item {
+      border-top: 1px solid rgba(17, 17, 17, 0.34);
+      border-left: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.blog_editorial_guide.s001",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "t:sections.blog_editorial_guide.s002",
+      "default": "The journal desk"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.blog_editorial_guide.s003",
+      "default": "What we keep in focus"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "t:sections.blog_editorial_guide.s004",
+      "default": "Practical stories, tested ideas, and closer looks at the details behind every step."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "topic",
+      "name": "t:sections.blog_editorial_guide.s005",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.blog_editorial_guide.s003"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "t:sections.blog_editorial_guide.s004"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "t:sections.blog_editorial_guide.s006"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.blog_editorial_guide.s007"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.blog_editorial_guide.s001",
+      "blocks": [
+        {
+          "type": "topic",
+          "settings": {
+            "heading": "Fit and feel",
+            "text": "Sizing notes, cushioning breakdowns, and practical guidance for choosing the right pair."
+          }
+        },
+        {
+          "type": "topic",
+          "settings": {
+            "heading": "Materials and care",
+            "text": "Closer looks at construction, wear, and the habits that help footwear last longer."
+          }
+        },
+        {
+          "type": "topic",
+          "settings": {
+            "heading": "People and places",
+            "text": "The routes, routines, and communities shaping how movement feels today."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

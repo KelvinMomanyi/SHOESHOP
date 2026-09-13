@@ -33,6 +33,15 @@
     "s031": "Pinterest"
   },
   "sections": {
+    "blog_editorial_guide": {
+      "s001": "Blog editorial guide",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "Text",
+      "s005": "Topic",
+      "s006": "Link label",
+      "s007": "Link"
+    },
     "blog_journal_callout": {
       "s001": "Journal callout",
       "s002": "Kicker",
@@ -48,7 +57,8 @@
       "s002": "Kicker",
       "s003": "Heading",
       "s004": "All stories label",
-      "s005": "Topics to show"
+      "s005": "Topics to show",
+      "s006": "Introduction"
     },
     "alexandra_loader": {
       "s001": "Product reveal",

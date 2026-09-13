@@ -3,7 +3,8 @@
     "topics": {
       "type": "blog-topic-navigation",
       "settings": {
-        "kicker": "Journal index",
+        "kicker": "Treadora journal",
+        "intro": "Stories about footwear, movement, materials, and the culture that connects them.",
         "heading": "Browse by topic",
         "all_label": "All stories",
         "tags_to_show": 8
@@ -15,6 +16,42 @@
         "articles_per_page": 12
       }
     },
+    "guide": {
+      "type": "blog-editorial-guide",
+      "settings": {
+        "kicker": "The journal desk",
+        "heading": "What we keep in focus",
+        "text": "Practical stories, tested ideas, and closer looks at the details behind every step."
+      },
+      "blocks": {
+        "topic_1": {
+          "type": "topic",
+          "settings": {
+            "heading": "Fit and feel",
+            "text": "Sizing notes, cushioning breakdowns, and practical guidance for choosing the right pair."
+          }
+        },
+        "topic_2": {
+          "type": "topic",
+          "settings": {
+            "heading": "Materials and care",
+            "text": "Closer looks at construction, wear, and the habits that help footwear last longer."
+          }
+        },
+        "topic_3": {
+          "type": "topic",
+          "settings": {
+            "heading": "People and places",
+            "text": "The routes, routines, and communities shaping how movement feels today."
+          }
+        }
+      },
+      "block_order": [
+        "topic_1",
+        "topic_2",
+        "topic_3"
+      ]
+    },
     "journal_note": {
       "type": "blog-journal-callout",
       "settings": {
@@ -24,11 +61,22 @@
         "use_article_image": true,
         "button_label": "Browse every story"
       }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "kicker": "From the journal",
+        "heading": "New stories, straight to your inbox",
+        "text": "Get fit notes, material guides, interviews, and new footwear stories as they land.",
+        "button_label": "Subscribe"
+      }
     }
   },
   "order": [
     "topics",
     "main",
-    "journal_note"
+    "guide",
+    "journal_note",
+    "newsletter"
   ]
 }

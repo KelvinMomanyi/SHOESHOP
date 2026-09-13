@@ -1,51 +1,100 @@
 <section class="blog-topic-navigation">
-  <div class="blog-topic-navigation__inner page-width">
-    <div class="blog-topic-navigation__heading reveal-item">
-      {%- if section.settings.kicker != blank -%}
-        <p class="eyebrow">{{ section.settings.kicker }}</p>
-      {%- endif -%}
-      <h2>{{ section.settings.heading }}</h2>
-    </div>
+  <div class="page-width">
+    <header class="blog-topic-navigation__masthead reveal-item">
+      <div class="blog-topic-navigation__title">
+        {%- if section.settings.kicker != blank -%}
+          <p class="eyebrow">{{ section.settings.kicker }}</p>
+        {%- endif -%}
+        <h1>{{ blog.title }}</h1>
+      </div>
 
-    <nav class="blog-topic-navigation__links" aria-label="{{ section.settings.heading | escape }}">
-      <span class="blog-topic-navigation__link{% if current_tags == blank %} is-active{% endif %}">
-        <a href="{{ blog.url }}">{{ section.settings.all_label }}</a>
-      </span>
-      {%- for tag in blog.all_tags limit: section.settings.tags_to_show -%}
-        <span class="blog-topic-navigation__link{% if current_tags contains tag %} is-active{% endif %}">
-          {{- tag | link_to_tag: tag -}}
+      <div class="blog-topic-navigation__summary">
+        <p class="blog-topic-navigation__count">{{ 'blog.articles.story_count' | t: count: blog.articles_count }}</p>
+        {%- if blog.description != blank -%}
+          <div class="rte">{{ blog.description }}</div>
+        {%- elsif section.settings.intro != blank -%}
+          <p>{{ section.settings.intro }}</p>
+        {%- endif -%}
+      </div>
+    </header>
+
+    <div class="blog-topic-navigation__bar">
+      <h2>{{ section.settings.heading }}</h2>
+      <nav class="blog-topic-navigation__links" aria-label="{{ section.settings.heading | escape }}">
+        <span class="blog-topic-navigation__link{% if current_tags == blank %} is-active{% endif %}">
+          <a href="{{ blog.url }}">{{ section.settings.all_label }}</a>
         </span>
-      {%- endfor -%}
-    </nav>
+        {%- for tag in blog.all_tags limit: section.settings.tags_to_show -%}
+          <span class="blog-topic-navigation__link{% if current_tags contains tag %} is-active{% endif %}">
+            {{- tag | link_to_tag: tag -}}
+          </span>
+        {%- endfor -%}
+      </nav>
+    </div>
   </div>
 </section>
 
 {% stylesheet %}
   .blog-topic-navigation {
     overflow: hidden;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
     background: #111;
     color: #fff;
   }
 
-  .blog-topic-navigation__inner {
+  .blog-topic-navigation__masthead {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.46fr);
+    gap: clamp(30px, 7vw, 110px);
+    align-items: end;
+    min-height: clamp(19rem, 37vw, 34rem);
+    padding-block: clamp(72px, 9vw, 132px) clamp(34px, 4vw, 52px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .blog-topic-navigation__title {
+    display: grid;
+    gap: 18px;
+    min-width: 0;
+  }
+
+  .blog-topic-navigation__title .eyebrow {
+    color: rgba(255, 255, 255, 0.58);
+  }
+
+  .blog-topic-navigation__title h1 {
+    max-width: 9ch;
+    font-size: clamp(4rem, 10.5vw, 10.5rem);
+    line-height: 0.82;
+    letter-spacing: -0.07em;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+  }
+
+  .blog-topic-navigation__summary {
+    display: grid;
+    gap: 18px;
+    padding-bottom: 4px;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: clamp(1rem, 1.25vw, 1.12rem);
+    line-height: 1.55;
+  }
+
+  .blog-topic-navigation__count {
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .blog-topic-navigation__bar {
     display: grid;
     grid-template-columns: minmax(180px, 0.35fr) minmax(0, 1fr);
     gap: 24px;
     align-items: center;
-    padding-block: 18px;
+    padding-block: 17px;
   }
 
-  .blog-topic-navigation__heading {
-    display: grid;
-    gap: 3px;
-  }
-
-  .blog-topic-navigation__heading .eyebrow {
-    color: rgba(255, 255, 255, 0.55);
-  }
-
-  .blog-topic-navigation__heading h2 {
+  .blog-topic-navigation__bar h2 {
     font-size: clamp(1.1rem, 1.7vw, 1.45rem);
     line-height: 1;
   }
@@ -71,11 +120,11 @@
   .blog-topic-navigation__link a {
     display: inline-flex;
     align-items: center;
-    min-height: 38px;
+    min-height: 40px;
     padding: 8px 14px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 999px;
-    font-family: var(--font-mono);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    border-radius: 0;
+    font-family: var(--font-body);
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -91,9 +140,24 @@
   }
 
   @media (max-width: 749px) {
-    .blog-topic-navigation__inner {
+    .blog-topic-navigation__masthead {
       grid-template-columns: 1fr;
-      gap: 13px;
+      gap: 28px;
+      min-height: 0;
+      padding-block: 76px 32px;
+    }
+
+    .blog-topic-navigation__title h1 {
+      font-size: clamp(3.7rem, 18vw, 6rem);
+    }
+
+    .blog-topic-navigation__summary {
+      max-width: 34rem;
+    }
+
+    .blog-topic-navigation__bar {
+      grid-template-columns: 1fr;
+      gap: 14px;
       padding-block: 16px;
     }
 
@@ -113,7 +177,13 @@
       "type": "text",
       "id": "kicker",
       "label": "t:sections.blog_topic_navigation.s002",
-      "default": "Journal index"
+      "default": "Treadora journal"
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "t:sections.blog_topic_navigation.s006",
+      "default": "Stories about footwear, movement, materials, and the culture that connects them."
     },
     {
       "type": "text",
