@@ -518,7 +518,7 @@ textarea.field__input {
   content: "";
   position: absolute;
   right: 0;
-  bottom: 18px;
+  bottom: calc(50% - 18px);
   left: 0;
   height: 1px;
   background: currentColor;
