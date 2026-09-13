@@ -377,9 +377,10 @@
             {%- liquid
               assign complementary_products = blank
               if recommendations.performed and recommendations.products_count > 0
-                assign complementary_products = recommendations.products
-              elsif block.settings.fallback_products != blank
-                assign complementary_products = block.settings.fallback_products
+                assign complementary_products = recommendations.products | reject: 'id', product.id
+              endif
+              if complementary_products == blank and block.settings.fallback_products != blank
+                assign complementary_products = block.settings.fallback_products | reject: 'id', product.id
               endif
             -%}
             <aside class="product__complementary" data-recommendations-container {{ block.shopify_attributes }}>

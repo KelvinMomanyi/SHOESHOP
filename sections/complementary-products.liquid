@@ -11,16 +11,19 @@
       data-loaded="{% if recommendations.performed %}true{% else %}false{% endif %}"
       data-hide-when-empty="true"
     >
-      {%- if recommendations.performed and recommendations.products_count > 0 -%}
+      {%- liquid
+        assign complementary_products = blank
+        if recommendations.performed and recommendations.products_count > 0
+          assign complementary_products = recommendations.products | reject: 'id', product.id
+        endif
+        if complementary_products == blank and section.settings.fallback_products != blank
+          assign complementary_products = section.settings.fallback_products | reject: 'id', product.id
+        endif
+      -%}
+      {%- if complementary_products != blank -%}
         <div class="product-grid">
-          {%- for recommendation in recommendations.products -%}
+          {%- for recommendation in complementary_products limit: section.settings.products_to_show -%}
             {%- render 'product-card', product: recommendation, loading: 'lazy' -%}
-          {%- endfor -%}
-        </div>
-      {%- elsif section.settings.fallback_products != blank -%}
-        <div class="product-grid">
-          {%- for fallback_product in section.settings.fallback_products limit: section.settings.products_to_show -%}
-            {%- render 'product-card', product: fallback_product, loading: 'lazy' -%}
           {%- endfor -%}
         </div>
       {%- endif -%}
