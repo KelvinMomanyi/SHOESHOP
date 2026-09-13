@@ -1,0 +1,262 @@
+{%- liquid
+  assign archive_article = blog.articles.last
+  assign callout_image = section.settings.image
+  if callout_image == blank and section.settings.use_article_image and archive_article != blank
+    assign callout_image = archive_article.image
+  endif
+  assign callout_link = section.settings.button_link
+  if callout_link == blank
+    assign callout_link = blog.url
+  endif
+  assign image_alt = section.settings.heading
+  if archive_article != blank
+    assign image_alt = archive_article.title
+  endif
+-%}
+
+<section class="blog-journal-callout section-band">
+  <div class="blog-journal-callout__inner page-width">
+    <div class="blog-journal-callout__media reveal-item">
+      {%- if callout_image != blank -%}
+        {%- render 'responsive-image',
+          image: callout_image,
+          class: 'blog-journal-callout__image',
+          sizes: '(min-width: 990px) 55vw, 100vw',
+          alt: image_alt
+        -%}
+      {%- else -%}
+        <div class="blog-journal-callout__placeholder" aria-hidden="true">
+          <span>{{ blog.title }}</span>
+        </div>
+      {%- endif -%}
+      <div class="blog-journal-callout__media-meta">
+        <span>{{ blog.title }}</span>
+        <span>{{ 'blog.articles.story_count' | t: count: blog.articles_count }}</span>
+      </div>
+    </div>
+
+    <div class="blog-journal-callout__content reveal-item">
+      <div>
+        {%- if section.settings.kicker != blank -%}
+          <p class="eyebrow">{{ section.settings.kicker }}</p>
+        {%- endif -%}
+        <h2>{{ section.settings.heading }}</h2>
+      </div>
+      {%- if section.settings.text != blank -%}
+        <div class="rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <a class="button button--light" href="{{ callout_link }}">
+          {{ section.settings.button_label }}
+          <span aria-hidden="true">&#8594;</span>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .blog-journal-callout {
+    background: #e4e3e0;
+  }
+
+  .blog-journal-callout__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.18fr) minmax(300px, 0.82fr);
+    min-height: clamp(30rem, 49vw, 42rem);
+  }
+
+  .blog-journal-callout__media {
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+    background: #cbc6bc;
+  }
+
+  .blog-journal-callout__media::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    pointer-events: none;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.48), transparent 42%);
+  }
+
+  .blog-journal-callout__image,
+  .blog-journal-callout__placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+  }
+
+  .blog-journal-callout__image {
+    display: block;
+    object-fit: cover;
+    transition: transform 650ms cubic-bezier(0.2, 0.72, 0.2, 1);
+  }
+
+  .blog-journal-callout__inner:hover .blog-journal-callout__image {
+    transform: scale(1.035);
+  }
+
+  .blog-journal-callout__placeholder {
+    display: grid;
+    place-items: center;
+    padding: 28px;
+    background:
+      radial-gradient(circle at 22% 24%, color-mix(in srgb, var(--color-accent) 72%, transparent), transparent 34%),
+      linear-gradient(135deg, #c7c0b5, #8d867b);
+  }
+
+  .blog-journal-callout__placeholder span {
+    color: rgba(255, 255, 255, 0.72);
+    font-family: var(--font-heading);
+    font-size: clamp(3rem, 9vw, 8rem);
+    line-height: 0.82;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .blog-journal-callout__media-meta {
+    position: absolute;
+    right: 24px;
+    bottom: 22px;
+    left: 24px;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px 22px;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+  }
+
+  .blog-journal-callout__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 30px;
+    padding: clamp(32px, 5vw, 72px);
+    background: #111;
+    color: #fff;
+  }
+
+  .blog-journal-callout__content > div:first-child {
+    display: grid;
+    gap: 14px;
+  }
+
+  .blog-journal-callout__content .eyebrow,
+  .blog-journal-callout__content .rte {
+    color: rgba(255, 255, 255, 0.64);
+  }
+
+  .blog-journal-callout__content h2 {
+    max-width: 9ch;
+    font-size: clamp(2.5rem, 5.3vw, 5.4rem);
+    line-height: 0.88;
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+  }
+
+  .blog-journal-callout__content .rte {
+    max-width: 31rem;
+  }
+
+  .blog-journal-callout__content .button {
+    gap: 16px;
+  }
+
+  .blog-journal-callout__content .button span {
+    transition: transform 180ms ease;
+  }
+
+  .blog-journal-callout__content .button:hover span {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 989px) {
+    .blog-journal-callout__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .blog-journal-callout__media {
+      min-height: min(68vw, 34rem);
+    }
+
+    .blog-journal-callout__content h2 {
+      max-width: 12ch;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .blog-journal-callout__inner {
+      width: min(100% - 24px, var(--page-width));
+      min-height: auto;
+    }
+
+    .blog-journal-callout__media {
+      min-height: 21rem;
+    }
+
+    .blog-journal-callout__media-meta {
+      right: 16px;
+      bottom: 15px;
+      left: 16px;
+    }
+
+    .blog-journal-callout__content {
+      padding: 30px 24px 34px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.blog_journal_callout.s001",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "t:sections.blog_journal_callout.s002",
+      "default": "Keep exploring"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.blog_journal_callout.s003",
+      "default": "Stories for the way you move"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:sections.blog_journal_callout.s004",
+      "default": "<p>Go deeper into footwear, movement, materials, and the people shaping what comes next.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.blog_journal_callout.s005"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_article_image",
+      "label": "t:sections.blog_journal_callout.s006",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.blog_journal_callout.s007",
+      "default": "Browse every story"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.blog_journal_callout.s008"
+    }
+  ]
+}
+{% endschema %}

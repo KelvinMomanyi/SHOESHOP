@@ -1,5 +1,14 @@
 {
   "sections": {
+    "topics": {
+      "type": "blog-topic-navigation",
+      "settings": {
+        "kicker": "Journal index",
+        "heading": "Browse by topic",
+        "all_label": "All stories",
+        "tags_to_show": 8
+      }
+    },
     "main": {
       "type": "main-blog",
       "settings": {
@@ -7,18 +16,18 @@
       }
     },
     "journal_note": {
-      "type": "rich-text",
+      "type": "blog-journal-callout",
       "settings": {
-        "kicker": "Inside the journal",
-        "heading": "The stories behind every stride",
-        "text": "<p>Follow the details that shape the way we move: new footwear, fit notes, material stories, and the people who wear them.</p>",
-        "button_label": "Shop new arrivals",
-        "button_link": "/collections/all",
-        "alignment": "center"
+        "kicker": "Keep exploring",
+        "heading": "Stories for the way you move",
+        "text": "<p>Go deeper into footwear, movement, materials, and the people shaping what comes next.</p>",
+        "use_article_image": true,
+        "button_label": "Browse every story"
       }
     }
   },
   "order": [
+    "topics",
     "main",
     "journal_note"
   ]

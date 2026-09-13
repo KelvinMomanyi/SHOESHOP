@@ -33,6 +33,23 @@
     "s031": "Pinterest"
   },
   "sections": {
+    "blog_journal_callout": {
+      "s001": "Journal callout",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "Text",
+      "s005": "Image",
+      "s006": "Use an article image when no image is selected",
+      "s007": "Button label",
+      "s008": "Button link"
+    },
+    "blog_topic_navigation": {
+      "s001": "Blog topic navigation",
+      "s002": "Kicker",
+      "s003": "Heading",
+      "s004": "All stories label",
+      "s005": "Topics to show"
+    },
     "alexandra_loader": {
       "s001": "Product reveal",
       "s002": "Top left label",

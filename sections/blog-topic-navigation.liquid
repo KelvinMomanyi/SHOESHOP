@@ -1,0 +1,141 @@
+<section class="blog-topic-navigation">
+  <div class="blog-topic-navigation__inner page-width">
+    <div class="blog-topic-navigation__heading reveal-item">
+      {%- if section.settings.kicker != blank -%}
+        <p class="eyebrow">{{ section.settings.kicker }}</p>
+      {%- endif -%}
+      <h2>{{ section.settings.heading }}</h2>
+    </div>
+
+    <nav class="blog-topic-navigation__links" aria-label="{{ section.settings.heading | escape }}">
+      <span class="blog-topic-navigation__link{% if current_tags == blank %} is-active{% endif %}">
+        <a href="{{ blog.url }}">{{ section.settings.all_label }}</a>
+      </span>
+      {%- for tag in blog.all_tags limit: section.settings.tags_to_show -%}
+        <span class="blog-topic-navigation__link{% if current_tags contains tag %} is-active{% endif %}">
+          {{- tag | link_to_tag: tag -}}
+        </span>
+      {%- endfor -%}
+    </nav>
+  </div>
+</section>
+
+{% stylesheet %}
+  .blog-topic-navigation {
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    background: #111;
+    color: #fff;
+  }
+
+  .blog-topic-navigation__inner {
+    display: grid;
+    grid-template-columns: minmax(180px, 0.35fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: center;
+    padding-block: 18px;
+  }
+
+  .blog-topic-navigation__heading {
+    display: grid;
+    gap: 3px;
+  }
+
+  .blog-topic-navigation__heading .eyebrow {
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .blog-topic-navigation__heading h2 {
+    font-size: clamp(1.1rem, 1.7vw, 1.45rem);
+    line-height: 1;
+  }
+
+  .blog-topic-navigation__links {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    min-width: 0;
+    padding-block: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .blog-topic-navigation__links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .blog-topic-navigation__link {
+    flex: 0 0 auto;
+  }
+
+  .blog-topic-navigation__link a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 8px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+  }
+
+  .blog-topic-navigation__link a:hover,
+  .blog-topic-navigation__link a:focus-visible,
+  .blog-topic-navigation__link.is-active a {
+    border-color: #fff;
+    background: #fff;
+    color: #111;
+  }
+
+  @media (max-width: 749px) {
+    .blog-topic-navigation__inner {
+      grid-template-columns: 1fr;
+      gap: 13px;
+      padding-block: 16px;
+    }
+
+    .blog-topic-navigation__links {
+      justify-content: flex-start;
+      margin-right: calc((100vw - 100%) / -2);
+      padding-right: 20px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.blog_topic_navigation.s001",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "t:sections.blog_topic_navigation.s002",
+      "default": "Journal index"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.blog_topic_navigation.s003",
+      "default": "Browse by topic"
+    },
+    {
+      "type": "text",
+      "id": "all_label",
+      "label": "t:sections.blog_topic_navigation.s004",
+      "default": "All stories"
+    },
+    {
+      "type": "range",
+      "id": "tags_to_show",
+      "label": "t:sections.blog_topic_navigation.s005",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    }
+  ]
+}
+{% endschema %}
