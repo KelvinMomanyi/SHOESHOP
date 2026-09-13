@@ -1,0 +1,48 @@
+{% doc %}
+  Renders one compact complementary product row.
+
+  @param {product} product - The complementary product.
+  @param {boolean} show_vendor - Whether to show the product vendor.
+  @param {boolean} show_price - Whether to show the product price.
+  @param {boolean} show_product_link - Whether to show the arrow link.
+{% enddoc %}
+
+{%- liquid
+  assign card_product = product
+  assign card_image = card_product.featured_media.preview_image | default: card_product.featured_image
+-%}
+
+{%- if card_product != blank -%}
+  <li class="product__complementary-item{% unless show_product_link %} product__complementary-item--no-link{% endunless %}">
+    <a class="product__complementary-media" href="{{ card_product.url }}" aria-label="{{ card_product.title | escape }}">
+      {%- if card_image != blank -%}
+        {{
+          card_image
+          | image_url: width: 240
+          | image_tag:
+            widths: '96, 144, 192, 240',
+            sizes: '80px',
+            loading: 'lazy',
+            class: 'product__complementary-image',
+            alt: card_product.title
+        }}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'product__complementary-image placeholder-svg' }}
+      {%- endif -%}
+    </a>
+    <div class="product__complementary-content">
+      {%- if show_vendor and card_product.vendor != blank -%}
+        <p class="eyebrow">{{ card_product.vendor | escape }}</p>
+      {%- endif -%}
+      <h3><a href="{{ card_product.url }}">{{ card_product.title }}</a></h3>
+      {%- if show_price -%}
+        {%- render 'price', product: card_product -%}
+      {%- endif -%}
+    </div>
+    {%- if show_product_link -%}
+      <a class="product__complementary-link" href="{{ card_product.url }}" aria-label="{{ 'products.product.view_product' | t: title: card_product.title | escape }}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.5"/></svg>
+      </a>
+    {%- endif -%}
+  </li>
+{%- endif -%}

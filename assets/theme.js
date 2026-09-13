@@ -894,10 +894,15 @@
   class ProductRecommendations extends HTMLElement {
     connectedCallback() {
       const url = this.dataset.url;
-      if (!url || this.querySelector('.product-grid')) return;
+      if (!url || this.dataset.loaded === 'true') return;
+
+      this.setAttribute('aria-busy', 'true');
 
       fetch(url)
-        .then((response) => response.text())
+        .then((response) => {
+          if (!response.ok) throw new Error('Unable to load product recommendations');
+          return response.text();
+        })
         .then((text) => {
           const html = document.createElement('div');
           html.innerHTML = text;
@@ -905,9 +910,12 @@
           if (recommendations && recommendations.innerHTML.trim().length) {
             this.innerHTML = recommendations.innerHTML;
             initReveal();
+          } else if (this.dataset.hideWhenEmpty === 'true') {
+            this.closest('[data-recommendations-container]')?.setAttribute('hidden', '');
           }
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => this.removeAttribute('aria-busy'));
     }
   }
 

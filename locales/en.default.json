@@ -145,7 +145,8 @@
       },
       "share": "Share",
       "recommendations": "You may also like",
-      "complementary": "Complete the set"
+      "complementary": "Complete the set",
+      "view_product": "View {{ title }}"
     },
     "collection": {
       "product_count": {

@@ -44,6 +44,17 @@
             "show_gift_card_recipient": true
           }
         },
+        "complementary": {
+          "type": "complementary_products",
+          "settings": {
+            "kicker": "Pairs with",
+            "heading": "Complete the set",
+            "products_to_show": 3,
+            "show_vendor": true,
+            "show_price": true,
+            "show_product_link": true
+          }
+        },
         "description": {
           "type": "description",
           "settings": {}
@@ -75,18 +86,12 @@
         "quantity",
         "selling_plan",
         "buy_buttons",
+        "complementary",
         "pickup",
         "share",
         "care"
       ],
       "settings": {}
-    },
-    "complementary": {
-      "type": "complementary-products",
-      "settings": {
-        "heading": "Complete the set",
-        "products_to_show": 4
-      }
     },
     "related": {
       "type": "product-recommendations",
@@ -98,7 +103,6 @@
   },
   "order": [
     "main",
-    "complementary",
     "related"
   ]
 }

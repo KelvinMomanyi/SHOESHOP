@@ -1,4 +1,4 @@
-<section class="product-recommendations section-band">
+<section class="product-recommendations section-band" data-recommendations-container>
   <div class="page-width">
     <div class="section-heading reveal-item">
       <p class="eyebrow">{{ section.settings.kicker }}</p>
@@ -8,6 +8,8 @@
     <product-recommendations
       class="product-recommendations__list"
       data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}&intent=related"
+      data-loaded="{% if recommendations.performed %}true{% else %}false{% endif %}"
+      data-hide-when-empty="true"
     >
       {%- if recommendations.performed and recommendations.products_count > 0 -%}
         <div class="product-grid">

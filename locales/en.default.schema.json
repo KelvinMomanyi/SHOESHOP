@@ -320,7 +320,16 @@
       "s018": "Heading",
       "s019": "Content",
       "s020": "Custom liquid",
-      "s021": "Custom liquid"
+      "s021": "Custom liquid",
+      "s024": "Complementary products",
+      "s025": "Kicker",
+      "s026": "Heading",
+      "s027": "Products to show",
+      "s028": "Fallback products",
+      "s029": "Shown when automatic complementary products are unavailable.",
+      "s030": "Show vendor",
+      "s031": "Show price",
+      "s032": "Show product link"
     },
     "main_search": {
       "s001": "Main search",
