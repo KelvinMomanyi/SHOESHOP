@@ -39,8 +39,8 @@
   let headerDocumentListenersReady = false;
 
   const getViewport = () => ({
-    width: window.innerWidth,
-    height: window.innerHeight
+    width: document.documentElement.clientWidth || window.innerWidth,
+    height: window.visualViewport?.height || document.documentElement.clientHeight || window.innerHeight
   });
 
   const isNearViewport = (rect, height, buffer = 0.35) => {
@@ -114,6 +114,7 @@
     if (scrollEffects.length === 1) {
       window.addEventListener('scroll', requestScrollEffects, { passive: true });
       window.addEventListener('resize', requestResizeEffects);
+      window.visualViewport?.addEventListener('resize', requestResizeEffects);
     }
 
     const viewport = getViewport();
@@ -421,7 +422,11 @@
         state.baseWidth = baseWidth;
         state.initialGap = visibleItems.length > 1 ? Math.max(0, (galleryWidth - visibleItems.length * baseWidth) / (visibleItems.length - 1)) : 0;
         state.finalGap = baseWidth * 0.4;
-        state.targetHeroWidth = Math.min(width * (isMobile ? 0.8 : 0.25), galleryWidth * 0.86);
+        state.targetHeroWidth = Math.min(
+          width * (isMobile ? 0.8 : 0.25),
+          galleryWidth * 0.86,
+          Math.max(baseWidth, height * 0.58)
+        );
         state.hero = hero;
         state.items = visibleItems.map((entry, index) => ({
           ...entry,

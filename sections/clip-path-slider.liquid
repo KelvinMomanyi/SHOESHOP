@@ -200,7 +200,7 @@
   .section-{{ section.id }}.clip-path-slider {
     position: relative;
     width: 100%;
-    min-height: max(var(--clip-scroll-height, 300svh), 520px);
+    min-height: max(var(--clip-scroll-height, 300svh), 100svh);
     overflow: visible;
     background: #080808;
     color: #fff;
@@ -221,6 +221,7 @@
     font-size: clamp(1.05rem, 2vw, 1.45rem);
     font-weight: 800;
     line-height: 1;
+    overflow-wrap: anywhere;
     text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
   }
 
@@ -235,7 +236,7 @@
     top: 0;
     width: 100%;
     height: var(--clip-slider-height, 100svh);
-    min-height: 520px;
+    min-height: min(520px, 100svh);
     overflow: hidden;
     background: #080808;
     isolation: isolate;
@@ -291,6 +292,7 @@
     left: 50%;
     z-index: 4;
     width: min(var(--clip-frame-width, 22vw), 380px);
+    max-width: calc(100% - 24px);
     height: min(calc(var(--clip-frame-width, 22vw) * var(--clip-frame-ratio, 1.25)), 480px);
     transform: translate(-50%, -50%);
     box-shadow: 0 40px 90px rgba(0, 0, 0, 0.35);
@@ -356,7 +358,7 @@
 
   @media (max-width: 989px) {
     .section-{{ section.id }} .clip-path-slider__stage {
-      min-height: 620px;
+      min-height: min(620px, 100svh);
     }
 
     .section-{{ section.id }} .clip-path-slider__frame {
@@ -368,7 +370,7 @@
 
   @media (max-width: 549px) {
     .section-{{ section.id }} .clip-path-slider__stage {
-      min-height: 560px;
+      min-height: min(560px, 100svh);
     }
 
     .section-{{ section.id }} .clip-path-slider__brand {
@@ -379,6 +381,26 @@
     .section-{{ section.id }} .clip-path-slider__frame {
       width: min(58vw, 230px);
       height: min(74vw, 292px);
+    }
+  }
+
+  @media (max-height: 480px) and (orientation: landscape) {
+    .section-{{ section.id }} .clip-path-slider__brand {
+      top: 14px;
+      left: 14px;
+      max-width: 36vw;
+      font-size: 0.9rem;
+    }
+
+    .section-{{ section.id }} .clip-path-slider__frame {
+      top: 50%;
+      width: min(34vw, 190px);
+      height: min(54svh, 240px);
+    }
+
+    .section-{{ section.id }} .clip-path-slider__counter {
+      right: 14px;
+      bottom: 12px;
     }
   }
 
@@ -585,7 +607,8 @@
       ticking = false;
       if (!scrollEnabled) return;
       const rect = root.getBoundingClientRect();
-      const scrollable = Math.max(root.offsetHeight - window.innerHeight, 1);
+      const viewportHeight = window.visualViewport?.height || document.documentElement.clientHeight || window.innerHeight;
+      const scrollable = Math.max(root.offsetHeight - viewportHeight, 1);
       const progress = clamp(-rect.top / scrollable, 0, 1);
       const targetIndex = Math.min(slides.length - 1, Math.round(progress * (slides.length - 1)));
 
@@ -615,6 +638,7 @@
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
+    window.visualViewport?.addEventListener('resize', onScroll);
     root.addEventListener('keydown', onKeydown);
     updateFromScroll();
 
