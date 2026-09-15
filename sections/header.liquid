@@ -34,11 +34,26 @@
         <nav class="mobile-nav" aria-label="{{ 'accessibility.mobile_navigation' | t }}">
           <ul role="list">
             {%- for link in menu.links -%}
-              <li class="{% if link.links != blank %}mobile-nav__item--has-children{% endif %}">
+              {%- liquid
+                assign link_handle = link.title | handle
+                assign mega_block = blank
+                for block in section.blocks
+                  assign menu_item_handle = block.settings.menu_item | handle
+                  if block.type == 'mega_menu' and menu_item_handle == link_handle
+                    assign mega_block = block
+                    break
+                  endif
+                endfor
+                assign mobile_links = link.links
+                if mega_block != blank and mega_block.settings.menu != blank
+                  assign mobile_links = mega_block.settings.menu.links
+                endif
+              -%}
+              <li class="{% if mobile_links != blank %}mobile-nav__item--has-children{% endif %}">
                 <a href="{{ link.url }}">{{ link.title }}</a>
-                {%- if link.links != blank -%}
+                {%- if mobile_links != blank -%}
                   <ul role="list">
-                    {%- for child_link in link.links -%}
+                    {%- for child_link in mobile_links -%}
                       <li class="{% if child_link.links != blank %}mobile-nav__item--has-children{% endif %}">
                         <a href="{{ child_link.url }}">{{ child_link.title }}</a>
                         {%- if child_link.links != blank -%}
@@ -89,9 +104,22 @@
     <nav class="site-header__nav" aria-label="{{ 'accessibility.primary_navigation' | t }}">
       <ul role="list">
         {%- for link in menu.links -%}
-          <li class="{% if link.links != blank %}has-submenu{% endif %}">
-            <a href="{{ link.url }}">{{ link.title }}</a>
-            {%- if link.links != blank -%}
+          {%- liquid
+            assign link_handle = link.title | handle
+            assign mega_block = blank
+            for block in section.blocks
+              assign menu_item_handle = block.settings.menu_item | handle
+              if block.type == 'mega_menu' and menu_item_handle == link_handle
+                assign mega_block = block
+                break
+              endif
+            endfor
+          -%}
+          <li class="{% if mega_block != blank %}has-mega-menu{% elsif link.links != blank %}has-submenu{% endif %}">
+            <a href="{{ link.url }}"{% if mega_block != blank %} aria-haspopup="true"{% endif %}>{{ link.title }}</a>
+            {%- if mega_block != blank -%}
+              {%- render 'header-mega-menu', block: mega_block, parent_link: link, section_id: section.id -%}
+            {%- elsif link.links != blank -%}
               <ul class="site-header__submenu" role="list">
                 {%- for child_link in link.links -%}
                   <li>
@@ -284,6 +312,120 @@
       "id": "show_search",
       "label": "t:sections.header.s005",
       "default": true
+    }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "mega_menu",
+      "name": "t:sections.header.s006",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_item",
+          "label": "t:sections.header.s007",
+          "info": "t:sections.header.s008",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "t:sections.header.s009"
+        },
+        {
+          "type": "select",
+          "id": "menu_layout",
+          "label": "t:sections.header.s021",
+          "options": [
+            { "value": "columns", "label": "t:sections.header.s022" },
+            { "value": "list", "label": "t:sections.header.s023" }
+          ],
+          "default": "columns"
+        },
+        {
+          "type": "select",
+          "id": "image_ratio",
+          "label": "t:sections.header.s010",
+          "options": [
+            { "value": "landscape", "label": "t:sections.header.s011" },
+            { "value": "square", "label": "t:sections.header.s012" },
+            { "value": "portrait", "label": "t:sections.header.s013" }
+          ],
+          "default": "square"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.header.s014"
+        },
+        {
+          "type": "image_picker",
+          "id": "promo_image_1",
+          "label": "t:sections.header.s015"
+        },
+        {
+          "type": "text",
+          "id": "promo_heading_1",
+          "label": "t:sections.header.s016"
+        },
+        {
+          "type": "url",
+          "id": "promo_link_1",
+          "label": "t:sections.header.s017"
+        },
+        {
+          "type": "text",
+          "id": "promo_label_1",
+          "label": "t:sections.header.s018"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.header.s019"
+        },
+        {
+          "type": "image_picker",
+          "id": "promo_image_2",
+          "label": "t:sections.header.s015"
+        },
+        {
+          "type": "text",
+          "id": "promo_heading_2",
+          "label": "t:sections.header.s016"
+        },
+        {
+          "type": "url",
+          "id": "promo_link_2",
+          "label": "t:sections.header.s017"
+        },
+        {
+          "type": "text",
+          "id": "promo_label_2",
+          "label": "t:sections.header.s018"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.header.s020"
+        },
+        {
+          "type": "image_picker",
+          "id": "promo_image_3",
+          "label": "t:sections.header.s015"
+        },
+        {
+          "type": "text",
+          "id": "promo_heading_3",
+          "label": "t:sections.header.s016"
+        },
+        {
+          "type": "url",
+          "id": "promo_link_3",
+          "label": "t:sections.header.s017"
+        },
+        {
+          "type": "text",
+          "id": "promo_label_3",
+          "label": "t:sections.header.s018"
+        }
+      ]
     }
   ]
 }

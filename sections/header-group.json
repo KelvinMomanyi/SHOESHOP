@@ -17,7 +17,29 @@
         "menu": "main-menu",
         "customer_account_menu": "customer-account-main-menu",
         "show_search": true
-      }
+      },
+      "blocks": {
+        "mega_menu_shop": {
+          "type": "mega_menu",
+          "settings": {
+            "menu_item": "Shop",
+            "menu_layout": "columns",
+            "image_ratio": "square"
+          }
+        },
+        "mega_menu_lookbooks": {
+          "type": "mega_menu",
+          "settings": {
+            "menu_item": "Lookbooks",
+            "menu_layout": "list",
+            "image_ratio": "square"
+          }
+        }
+      },
+      "block_order": [
+        "mega_menu_shop",
+        "mega_menu_lookbooks"
+      ]
     }
   },
   "order": [
