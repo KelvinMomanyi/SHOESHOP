@@ -1,3 +1,12 @@
+{% doc %}
+Renders a product card.
+
+@param {product} product - Product displayed by the card.
+@param {collection} [collection] - Collection used to preserve product navigation context.
+@param {string} [loading] - Image loading behavior.
+@param {boolean} [show_quick_add] - Whether the card displays its add-to-cart action.
+{% enddoc %}
+
 {%- liquid
   assign card_product = product
   assign card_collection = collection
@@ -29,7 +38,8 @@
       </h3>
       {%- render 'price', product: card_product -%}
 
-      {%- if card_product.available and card_product.variants.size == 1 -%}
+      {%- unless show_quick_add == false -%}
+        {%- if card_product.available and card_product.variants.size == 1 -%}
         {%- form 'product', card_product, class: 'quick-add' -%}
           <input type="hidden" name="id" value="{{ card_product.selected_or_first_available_variant.id }}">
           <button class="button button--small button--ghost" type="submit">{{ 'products.product.add_to_cart' | t }}</button>
@@ -38,7 +48,8 @@
         <a class="button button--small button--ghost" href="{{ card_product.url | within: card_collection }}">
           {{ 'products.product.add_to_cart' | t }}
         </a>
-      {%- endif -%}
+        {%- endif -%}
+      {%- endunless -%}
     </div>
   </article>
 {%- else -%}

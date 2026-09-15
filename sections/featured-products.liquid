@@ -55,7 +55,7 @@
               style="--stack-index: {{ forloop.index0 }};"
               {{ block.shopify_attributes }}
             >
-              {%- render 'product-card', product: block.settings.product, collection: collection, loading: 'lazy' -%}
+              {%- render 'product-card', product: block.settings.product, collection: collection, loading: 'lazy', show_quick_add: false -%}
             </div>
           {%- endif -%}
         {%- endfor -%}
@@ -68,7 +68,7 @@
             data-rotate-to="{% cycle '-3', '4', '-5', '3', '-4', '5', '-2', '4', '-5', '3', '-4', '2' %}"
             style="--stack-index: {{ forloop.index0 }};"
           >
-            {%- render 'product-card', product: product, collection: collection, loading: 'lazy' -%}
+            {%- render 'product-card', product: product, collection: collection, loading: 'lazy', show_quick_add: false -%}
           </div>
         {%- endfor -%}
       {%- else -%}
@@ -80,7 +80,7 @@
             data-rotate-to="{% cycle '-3', '4', '-5', '3' %}"
             style="--stack-index: {{ forloop.index0 }};"
           >
-            {%- render 'product-card', product: blank -%}
+            {%- render 'product-card', product: blank, show_quick_add: false -%}
           </div>
         {%- endfor -%}
       {%- endif -%}
