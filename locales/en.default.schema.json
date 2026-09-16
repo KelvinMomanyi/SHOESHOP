@@ -393,6 +393,27 @@
       "s006": "Button label",
       "s007": "Newsletter"
     },
+    "newsletter_popup": {
+      "s001": "Newsletter popup",
+      "s002": "Enable popup",
+      "s003": "Delay",
+      "s004": "Days before showing again",
+      "s005": "Kicker",
+      "s006": "Heading",
+      "s007": "Text",
+      "s008": "Highlight text",
+      "s009": "Image",
+      "s010": "Image position",
+      "s011": "Left",
+      "s012": "Right",
+      "s013": "Button label",
+      "s014": "Dismiss label",
+      "s015": "Fine print",
+      "s016": "Background",
+      "s017": "Text color",
+      "s018": "Accent",
+      "s019": "Newsletter popup"
+    },
     "product_recommendations": {
       "s001": "Related products",
       "s002": "Kicker",

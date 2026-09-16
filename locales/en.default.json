@@ -55,7 +55,8 @@
       "label": "Email",
       "placeholder": "Email address",
       "button": "Subscribe",
-      "success": "Thanks for subscribing."
+      "success": "Thanks for subscribing.",
+      "modal_label": "Newsletter signup"
     },
     "contact": {
       "name": "Name",

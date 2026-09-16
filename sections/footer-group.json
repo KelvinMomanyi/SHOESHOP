@@ -2,6 +2,25 @@
   "type": "footer",
   "name": "t:section_groups.footer_group.s001",
   "sections": {
+    "newsletter_popup": {
+      "type": "newsletter-popup",
+      "settings": {
+        "enable_popup": true,
+        "delay": 6,
+        "frequency_days": 14,
+        "kicker": "Stay in step",
+        "heading": "Be first in line",
+        "text": "<p>Get early access to new drops, restocks, and practical fit notes.</p>",
+        "offer_text": "Fresh footwear stories, sent sparingly.",
+        "image_position": "left",
+        "button_label": "Join the list",
+        "dismiss_label": "No thanks",
+        "fine_print": "By subscribing, you agree to receive marketing emails. Unsubscribe at any time.",
+        "background_color": "#f6f4ef",
+        "text_color": "#111111",
+        "accent_color": "#a6bd2f"
+      }
+    },
     "newsletter": {
       "type": "newsletter",
       "settings": {
@@ -19,6 +38,7 @@
     }
   },
   "order": [
+    "newsletter_popup",
     "newsletter",
     "footer"
   ]
