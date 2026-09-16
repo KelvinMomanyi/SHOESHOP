@@ -29,7 +29,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-body, input, textarea, select, button {
+input, textarea, select, button {
   font: inherit;
   letter-spacing: 0;
 }
@@ -5337,7 +5337,26 @@ button,
   border-radius: 0 !important;
 }
 
-/* Use one supporting typeface across every section and small-text treatment. */
+small,
+label,
+legend,
+button,
+input,
+select,
+textarea,
+figcaption,
+caption,
+.announcement-bar,
+.site-header__nav a,
+.site-header__mega-heading,
+.site-header__mega-menu--list .site-header__mega-heading,
+.site-header__mega-promo-content > span,
+.mobile-nav a,
+.mobile-nav > ul > li > a,
+.mobile-drawer__action,
+.site-footer__nav a,
+.button,
+.text-link,
 .eyebrow,
 .predictive-search__header,
 .predictive-search__status,
@@ -5356,7 +5375,7 @@ button,
 .news-card__meta,
 .blog-picks__meta,
 .blog-newsroom__hero-link {
-  font-family: var(--font-body);
+  font-family: var(--font-utility);
 }
 
 .scroll-reveal-enabled .reveal-item {

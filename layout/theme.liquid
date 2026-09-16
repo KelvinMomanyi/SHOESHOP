@@ -24,10 +24,10 @@
       assign heading_font_bold = heading_font | font_modify: 'weight', 'bold'
       assign heading_font_italic = heading_font | font_modify: 'style', 'italic'
       assign heading_font_bold_italic = heading_font_bold | font_modify: 'style', 'italic'
-      assign mono_font = settings.type_mono_font
-      assign mono_font_bold = mono_font | font_modify: 'weight', 'bold'
-      assign mono_font_italic = mono_font | font_modify: 'style', 'italic'
-      assign mono_font_bold_italic = mono_font_bold | font_modify: 'style', 'italic'
+      assign utility_font = settings.type_mono_font
+      assign utility_font_bold = utility_font | font_modify: 'weight', 'bold'
+      assign utility_font_italic = utility_font | font_modify: 'style', 'italic'
+      assign utility_font_bold_italic = utility_font_bold | font_modify: 'style', 'italic'
     -%}
 
     <style>
@@ -39,15 +39,16 @@
       {{ heading_font_bold | font_face: font_display: 'swap' }}
       {{ heading_font_italic | font_face: font_display: 'swap' }}
       {{ heading_font_bold_italic | font_face: font_display: 'swap' }}
-      {{ mono_font | font_face: font_display: 'swap' }}
-      {{ mono_font_bold | font_face: font_display: 'swap' }}
-      {{ mono_font_italic | font_face: font_display: 'swap' }}
-      {{ mono_font_bold_italic | font_face: font_display: 'swap' }}
+      {{ utility_font | font_face: font_display: 'swap' }}
+      {{ utility_font_bold | font_face: font_display: 'swap' }}
+      {{ utility_font_italic | font_face: font_display: 'swap' }}
+      {{ utility_font_bold_italic | font_face: font_display: 'swap' }}
 
       :root {
         --font-body: {{ body_font.family }}, {{ body_font.fallback_families }};
         --font-heading: {{ heading_font.family }}, {{ heading_font.fallback_families }};
-        --font-mono: {{ mono_font.family }}, {{ mono_font.fallback_families }};
+        --font-utility: {{ utility_font.family }}, {{ utility_font.fallback_families }};
+        --font-mono: var(--font-utility);
         --color-background: {{ settings.color_background }};
         --color-foreground: {{ settings.color_foreground }};
         --color-muted: {{ settings.color_muted }};

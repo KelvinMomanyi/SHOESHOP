@@ -8,7 +8,7 @@
     "s006": "Typography",
     "s007": "Body font",
     "s008": "Heading font",
-    "s009": "Utility font",
+    "s009": "Navigation and small text font",
     "s010": "Colors",
     "s011": "Background",
     "s012": "Text",
@@ -30,7 +30,8 @@
     "s028": "Instagram",
     "s029": "TikTok",
     "s030": "YouTube",
-    "s031": "Pinterest"
+    "s031": "Pinterest",
+    "s032": "Used for navigation, buttons, labels, captions, and other compact interface text."
   },
   "sections": {
     "blog_editorial_guide": {

@@ -52,6 +52,7 @@
         "type": "font_picker",
         "id": "type_mono_font",
         "label": "t:settings_schema.s009",
+        "info": "t:settings_schema.s032",
         "default": "space_grotesk_n4"
       }
     ]
