@@ -8,7 +8,11 @@
         "text": "Free shipping over $100",
         "text_2": "New arrivals just landed",
         "text_3": "Easy returns within 30 days",
-        "link": ""
+        "link": "",
+        "show_social_links": true,
+        "show_localization": true,
+        "color_background": "#1f1f1f",
+        "color_text": "#ffffff"
       }
     },
     "header": {

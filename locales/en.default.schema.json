@@ -86,7 +86,13 @@
       "s004": "Text 3",
       "s005": "Link",
       "s006": "Background",
-      "s007": "Text"
+      "s007": "Text",
+      "s008": "Show social icons",
+      "s009": "Facebook link",
+      "s010": "X link",
+      "s011": "Instagram link",
+      "s012": "YouTube link",
+      "s013": "Show language and country/currency selectors"
     },
     "clip_path_slider": {
       "s001": "Clip-path slideshow",

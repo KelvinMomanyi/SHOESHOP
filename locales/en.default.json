@@ -10,6 +10,8 @@
     "search_products": "Search products",
     "menu": "Menu",
     "announcement": "Announcement",
+    "previous_announcement": "Previous announcement",
+    "next_announcement": "Next announcement",
     "primary_navigation": "Primary navigation",
     "mobile_navigation": "Mobile navigation",
     "footer_navigation": "Footer navigation",
@@ -79,6 +81,11 @@
       "next": "Next"
     },
     "social": {
+      "social_media": "Social media",
+      "facebook": "Facebook",
+      "x": "X",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
       "share_on_facebook": "Share on Facebook",
       "share_on_x": "Share on X",
       "share_on_pinterest": "Share on Pinterest"

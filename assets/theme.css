@@ -308,57 +308,221 @@ textarea.field__input {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 8px 16px;
+  min-height: 48px;
+  padding: 0 20px;
   background: var(--announcement-background, var(--color-accent));
   color: var(--announcement-text, var(--color-accent-text));
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-family: var(--font-utility);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.announcement-bar__inner {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(320px, 1.45fr) minmax(300px, 1fr);
+  align-items: center;
+  gap: clamp(16px, 2vw, 36px);
+  width: 100%;
+  min-height: 48px;
 }
 
 .announcement-bar__link {
+  color: inherit;
   text-decoration: none;
+}
+
+.announcement-bar__social {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 17px;
+}
+
+.announcement-bar__social a,
+.announcement-bar__social span {
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  color: inherit;
+}
+
+.announcement-bar__social a {
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.announcement-bar__social a:hover {
+  opacity: 0.7;
+  transform: translateY(-1px);
+}
+
+.announcement-bar__social svg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+}
+
+.announcement-bar__slider {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.announcement-bar__arrow {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.announcement-bar__arrow:hover {
+  opacity: 0.72;
+  transform: scale(1.06);
+}
+
+.announcement-bar__arrow:disabled {
+  visibility: hidden;
+}
+
+.announcement-bar__arrow svg {
+  width: 19px;
+  height: 19px;
 }
 
 .announcement-bar__items {
   position: relative;
-  display: grid;
-  place-items: center;
-  width: min(100%, 760px);
-  min-height: 1.35em;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  text-align: center;
 }
 
 .announcement-bar__message {
-  grid-area: 1 / 1;
-  width: max-content;
-  max-width: calc(100vw - 32px);
+  display: block;
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  opacity: 0;
-  transform: translateX(calc(50vw + 100%));
-  animation: announcement-message-slide 9.6s linear infinite both;
-  animation-delay: var(--announcement-delay, 0s);
-  will-change: transform, opacity;
 }
 
-.announcement-bar__link .announcement-bar__message {
+.announcement-bar__message[hidden] {
+  display: none;
+}
+
+.announcement-bar__link:hover .announcement-bar__message {
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.announcement-bar__localization {
+  justify-self: end;
+  min-width: 0;
+}
+
+.announcement-bar__localization .localization-form {
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+}
+
+.announcement-bar__selector {
+  position: relative;
+  display: grid;
+  grid-template-columns: 18px minmax(0, auto) 10px;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.announcement-bar__selector-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.announcement-bar__chevron {
+  width: 9px;
+  height: 6px;
+  pointer-events: none;
+}
+
+.announcement-bar__localization .localization-form__select {
+  width: auto;
+  min-width: 0;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.announcement-bar__selector--language .localization-form__select {
+  max-width: 92px;
+}
+
+.announcement-bar__selector--country .localization-form__select {
+  max-width: 190px;
+}
+
+.announcement-bar__localization option {
+  background: #fff;
+  color: #111;
+}
+
+@media (max-width: 1100px) {
+  .announcement-bar__inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .announcement-bar__social {
+    display: none;
+  }
+}
+
+@media (max-width: 749px) {
+  .announcement-bar__inner {
+    display: block;
+  }
+
+  .announcement-bar__slider {
+    max-width: none;
+    min-height: 48px;
+    gap: 8px;
+  }
+
+  .announcement-bar__localization {
+    display: none;
+  }
 }
 
 .template-index .announcement-bar {
   position: fixed;
   inset: 0 0 auto;
   width: 100%;
-  min-height: 34px;
-  padding: 8px 16px;
+  min-height: 48px;
+  padding: 0 20px;
   z-index: 95;
   align-items: center;
   border: 0;
   border-radius: 0;
-  background: transparent;
-  color: #fff;
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+  background: var(--announcement-background, #1f1f1f);
+  color: var(--announcement-text, #fff);
+  text-shadow: none;
   backdrop-filter: none;
   transform: none;
   transition: background 220ms ease, border-color 220ms ease, text-shadow 220ms ease;
@@ -374,12 +538,12 @@ textarea.field__input {
 }
 
 .announcement-bar + .site-header {
-  top: 34px;
+  top: 48px;
 }
 
 .template-index .site-header {
   position: fixed;
-  inset: 34px 0 auto;
+  inset: 48px 0 auto;
   z-index: 90;
   background: transparent;
   border-bottom: 0;
@@ -390,7 +554,7 @@ textarea.field__input {
 }
 
 .template-index .announcement-bar + .site-header {
-  top: 34px;
+  top: 48px;
 }
 
 .template-index.is-past-hero .announcement-bar,
@@ -1673,7 +1837,7 @@ textarea.field__input {
 
   .header-search__panel {
     position: fixed;
-    top: calc(34px + 58px);
+    top: calc(48px + 58px);
     right: 16px;
     left: 16px;
     width: auto;
@@ -1700,7 +1864,7 @@ textarea.field__input {
   }
 
   .announcement-bar__message {
-    max-width: calc(100vw - 24px);
+    max-width: calc(100vw - 104px);
   }
 
   .site-header__brand {
@@ -1745,7 +1909,7 @@ textarea.field__input {
   }
 
   .header-search__panel {
-    top: calc(34px + 54px);
+    top: calc(48px + 54px);
   }
 
   .site-header__cart-count {
@@ -5405,13 +5569,7 @@ caption,
   }
 
   .announcement-bar__message {
-    animation: none !important;
-    opacity: 0;
-    transform: none;
-  }
-
-  .announcement-bar__message--first {
-    opacity: 1;
+    transition: none !important;
   }
 }
 
