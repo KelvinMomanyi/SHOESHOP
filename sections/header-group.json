@@ -10,9 +10,7 @@
         "text_3": "Easy returns within 30 days",
         "link": "",
         "show_social_links": true,
-        "show_localization": true,
-        "color_background": "#1f1f1f",
-        "color_text": "#ffffff"
+        "show_localization": true
       }
     },
     "header": {
