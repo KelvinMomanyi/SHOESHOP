@@ -117,9 +117,9 @@
   }
 
   .newsletter-popup__dialog {
-    width: min(1040px, calc(100% - 32px));
+    width: min(920px, calc(100% - 48px));
     max-width: none;
-    max-height: min(88dvh, 760px);
+    max-height: min(84dvh, 680px);
     margin: auto;
     padding: 0;
     overflow: auto;
@@ -142,8 +142,8 @@
   .newsletter-popup__shell {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(300px, 0.88fr) minmax(0, 1.12fr);
-    min-height: 560px;
+    grid-template-columns: minmax(270px, 0.88fr) minmax(0, 1.12fr);
+    min-height: 490px;
     overflow: hidden;
     background: var(--newsletter-popup-background);
   }
@@ -155,12 +155,12 @@
   .newsletter-popup__close {
     position: absolute;
     z-index: 2;
-    top: 18px;
-    right: 18px;
+    top: 16px;
+    right: 16px;
     display: grid;
     place-items: center;
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     padding: 0;
     border: 1px solid color-mix(in srgb, var(--newsletter-popup-text) 20%, transparent);
     background: color-mix(in srgb, var(--newsletter-popup-background) 84%, transparent);
@@ -176,8 +176,8 @@
   }
 
   .newsletter-popup__close svg {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 
   .newsletter-popup__media {
@@ -199,7 +199,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 28px;
+    padding: 24px;
     overflow: hidden;
     color: #111;
     isolation: isolate;
@@ -257,7 +257,7 @@
     flex-direction: column;
     justify-content: center;
     min-width: 0;
-    padding: clamp(58px, 7vw, 86px) clamp(32px, 6vw, 74px) clamp(40px, 6vw, 70px);
+    padding: clamp(46px, 5.5vw, 64px) clamp(28px, 4.5vw, 52px) clamp(34px, 4.5vw, 52px);
   }
 
   .newsletter-popup__kicker {
@@ -268,14 +268,14 @@
 
   .newsletter-popup__content h2 {
     max-width: 580px;
-    font-size: clamp(2.6rem, 5vw, 4.7rem);
+    font-size: clamp(2.25rem, 4.2vw, 3.9rem);
     line-height: 0.9;
     letter-spacing: -0.045em;
   }
 
   .newsletter-popup__text {
     max-width: 500px;
-    margin-top: 22px;
+    margin-top: 18px;
     color: color-mix(in srgb, var(--newsletter-popup-text) 72%, transparent);
     font-size: 1rem;
     line-height: 1.55;
@@ -285,12 +285,12 @@
   }
 
   .newsletter-popup__offer {
-    margin: 18px 0 0;
+    margin: 14px 0 0;
     font-weight: 700;
   }
 
   .newsletter-popup__form {
-    margin-top: 30px;
+    margin-top: 24px;
   }
 
   .newsletter-popup__field {
@@ -326,7 +326,7 @@
   }
 
   .newsletter-popup__fine-print {
-    margin: 16px 0 0;
+    margin: 13px 0 0;
     color: color-mix(in srgb, var(--newsletter-popup-text) 62%, transparent);
     font-size: 0.76rem;
     line-height: 1.45;
@@ -334,7 +334,7 @@
 
   .newsletter-popup__dismiss {
     align-self: flex-start;
-    margin-top: 18px;
+    margin-top: 14px;
     padding: 2px 0;
     border: 0;
     border-bottom: 1px solid currentColor;
@@ -361,10 +361,30 @@
     }
   }
 
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    .newsletter-popup__dialog {
+      width: min(780px, calc(100% - 40px));
+      max-height: min(82dvh, 620px);
+    }
+
+    .newsletter-popup__shell {
+      grid-template-columns: minmax(240px, 0.82fr) minmax(0, 1.18fr);
+      min-height: 450px;
+    }
+
+    .newsletter-popup__content {
+      padding: 42px 34px 34px;
+    }
+
+    .newsletter-popup__content h2 {
+      font-size: clamp(2.2rem, 5vw, 3.25rem);
+    }
+  }
+
   @media screen and (max-width: 749px) {
     .newsletter-popup__dialog {
-      width: calc(100% - 24px);
-      max-height: calc(100dvh - 24px);
+      width: min(400px, calc(100% - 36px));
+      max-height: calc(100dvh - 36px);
     }
 
     .newsletter-popup__shell {
@@ -377,16 +397,16 @@
     }
 
     .newsletter-popup__media {
-      min-height: 150px;
-      max-height: 24dvh;
+      min-height: 120px;
+      max-height: 20dvh;
     }
 
     .newsletter-popup__content {
-      padding: 34px 24px 30px;
+      padding: 28px 20px 24px;
     }
 
     .newsletter-popup__content h2 {
-      font-size: clamp(2.2rem, 12vw, 3.25rem);
+      font-size: clamp(1.9rem, 9vw, 2.65rem);
     }
 
     .newsletter-popup__field {
