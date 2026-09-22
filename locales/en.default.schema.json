@@ -228,8 +228,20 @@
       "s019": "Promotion 2",
       "s020": "Promotion 3",
       "s021": "Link layout",
-      "s022": "Columns",
-      "s023": "Vertical list"
+      "s022": "Category columns with image cards",
+      "s023": "Vertical links with lookbook cards",
+      "s024": "Category columns",
+      "s025": "Used by the category columns layout on desktop.",
+      "s026": "Vertical spacing",
+      "s027": "Text position on images",
+      "s028": "Center",
+      "s029": "Bottom",
+      "s030": "Image heading size",
+      "s031": "Small",
+      "s032": "Medium",
+      "s033": "Large",
+      "s034": "Image overlay opacity",
+      "s035": "Space between images"
     },
     "hover_preview": {
       "s001": "Hover preview",

@@ -18,9 +18,20 @@ Renders a configurable header mega menu.
       assign promo_count = promo_count | plus: 1
     endif
   endfor
+  assign menu_columns = block.settings.menu_columns | default: 3
+  assign panel_padding = block.settings.panel_padding | default: 32
+  assign promo_gap = block.settings.promo_gap | default: 20
+  assign promo_position = block.settings.promo_text_position | default: 'center'
+  assign promo_heading_size = block.settings.promo_heading_size | default: 'medium'
+  assign promo_overlay_opacity = block.settings.promo_overlay_opacity | default: 25 | divided_by: 100.0
 -%}
 
-<div id="HeaderMegaMenu-{{ section_id }}-{{ block.id }}" class="site-header__mega-menu site-header__mega-menu--{{ block.settings.menu_layout }}" {{ block.shopify_attributes }}>
+<div
+  id="HeaderMegaMenu-{{ section_id }}-{{ block.id }}"
+  class="site-header__mega-menu site-header__mega-menu--{{ block.settings.menu_layout }} site-header__mega-menu--text-{{ promo_position }} site-header__mega-menu--heading-{{ promo_heading_size }}"
+  style="--mega-menu-columns: {{ menu_columns }}; --mega-panel-padding: {{ panel_padding }}px; --mega-promo-gap: {{ promo_gap }}px; --mega-overlay-opacity: {{ promo_overlay_opacity }};"
+  {{ block.shopify_attributes }}
+>
   <div class="site-header__mega-menu-inner page-width">
     {%- if mega_links != blank -%}
       <nav class="site-header__mega-links" aria-label="{{ parent_link.title | escape }}">

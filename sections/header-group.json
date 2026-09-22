@@ -26,7 +26,13 @@
           "settings": {
             "menu_item": "Shop",
             "menu_layout": "columns",
-            "image_ratio": "square"
+            "menu_columns": 3,
+            "panel_padding": 32,
+            "image_ratio": "landscape",
+            "promo_text_position": "center",
+            "promo_heading_size": "medium",
+            "promo_overlay_opacity": 20,
+            "promo_gap": 20
           }
         },
         "mega_menu_lookbooks": {
@@ -34,7 +40,13 @@
           "settings": {
             "menu_item": "Lookbooks",
             "menu_layout": "list",
-            "image_ratio": "square"
+            "menu_columns": 3,
+            "panel_padding": 28,
+            "image_ratio": "landscape",
+            "promo_text_position": "center",
+            "promo_heading_size": "medium",
+            "promo_overlay_opacity": 25,
+            "promo_gap": 24
           }
         }
       },

@@ -343,6 +343,26 @@
           "default": "columns"
         },
         {
+          "type": "range",
+          "id": "menu_columns",
+          "min": 2,
+          "max": 5,
+          "step": 1,
+          "label": "t:sections.header.s024",
+          "info": "t:sections.header.s025",
+          "default": 3
+        },
+        {
+          "type": "range",
+          "id": "panel_padding",
+          "min": 20,
+          "max": 64,
+          "step": 4,
+          "unit": "px",
+          "label": "t:sections.header.s026",
+          "default": 32
+        },
+        {
           "type": "select",
           "id": "image_ratio",
           "label": "t:sections.header.s010",
@@ -351,7 +371,48 @@
             { "value": "square", "label": "t:sections.header.s012" },
             { "value": "portrait", "label": "t:sections.header.s013" }
           ],
-          "default": "square"
+          "default": "landscape"
+        },
+        {
+          "type": "select",
+          "id": "promo_text_position",
+          "label": "t:sections.header.s027",
+          "options": [
+            { "value": "center", "label": "t:sections.header.s028" },
+            { "value": "bottom", "label": "t:sections.header.s029" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "select",
+          "id": "promo_heading_size",
+          "label": "t:sections.header.s030",
+          "options": [
+            { "value": "small", "label": "t:sections.header.s031" },
+            { "value": "medium", "label": "t:sections.header.s032" },
+            { "value": "large", "label": "t:sections.header.s033" }
+          ],
+          "default": "medium"
+        },
+        {
+          "type": "range",
+          "id": "promo_overlay_opacity",
+          "min": 0,
+          "max": 70,
+          "step": 5,
+          "unit": "%",
+          "label": "t:sections.header.s034",
+          "default": 25
+        },
+        {
+          "type": "range",
+          "id": "promo_gap",
+          "min": 8,
+          "max": 32,
+          "step": 2,
+          "unit": "px",
+          "label": "t:sections.header.s035",
+          "default": 20
         },
         {
           "type": "header",

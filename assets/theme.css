@@ -846,7 +846,7 @@ textarea.field__input {
     max-height: calc(100dvh - 92px);
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding-block: clamp(28px, 3vw, 46px);
+    padding-block: var(--mega-panel-padding, 32px);
     border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
     background: var(--color-surface);
@@ -882,7 +882,7 @@ textarea.field__input {
 
   .site-header__mega-columns {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(var(--mega-menu-columns, 3), minmax(120px, 1fr));
     gap: 28px clamp(22px, 3vw, 52px);
   }
 
@@ -892,16 +892,17 @@ textarea.field__input {
 
   .site-header__mega-menu--list .site-header__mega-columns {
     grid-template-columns: minmax(0, 1fr);
-    gap: 10px;
+    gap: 18px;
   }
 
   .site-header__mega-menu--list .site-header__mega-heading {
     border-bottom: 0;
     padding: 0;
-    font-family: var(--font-heading);
-    font-size: 1.08rem;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+    font-family: var(--font-body);
+    font-size: clamp(1.2rem, 1.65vw, 1.65rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
     text-transform: none;
   }
 
@@ -956,7 +957,7 @@ textarea.field__input {
   .site-header__mega-promos {
     display: grid;
     grid-template-columns: repeat(var(--mega-promo-count), minmax(0, 1fr));
-    gap: clamp(12px, 1.5vw, 22px);
+    gap: var(--mega-promo-gap, 20px);
   }
 
   .site-header__mega-promo {
@@ -995,7 +996,7 @@ textarea.field__input {
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.48));
+    background: rgba(0, 0, 0, var(--mega-overlay-opacity, 0.25));
   }
 
   .site-header__mega-promo-content {
@@ -1014,6 +1015,18 @@ textarea.field__input {
     font-family: var(--font-heading);
     font-size: clamp(1.35rem, 2vw, 2.25rem);
     line-height: 0.96;
+  }
+
+  .site-header__mega-menu--text-bottom .site-header__mega-promo-content {
+    align-content: end;
+  }
+
+  .site-header__mega-menu--heading-small .site-header__mega-promo-content strong {
+    font-size: clamp(1.1rem, 1.5vw, 1.65rem);
+  }
+
+  .site-header__mega-menu--heading-large .site-header__mega-promo-content strong {
+    font-size: clamp(1.7rem, 2.5vw, 2.8rem);
   }
 
   .site-header__mega-promo-content > span {
