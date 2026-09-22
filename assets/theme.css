@@ -139,6 +139,10 @@ h3 {
   isolation: isolate;
 }
 
+body:not(.template-index) .main-content {
+  padding-top: 106px;
+}
+
 .color-paper {
   background: #ede8de;
 }
@@ -301,20 +305,24 @@ textarea.field__input {
 }
 
 .announcement-bar {
-  position: sticky;
-  top: 0;
-  z-index: 85;
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 95;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: visible;
+  width: 100%;
   min-height: 48px;
   padding: 0 20px;
+  border: 0;
   background: var(--announcement-background, var(--color-accent));
   color: var(--announcement-text, var(--color-accent-text));
   font-family: var(--font-utility);
   font-size: 0.78rem;
   font-weight: 500;
+  text-shadow: none;
+  transition: background 220ms ease, border-color 220ms ease, text-shadow 220ms ease;
 }
 
 .announcement-bar__inner {
@@ -599,12 +607,15 @@ textarea.field__input {
 }
 
 .site-header {
-  position: sticky;
-  top: 0;
-  z-index: 80;
-  background: color-mix(in srgb, var(--color-background) 88%, transparent);
-  border-bottom: 1px solid var(--color-border);
-  backdrop-filter: blur(14px);
+  position: fixed;
+  inset: 48px 0 auto;
+  z-index: 90;
+  background: #080808;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  backdrop-filter: none;
+  text-shadow: none;
+  transition: background 220ms ease, border-color 220ms ease, text-shadow 220ms ease;
 }
 
 .announcement-bar + .site-header {
@@ -627,7 +638,11 @@ textarea.field__input {
   top: 48px;
 }
 
-.template-index.is-past-hero .announcement-bar,
+.template-index.is-past-hero .announcement-bar {
+  background: var(--announcement-background, #080808);
+  text-shadow: none;
+}
+
 .template-index.is-past-hero .site-header {
   background: #080808;
   text-shadow: none;
@@ -641,11 +656,6 @@ textarea.field__input {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  gap: clamp(18px, 3vw, 44px);
-  min-height: 72px;
-}
-
-.template-index .site-header__inner {
   gap: clamp(16px, 2.4vw, 36px);
   min-height: 58px;
 }
@@ -753,7 +763,7 @@ textarea.field__input {
   position: relative;
   display: inline-flex;
   align-items: center;
-  min-height: 72px;
+  min-height: 58px;
   padding-block: 0;
   font-size: 0.84rem;
   font-weight: 700;
@@ -779,12 +789,6 @@ textarea.field__input {
 .site-header__nav > ul > li:focus-within > a::after {
   opacity: 1;
   transform: scaleX(1);
-}
-
-.template-index .site-header__nav a {
-  align-items: center;
-  min-height: 42px;
-  padding-block: 0;
 }
 
 .has-submenu {
@@ -1966,6 +1970,10 @@ textarea.field__input {
 }
 
 @media (max-width: 479px) {
+  body:not(.template-index) .main-content {
+    padding-top: 102px;
+  }
+
   .site-header__inner {
     grid-template-columns: minmax(52px, 1fr) auto minmax(52px, 1fr);
     gap: 8px;
