@@ -618,6 +618,10 @@ textarea.field__input {
   transition: background 220ms ease, border-color 220ms ease, text-shadow 220ms ease;
 }
 
+body.drawer-open .site-header {
+  z-index: 200;
+}
+
 .announcement-bar + .site-header {
   top: 48px;
 }
@@ -1453,7 +1457,7 @@ textarea.field__input {
 .cart-drawer__overlay {
   position: fixed;
   inset: 0;
-  z-index: 130;
+  z-index: 210;
   border: 0;
   background: rgba(0, 0, 0, 0.42);
   backdrop-filter: blur(5px);
@@ -1462,7 +1466,7 @@ textarea.field__input {
 .cart-drawer__panel {
   position: fixed;
   inset: 0 0 0 auto;
-  z-index: 135;
+  z-index: 220;
   width: min(92vw, 430px);
   height: 100svh;
   display: grid;
@@ -1653,7 +1657,7 @@ textarea.field__input {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: 110;
+  z-index: 210;
   background: rgba(0, 0, 0, 0.42);
   backdrop-filter: blur(5px);
 }
@@ -1662,6 +1666,7 @@ textarea.field__input {
   position: fixed;
   top: 18px;
   left: 18px;
+  z-index: 225;
   background: var(--color-surface);
   color: var(--color-surface-text);
   border-color: var(--color-border);
@@ -1679,7 +1684,7 @@ textarea.field__input {
 .mobile-drawer__panel {
   position: fixed;
   inset: 0 auto 0 0;
-  z-index: 120;
+  z-index: 220;
   width: min(88vw, 390px);
   height: 100svh;
   display: grid;
