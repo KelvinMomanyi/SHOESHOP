@@ -68,7 +68,7 @@
                 </div>
               </div>
 
-              <h1>{{ panel_title | default: 'Featured edit' }}</h1>
+              <h1>{% if panel_title != blank %}{{ panel_title }}{% else %}{{ 'general.onboarding.featured_edit' | t }}{% endif %}</h1>
             </div>
           </div>
         </article>
@@ -214,3 +214,4 @@
   ]
 }
 {% endschema %}
+{{ 'editorial-stacked.css' | asset_url | stylesheet_tag }}

@@ -9,7 +9,7 @@
 <div
   id="NewsletterPopup-{{ section.id }}"
   class="newsletter-popup"
-  style="--newsletter-popup-background: {{ section.settings.background_color }}; --newsletter-popup-text: {{ section.settings.text_color }}; --newsletter-popup-accent: {{ section.settings.accent_color }};"
+  style="--newsletter-popup-background: {{ section.settings.background_color }}; --newsletter-popup-text: {{ section.settings.text_color }}; --newsletter-popup-accent: {{ section.settings.accent_color }}; --newsletter-popup-accent-text: {{ section.settings.accent_text_color }};"
   data-newsletter-popup-root
   data-enabled="{{ section.settings.enable_popup }}"
   data-delay="{{ section.settings.delay | times: 1000 }}"
@@ -35,6 +35,8 @@
 
       <div class="newsletter-popup__media" aria-hidden="{% if section.settings.image.alt == blank %}true{% else %}false{% endif %}">
         {%- if section.settings.image != blank -%}
+          {%- assign popup_focal_point = section.settings.image.presentation.focal_point | default: 'center' -%}
+          {%- assign popup_image_style = 'object-position: ' | append: popup_focal_point | append: ';' -%}
           {{
             section.settings.image
             | image_url: width: 1400
@@ -42,7 +44,8 @@
               widths: '360, 540, 720, 960, 1200, 1400',
               sizes: '(min-width: 750px) 42vw, 100vw',
               loading: 'lazy',
-              class: 'newsletter-popup__image'
+              class: 'newsletter-popup__image',
+              style: popup_image_style
           }}
         {%- else -%}
           <div class="newsletter-popup__art">
@@ -201,7 +204,7 @@
     justify-content: space-between;
     padding: 24px;
     overflow: hidden;
-    color: #111;
+    color: var(--newsletter-popup-accent-text);
     isolation: isolate;
   }
 
@@ -660,6 +663,12 @@
       "id": "accent_color",
       "label": "t:sections.newsletter_popup.s018",
       "default": "#a6bd2f"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "t:sections.newsletter_popup.s020",
+      "default": "#111111"
     }
   ],
   "presets": [

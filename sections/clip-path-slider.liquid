@@ -12,6 +12,8 @@
   assign scroll_per_slide = section.settings.scroll_per_slide | default: 110
   assign scroll_steps = slide_count | minus: 1
   assign scroll_height = scroll_steps | times: scroll_per_slide | plus: section_height
+  assign logo_focal_point = section.settings.logo.presentation.focal_point | default: 'center'
+  assign logo_style = 'object-position: ' | append: logo_focal_point | append: ';'
 -%}
 
 <section
@@ -42,7 +44,8 @@
               widths: '96, 140, 180, 220',
               loading: 'eager',
               class: 'clip-path-slider__logo',
-              alt: brand_name
+              alt: brand_name,
+              style: logo_style
           }}
         {%- else -%}
           <span>{{ brand_name }}</span>
@@ -415,154 +418,68 @@
   }
 </style>
 
-<script>
-  (() => {
-    const root = document.getElementById('ClipPathSlider-{{ section.id }}');
-    if (!root || root.dataset.clipPathReady === 'true') return;
+{% javascript %}
+  const initializeClipPathSliders = (scope = document) => {
+    const roots = scope.matches?.('[data-clip-path-slider]')
+      ? [scope]
+      : Array.from(scope.querySelectorAll?.('[data-clip-path-slider]') || []);
 
-    root.dataset.clipPathReady = 'true';
+    roots.forEach((root) => {
+      if (root.dataset.clipPathReady === 'true') return;
+      root.dataset.clipPathReady = 'true';
 
-    const slides = Array.from(root.querySelectorAll('[data-clip-slide]'));
-    const frameItems = Array.from(root.querySelectorAll('[data-clip-frame-item]'));
-    const countItems = Array.from(root.querySelectorAll('[data-clip-count-item]'));
-    const duration = Number(root.dataset.duration || 1250);
-    const loopSlides = root.dataset.loop === 'true';
-    const scrollEnabled = root.dataset.wheel === 'true';
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const easing = 'cubic-bezier(0.76, 0, 0.24, 1)';
-    const openClip = 'inset(0% 0% 0% 0%)';
-    const fromBottom = 'inset(100% 0% 0% 0%)';
-    const fromTop = 'inset(0% 0% 100% 0%)';
-    let current = 0;
-    let busy = false;
-    let pendingIndex = null;
-    let ticking = false;
+      const slides = Array.from(root.querySelectorAll('[data-clip-slide]'));
+      const frameItems = Array.from(root.querySelectorAll('[data-clip-frame-item]'));
+      const countItems = Array.from(root.querySelectorAll('[data-clip-count-item]'));
+      const duration = Number(root.dataset.duration || 1250);
+      const loopSlides = root.dataset.loop === 'true';
+      const scrollEnabled = root.dataset.wheel === 'true';
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const easing = 'cubic-bezier(0.76, 0, 0.24, 1)';
+      const openClip = 'inset(0% 0% 0% 0%)';
+      const fromBottom = 'inset(100% 0% 0% 0%)';
+      const fromTop = 'inset(0% 0% 100% 0%)';
+      let current = 0;
+      let busy = false;
+      let pendingIndex = null;
+      let ticking = false;
 
-    if (slides.length < 2 || frameItems.length < 2) return;
+      if (slides.length < 2 || frameItems.length < 2) return;
 
-    const imageIn = (element) => element?.querySelector('.clip-path-slider__image');
+      const imageIn = (element) => element?.querySelector('.clip-path-slider__image');
 
-    const setVisible = (element, visible) => {
-      if (!element) return;
-      element.classList.toggle('is-visible', visible);
-      element.setAttribute('aria-hidden', visible ? 'false' : 'true');
-      if (element.matches('a[href]')) element.tabIndex = visible ? 0 : -1;
-    };
+      const setVisible = (element, visible) => {
+        if (!element) return;
+        element.classList.toggle('is-visible', visible);
+        element.setAttribute('aria-hidden', visible ? 'false' : 'true');
+        if (element.matches('a[href]')) element.tabIndex = visible ? 0 : -1;
+      };
 
-    const setActive = (elements, index) => {
-      elements.forEach((element, itemIndex) => {
-        const active = itemIndex === index;
-        element.classList.toggle('is-active', active);
-        element.classList.remove('is-visible');
-        element.setAttribute('aria-hidden', active ? 'false' : 'true');
-        if (element.matches('a[href]')) element.tabIndex = active ? 0 : -1;
-        if (element.style) element.style.zIndex = active ? '2' : '1';
-      });
-    };
+      const setActive = (elements, index) => {
+        elements.forEach((element, itemIndex) => {
+          const active = itemIndex === index;
+          element.classList.toggle('is-active', active);
+          element.classList.remove('is-visible');
+          element.setAttribute('aria-hidden', active ? 'false' : 'true');
+          if (element.matches('a[href]')) element.tabIndex = active ? 0 : -1;
+          if (element.style) element.style.zIndex = active ? '2' : '1';
+        });
+      };
 
-    const animateTo = (element, frames) => {
-      if (!element) return Promise.resolve();
-      const endFrame = frames[frames.length - 1];
+      const animateTo = (element, frames) => {
+        if (!element) return Promise.resolve();
+        const endFrame = frames[frames.length - 1];
 
-      if (reduceMotion) {
-        Object.assign(element.style, endFrame);
-        return Promise.resolve();
-      }
+        if (reduceMotion || !element.animate) {
+          Object.assign(element.style, endFrame);
+          return Promise.resolve();
+        }
 
-      if (!element.animate) {
-        Object.assign(element.style, endFrame);
-        return Promise.resolve();
-      }
+        const animation = element.animate(frames, { duration, easing, fill: 'forwards' });
+        return animation.finished.catch(() => {});
+      };
 
-      const animation = element.animate(frames, {
-        duration,
-        easing,
-        fill: 'forwards'
-      });
-
-      return animation.finished.catch(() => {});
-    };
-
-    const animateTransition = ({
-      oldBg,
-      nextBg,
-      oldBgImage,
-      nextBgImage,
-      oldFrame,
-      nextFrame,
-      oldFrameImage,
-      nextFrameImage,
-      oldCount,
-      nextCount,
-      bgStart,
-      frameStart,
-      dir
-    }) => {
-      if (reduceMotion) {
-        if (nextBg) nextBg.style.clipPath = openClip;
-        if (nextFrame) nextFrame.style.clipPath = openClip;
-        return Promise.resolve();
-      }
-
-      return Promise.all([
-        animateTo(nextBg, [{ clipPath: bgStart }, { clipPath: openClip }]),
-        animateTo(nextBgImage, [{ transform: 'scale(1.35)' }, { transform: 'scale(1)' }]),
-        animateTo(oldBgImage, [{ transform: 'scale(1)' }, { transform: 'scale(1.15)' }]),
-        animateTo(nextFrame, [{ clipPath: frameStart }, { clipPath: openClip }]),
-        animateTo(oldFrameImage, [{ transform: 'translateY(0%)' }, { transform: `translateY(${dir * 50}%)` }]),
-        animateTo(nextFrameImage, [{ transform: `translateY(${-dir * 50}%)` }, { transform: 'translateY(0%)' }]),
-        animateTo(oldCount, [{ transform: 'translateY(0%)' }, { transform: `translateY(${-dir * 110}%)` }]),
-        animateTo(nextCount, [{ transform: `translateY(${dir * 110}%)` }, { transform: 'translateY(0%)' }])
-      ]);
-    };
-
-    const atEdge = (dir) => {
-      if (loopSlides) return false;
-      return (dir > 0 && current === slides.length - 1) || (dir < 0 && current === 0);
-    };
-
-    const go = (dir, source = 'manual') => {
-      if (busy || !dir) return false;
-      if (source !== 'scroll' && atEdge(dir)) return false;
-
-      busy = true;
-      const oldIndex = current;
-      const nextIndex = (current + dir + slides.length) % slides.length;
-      current = nextIndex;
-
-      const oldSlide = slides[oldIndex];
-      const nextSlide = slides[nextIndex];
-      const oldBg = oldSlide?.querySelector('[data-clip-bg]');
-      const nextBg = nextSlide?.querySelector('[data-clip-bg]');
-      const oldBgImage = imageIn(oldBg);
-      const nextBgImage = imageIn(nextBg);
-      const oldFrame = frameItems[oldIndex];
-      const nextFrame = frameItems[nextIndex];
-      const oldFrameImage = imageIn(oldFrame);
-      const nextFrameImage = imageIn(nextFrame);
-      const oldCount = countItems[oldIndex];
-      const nextCount = countItems[nextIndex];
-      const bgStart = dir > 0 ? fromBottom : fromTop;
-      const frameStart = dir > 0 ? fromTop : fromBottom;
-
-      if (oldFrame?.matches('a[href]')) oldFrame.tabIndex = -1;
-      setVisible(nextSlide, true);
-      setVisible(nextFrame, true);
-      setVisible(nextCount, true);
-      nextSlide.style.zIndex = '3';
-      oldSlide.style.zIndex = '2';
-      if (nextFrame) nextFrame.style.zIndex = '3';
-      if (oldFrame) oldFrame.style.zIndex = '2';
-      if (nextCount) nextCount.style.zIndex = '3';
-      if (oldCount) oldCount.style.zIndex = '2';
-
-      if (nextBg) nextBg.style.clipPath = bgStart;
-      if (nextFrame) nextFrame.style.clipPath = frameStart;
-      if (nextBgImage) nextBgImage.style.transform = 'scale(1.35)';
-      if (nextFrameImage) nextFrameImage.style.transform = `translateY(${-dir * 50}%)`;
-      if (nextCount) nextCount.style.transform = `translateY(${dir * 110}%)`;
-
-      animateTransition({
+      const animateTransition = ({
         oldBg,
         nextBg,
         oldBgImage,
@@ -576,87 +493,191 @@
         bgStart,
         frameStart,
         dir
-      }).then(() => {
-        [oldBg, nextBg, oldFrame, nextFrame].forEach((element) => {
-          if (element) element.style.clipPath = openClip;
-        });
-        [oldBgImage, nextBgImage, oldFrameImage, nextFrameImage, oldCount, nextCount].forEach((element) => {
-          if (element) element.style.transform = '';
-        });
-        setActive(slides, current);
-        setActive(frameItems, current);
-        setActive(countItems, current);
-        busy = false;
+      }) => {
+        if (reduceMotion) {
+          if (nextBg) nextBg.style.clipPath = openClip;
+          if (nextFrame) nextFrame.style.clipPath = openClip;
+          return Promise.resolve();
+        }
 
-        if (pendingIndex !== null && pendingIndex !== current) {
-          const nextDir = pendingIndex > current ? 1 : -1;
+        return Promise.all([
+          animateTo(nextBg, [{ clipPath: bgStart }, { clipPath: openClip }]),
+          animateTo(nextBgImage, [{ transform: 'scale(1.35)' }, { transform: 'scale(1)' }]),
+          animateTo(oldBgImage, [{ transform: 'scale(1)' }, { transform: 'scale(1.15)' }]),
+          animateTo(nextFrame, [{ clipPath: frameStart }, { clipPath: openClip }]),
+          animateTo(oldFrameImage, [{ transform: 'translateY(0%)' }, { transform: `translateY(${dir * 50}%)` }]),
+          animateTo(nextFrameImage, [{ transform: `translateY(${-dir * 50}%)` }, { transform: 'translateY(0%)' }]),
+          animateTo(oldCount, [{ transform: 'translateY(0%)' }, { transform: `translateY(${-dir * 110}%)` }]),
+          animateTo(nextCount, [{ transform: `translateY(${dir * 110}%)` }, { transform: 'translateY(0%)' }])
+        ]);
+      };
+
+      const atEdge = (dir) => {
+        if (loopSlides) return false;
+        return (dir > 0 && current === slides.length - 1) || (dir < 0 && current === 0);
+      };
+
+      const go = (dir, source = 'manual') => {
+        if (busy || !dir) return false;
+        if (source !== 'scroll' && atEdge(dir)) return false;
+
+        busy = true;
+        const oldIndex = current;
+        const nextIndex = (current + dir + slides.length) % slides.length;
+        current = nextIndex;
+
+        const oldSlide = slides[oldIndex];
+        const nextSlide = slides[nextIndex];
+        const oldBg = oldSlide?.querySelector('[data-clip-bg]');
+        const nextBg = nextSlide?.querySelector('[data-clip-bg]');
+        const oldBgImage = imageIn(oldBg);
+        const nextBgImage = imageIn(nextBg);
+        const oldFrame = frameItems[oldIndex];
+        const nextFrame = frameItems[nextIndex];
+        const oldFrameImage = imageIn(oldFrame);
+        const nextFrameImage = imageIn(nextFrame);
+        const oldCount = countItems[oldIndex];
+        const nextCount = countItems[nextIndex];
+        const bgStart = dir > 0 ? fromBottom : fromTop;
+        const frameStart = dir > 0 ? fromTop : fromBottom;
+
+        if (oldFrame?.matches('a[href]')) oldFrame.tabIndex = -1;
+        setVisible(nextSlide, true);
+        setVisible(nextFrame, true);
+        setVisible(nextCount, true);
+        nextSlide.style.zIndex = '3';
+        oldSlide.style.zIndex = '2';
+        if (nextFrame) nextFrame.style.zIndex = '3';
+        if (oldFrame) oldFrame.style.zIndex = '2';
+        if (nextCount) nextCount.style.zIndex = '3';
+        if (oldCount) oldCount.style.zIndex = '2';
+
+        if (nextBg) nextBg.style.clipPath = bgStart;
+        if (nextFrame) nextFrame.style.clipPath = frameStart;
+        if (nextBgImage) nextBgImage.style.transform = 'scale(1.35)';
+        if (nextFrameImage) nextFrameImage.style.transform = `translateY(${-dir * 50}%)`;
+        if (nextCount) nextCount.style.transform = `translateY(${dir * 110}%)`;
+
+        animateTransition({
+          oldBg,
+          nextBg,
+          oldBgImage,
+          nextBgImage,
+          oldFrame,
+          nextFrame,
+          oldFrameImage,
+          nextFrameImage,
+          oldCount,
+          nextCount,
+          bgStart,
+          frameStart,
+          dir
+        }).then(() => {
+          [oldBg, nextBg, oldFrame, nextFrame].forEach((element) => {
+            if (element) element.style.clipPath = openClip;
+          });
+          [oldBgImage, nextBgImage, oldFrameImage, nextFrameImage, oldCount, nextCount].forEach((element) => {
+            if (element) element.style.transform = '';
+          });
+          setActive(slides, current);
+          setActive(frameItems, current);
+          setActive(countItems, current);
+          busy = false;
+
+          if (pendingIndex !== null && pendingIndex !== current) {
+            go(pendingIndex > current ? 1 : -1, 'scroll');
+            return;
+          }
+
           pendingIndex = null;
-          go(nextDir, 'scroll');
+        });
+
+        return true;
+      };
+
+      const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+      const selectIndex = (index) => {
+        const target = clamp(Number(index), 0, slides.length - 1);
+        if (!Number.isFinite(target) || target === current) {
+          pendingIndex = null;
           return;
         }
 
-        pendingIndex = null;
-      });
+        pendingIndex = target;
+        if (!busy) go(target > current ? 1 : -1, 'scroll');
+      };
 
-      return true;
-    };
+      const updateFromScroll = () => {
+        ticking = false;
+        if (!scrollEnabled) return;
+        const rect = root.getBoundingClientRect();
+        const viewportHeight = window.visualViewport?.height || document.documentElement.clientHeight || window.innerHeight;
+        const scrollable = Math.max(root.offsetHeight - viewportHeight, 1);
+        const progress = clamp(-rect.top / scrollable, 0, 1);
+        selectIndex(Math.min(slides.length - 1, Math.round(progress * (slides.length - 1))));
+      };
 
-    const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+      const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(updateFromScroll);
+      };
 
-    const updateFromScroll = () => {
-      ticking = false;
-      if (!scrollEnabled) return;
-      const rect = root.getBoundingClientRect();
-      const viewportHeight = window.visualViewport?.height || document.documentElement.clientHeight || window.innerHeight;
-      const scrollable = Math.max(root.offsetHeight - viewportHeight, 1);
-      const progress = clamp(-rect.top / scrollable, 0, 1);
-      const targetIndex = Math.min(slides.length - 1, Math.round(progress * (slides.length - 1)));
+      const onKeydown = (event) => {
+        if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)) return;
+        const dir = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : -1;
+        if (go(dir, 'keyboard')) event.preventDefault();
+      };
 
-      if (targetIndex === current) {
-        pendingIndex = null;
-        return;
-      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      window.visualViewport?.addEventListener('resize', onScroll);
+      root.addEventListener('keydown', onKeydown);
+      root.clipPathSliderSelect = selectIndex;
+      updateFromScroll();
 
-      pendingIndex = targetIndex;
-      if (!busy) {
-        const dir = targetIndex > current ? 1 : -1;
-        go(dir, 'scroll');
-      }
-    };
+      root.clipPathSliderDestroy = () => {
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', onScroll);
+        window.visualViewport?.removeEventListener('resize', onScroll);
+        root.removeEventListener('keydown', onKeydown);
+        root.dataset.clipPathReady = 'false';
+        delete root.clipPathSliderSelect;
+        delete root.clipPathSliderDestroy;
+      };
+    });
+  };
 
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(updateFromScroll);
-    };
+  if (!window.TreadoraClipPathSlider) {
+    window.TreadoraClipPathSlider = { initialize: initializeClipPathSliders };
 
-    const onKeydown = (event) => {
-      if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)) return;
-      const dir = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : -1;
-      if (go(dir, 'keyboard')) event.preventDefault();
-    };
+    document.addEventListener('shopify:section:load', (event) => {
+      initializeClipPathSliders(event.target);
+    });
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    window.visualViewport?.addEventListener('resize', onScroll);
-    root.addEventListener('keydown', onKeydown);
-    updateFromScroll();
+    document.addEventListener('shopify:section:unload', (event) => {
+      const roots = event.target.matches?.('[data-clip-path-slider]')
+        ? [event.target]
+        : Array.from(event.target.querySelectorAll?.('[data-clip-path-slider]') || []);
+      roots.forEach((root) => root.clipPathSliderDestroy?.());
+    });
 
-    root.clipPathSliderDestroy = () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-      root.removeEventListener('keydown', onKeydown);
-      document.removeEventListener('shopify:section:unload', onSectionUnload);
-      root.dataset.clipPathReady = 'false';
-    };
+    document.addEventListener('shopify:block:select', (event) => {
+      const block = event.target.matches?.('[data-clip-slide]')
+        ? event.target
+        : event.target.querySelector?.('[data-clip-slide]');
+      const root = block?.closest('[data-clip-path-slider]');
+      if (root && block) root.clipPathSliderSelect?.(block.dataset.index);
+    });
+  }
 
-    const onSectionUnload = (event) => {
-      if (event.target?.contains(root)) root.clipPathSliderDestroy?.();
-    };
-
-    document.addEventListener('shopify:section:unload', onSectionUnload);
-  })();
-</script>
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => initializeClipPathSliders(), { once: true });
+  } else {
+    initializeClipPathSliders();
+  }
+{% endjavascript %}
 
 {% schema %}
 {

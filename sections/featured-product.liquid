@@ -14,6 +14,8 @@
         {%- liquid
           assign media_loading = 'lazy'
           assign media_alt = media.alt | escape
+          assign media_focal_point = media.preview_image.presentation.focal_point | default: 'center'
+          assign media_image_style = 'object-position: ' | append: media_focal_point | append: ';'
           if forloop.first
             assign media_loading = 'eager'
           endif
@@ -29,7 +31,8 @@
                   sizes: '(min-width: 990px) 50vw, 100vw',
                   loading: media_loading,
                   class: 'media-frame__image',
-                  alt: media_alt
+                  alt: media_alt,
+                  style: media_image_style
               }}
             {%- when 'external_video' -%}
               {{ media | external_video_tag: class: 'product-media__video' }}
@@ -52,7 +55,8 @@
   <div class="product__info">
     {%- if featured_product != blank -%}
       {%- form 'product', featured_product, id: product_form_id, class: 'product-form', novalidate: 'novalidate' -%}
-        <input type="hidden" name="id" value="{{ current_variant.id }}" data-product-id-input>
+        {%- assign variant_select_id = 'FeaturedProductVariant-' | append: section.id -%}
+        {%- render 'variant-select-fallback', product: featured_product, current_variant: current_variant, select_id: variant_select_id -%}
 
         {%- for block in section.blocks -%}
           {%- case block.type -%}

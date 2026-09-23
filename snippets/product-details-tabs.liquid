@@ -1,0 +1,50 @@
+{% doc %}
+  Renders the product description, specifications, and policy tabs.
+
+  @param {product} product - Product displayed by the section.
+  @param {section} section - Product section instance.
+  @param {boolean} show_description - Whether to show the description panel.
+  @param {boolean} show_specifications - Whether to show product facts.
+  @param {boolean} show_policies - Whether to show shipping and returns policies.
+{% enddoc %}
+
+{%- if show_description or show_specifications or show_policies -%}
+  <product-detail-tabs class="product__details-area">
+    <nav class="product__detail-nav" aria-label="{{ 'products.product.product_information' | t }}">
+      {%- if show_description -%}<a id="ProductDescriptionTab-{{ section.id }}" href="#ProductDescription-{{ section.id }}" data-product-tab>{{ 'products.product.description_label' | t }}</a>{%- endif -%}
+      {%- if show_specifications -%}<a id="ProductSpecsTab-{{ section.id }}" href="#ProductSpecs-{{ section.id }}" data-product-tab>{{ 'products.product.product_information' | t }}</a>{%- endif -%}
+      {%- if show_policies -%}<a id="ProductPoliciesTab-{{ section.id }}" href="#ProductPolicies-{{ section.id }}" data-product-tab>{{ 'products.product.shipping_and_returns' | t }}</a>{%- endif -%}
+    </nav>
+    {%- if show_description -%}
+      <div id="ProductDescription-{{ section.id }}" class="product__detail-panel" data-product-panel>
+        <div class="product__detail-intro"><p class="eyebrow">{{ 'products.product.about_product' | t }}</p><h2>{{ product.title | escape }}</h2></div>
+        <div class="rte">{{ product.description }}</div>
+      </div>
+    {%- endif -%}
+    {%- if show_specifications -%}
+      <div id="ProductSpecs-{{ section.id }}" class="product__detail-panel" data-product-panel>
+        <div class="product__detail-intro"><p class="eyebrow">{{ 'products.product.product_information' | t }}</p><h2>{{ 'products.product.at_a_glance' | t }}</h2></div>
+        <dl class="product__fact-list">
+          {%- if product.vendor != blank -%}<div><dt>{{ 'products.product.vendor' | t }}</dt><dd>{{ product.vendor | escape }}</dd></div>{%- endif -%}
+          {%- if product.type != blank -%}<div><dt>{{ 'products.product.product_type' | t }}</dt><dd>{{ product.type | escape }}</dd></div>{%- endif -%}
+          {%- unless product.has_only_default_variant -%}
+            {%- for option in product.options_with_values -%}<div><dt>{{ option.name | escape }}</dt><dd>{{ option.values | join: ', ' | escape }}</dd></div>{%- endfor -%}
+          {%- endunless -%}
+        </dl>
+      </div>
+    {%- endif -%}
+    {%- if show_policies -%}
+      <div id="ProductPolicies-{{ section.id }}" class="product__detail-panel" data-product-panel>
+        <div class="product__detail-intro"><p class="eyebrow">{{ 'products.product.good_to_know' | t }}</p><h2>{{ 'products.product.shipping_and_returns' | t }}</h2></div>
+        <div class="product__policy-summaries">
+          {%- if shop.shipping_policy.body != blank -%}
+            <div><h3>{{ 'products.product.shipping_details' | t }}</h3><p>{{ shop.shipping_policy.body | strip_html | truncatewords: 45 }}</p><a class="product__details-link" href="{{ shop.shipping_policy.url }}">{{ 'products.product.read_shipping_policy' | t }} <span aria-hidden="true">&#8599;</span></a></div>
+          {%- endif -%}
+          {%- if shop.refund_policy.body != blank -%}
+            <div><h3>{{ 'products.product.return_details' | t }}</h3><p>{{ shop.refund_policy.body | strip_html | truncatewords: 45 }}</p><a class="product__details-link" href="{{ shop.refund_policy.url }}">{{ 'products.product.read_return_policy' | t }} <span aria-hidden="true">&#8599;</span></a></div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </product-detail-tabs>
+{%- endif -%}

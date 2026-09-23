@@ -1,0 +1,22 @@
+{% doc %}
+  Renders a variant selector that remains functional when JavaScript is disabled.
+
+  @param {product} product - Product whose variants are rendered.
+  @param {variant} current_variant - Currently selected variant.
+  @param {string} select_id - Unique select element ID.
+{% enddoc %}
+
+<div class="product-form__variant-fallback">
+  <label for="{{ select_id }}">{{ 'products.product.variant' | t }}</label>
+  <select id="{{ select_id }}" class="field__input" name="id" data-product-id-input>
+    {%- for variant in product.variants -%}
+      <option
+        value="{{ variant.id }}"
+        {% if variant.id == current_variant.id %}selected="selected"{% endif %}
+        {% unless variant.available %}disabled="disabled"{% endunless %}
+      >
+        {{ variant.title | escape }} &mdash; {{ variant.price | money }}{% unless variant.available %} &mdash; {{ 'products.product.sold_out' | t }}{% endunless %}
+      </option>
+    {%- endfor -%}
+  </select>
+</div>

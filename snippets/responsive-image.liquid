@@ -1,9 +1,22 @@
+{% doc %}
+  Renders a responsive image with its Shopify focal point.
+
+  @param {image} image - Image to render.
+  @param {string} [class] - CSS classes for the image.
+  @param {string} [sizes] - Responsive sizes attribute.
+  @param {string} [widths] - Responsive source widths.
+  @param {string} [loading] - Image loading behavior.
+  @param {string} [alt] - Alternative text override.
+{% enddoc %}
+
 {%- liquid
   assign image_class = class | default: ''
   assign image_sizes = sizes | default: '100vw'
   assign image_widths = widths | default: '165, 360, 533, 720, 940, 1200, 1600, 2000'
   assign image_loading = loading | default: 'lazy'
   assign image_alt = alt | default: image.alt | escape
+  assign image_focal_point = image.presentation.focal_point | default: 'center'
+  assign image_style = 'object-position: ' | append: image_focal_point | append: ';'
 -%}
 
 {%- if image != blank -%}
@@ -15,7 +28,8 @@
       sizes: image_sizes,
       loading: image_loading,
       class: image_class,
-      alt: image_alt
+      alt: image_alt,
+      style: image_style
   }}
 {%- else -%}
   {{ 'product-1' | placeholder_svg_tag: image_class }}

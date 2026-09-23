@@ -86,6 +86,11 @@
           search: {{ routes.search_url | json }},
           predictiveSearch: {{ routes.predictive_search_url | json }},
           recommendations: {{ routes.product_recommendations_url | json }}
+        },
+        assets: {
+          motionEffects: {{ 'motion-effects.js' | asset_url | json }},
+          facets: {{ 'facets.js' | asset_url | json }},
+          productFeatures: {{ 'product-features.js' | asset_url | json }}
         }
       };
     </script>

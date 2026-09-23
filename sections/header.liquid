@@ -1,6 +1,8 @@
 {%- liquid
   assign menu = linklists[section.settings.menu]
   assign logo = section.settings.logo | default: settings.logo
+  assign logo_focal_point = logo.presentation.focal_point | default: 'center'
+  assign logo_style = 'object-position: ' | append: logo_focal_point | append: ';'
   assign brand_name = settings.brand_name | default: 'Treadora'
   assign account_link = routes.account_login_url
   assign account_label = 'customer.login.submit' | t
@@ -11,7 +13,12 @@
   endif
 -%}
 
-<header class="site-header" data-section-id="{{ section.id }}">
+<header
+  id="SiteHeader-{{ section.id }}"
+  class="site-header"
+  data-section-id="{{ section.id }}"
+  data-header-loaders
+>
   <div class="site-header__inner page-width">
     <details class="mobile-drawer" data-modal-drawer>
       <summary class="site-header__action mobile-drawer__summary" aria-label="{{ 'accessibility.menu' | t }}" title="{{ 'accessibility.menu' | t }}">
@@ -95,7 +102,7 @@
 
     <a class="site-header__brand" href="{{ routes.root_url }}" aria-label="{{ brand_name | escape }}">
       {%- if logo != blank -%}
-        {{ logo | image_url: width: 280 | image_tag: widths: '120, 180, 240, 280', loading: 'eager', class: 'site-header__logo', alt: brand_name }}
+        {{ logo | image_url: width: 280 | image_tag: widths: '120, 180, 240, 280', loading: 'eager', class: 'site-header__logo', alt: brand_name, style: logo_style }}
       {%- else -%}
         <span class="site-header__name">{{ brand_name }}</span>
       {%- endif -%}
@@ -149,7 +156,13 @@
           </summary>
 
           <div class="header-search__panel">
-            <form action="{{ routes.search_url }}" method="get" role="search" class="header-search__form" data-predictive-search>
+            <form
+              action="{{ routes.search_url }}"
+              method="get"
+              role="search"
+              class="header-search__form"
+              data-predictive-search
+            >
               <input type="hidden" name="type" value="product,page,article">
               <label class="visually-hidden" for="HeaderSearch-{{ section.id }}">{{ 'accessibility.search' | t }}</label>
               <input
@@ -286,6 +299,62 @@
   </div>
 </header>
 
+<script>
+  (() => {
+    const setup = (root) => {
+      if (!root || root.dataset.headerLoadersReady === 'true') return;
+      root.dataset.headerLoadersReady = 'true';
+
+      let drawersPromise;
+      const loadDrawers = () => {
+        drawersPromise ||= import("{{ 'header-drawers.js' | asset_url }}")
+          .then(({ initializeHeaderDrawers }) => initializeHeaderDrawers())
+          .catch(() => {
+            drawersPromise = null;
+          });
+        return drawersPromise;
+      };
+
+      root.addEventListener('pointerdown', (event) => {
+        if (event.target.closest('[data-search-drawer], [data-modal-drawer], [data-cart-open]')) loadDrawers();
+      }, { passive: true });
+      root.addEventListener('focusin', (event) => {
+        if (event.target.closest('[data-search-drawer], [data-modal-drawer], [data-cart-open]')) loadDrawers();
+      });
+      if (root.querySelector('details[open]')) loadDrawers();
+
+      root.querySelectorAll('[data-predictive-search]').forEach((form) => {
+        let predictivePromise;
+        const loadPredictiveSearch = () => {
+          predictivePromise ||= import("{{ 'predictive-search.js' | asset_url }}")
+            .then(({ initializePredictiveSearch }) => initializePredictiveSearch(form))
+            .catch(() => {
+              predictivePromise = null;
+            });
+          return predictivePromise;
+        };
+
+        form.addEventListener('focusin', loadPredictiveSearch, { once: true });
+        form.closest('details')?.addEventListener('toggle', (event) => {
+          if (event.currentTarget.open) loadPredictiveSearch();
+        });
+      });
+    };
+
+    if (!window.TreadoraHeaderLoaders) {
+      window.TreadoraHeaderLoaders = { setup };
+      document.addEventListener('shopify:section:load', (event) => {
+        const root = event.target.matches?.('[data-header-loaders]')
+          ? event.target
+          : event.target.querySelector?.('[data-header-loaders]');
+        setup(root);
+      });
+    }
+
+    window.TreadoraHeaderLoaders.setup(document.getElementById('SiteHeader-{{ section.id }}'));
+  })();
+</script>
+
 {% schema %}
 {
   "name": "t:sections.header.s001",
@@ -305,7 +374,7 @@
       "type": "link_list",
       "id": "customer_account_menu",
       "label": "t:sections.header.s004",
-      "default": "customer-account-main-menu"
+      "default": "main-menu"
     },
     {
       "type": "checkbox",

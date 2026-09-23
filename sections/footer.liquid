@@ -1,6 +1,8 @@
 {%- liquid
   assign menu = linklists[section.settings.menu]
   assign brand_name = settings.brand_name | default: 'Treadora'
+  assign logo_focal_point = section.settings.logo.presentation.focal_point | default: 'center'
+  assign logo_style = 'object-position: ' | append: logo_focal_point | append: ';'
 -%}
 
 <footer class="site-footer">
@@ -8,7 +10,7 @@
     <div class="site-footer__brand">
       <a href="{{ routes.root_url }}">
         {%- if section.settings.logo != blank -%}
-          {{ section.settings.logo | image_url: width: 280 | image_tag: widths: '120, 180, 240, 280', loading: 'lazy', class: 'site-footer__logo', alt: brand_name }}
+          {{ section.settings.logo | image_url: width: 280 | image_tag: widths: '120, 180, 240, 280', loading: 'lazy', class: 'site-footer__logo', alt: brand_name, style: logo_style }}
         {%- else -%}
           {{ brand_name }}
         {%- endif -%}

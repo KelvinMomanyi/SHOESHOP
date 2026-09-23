@@ -19,7 +19,7 @@
       "type": "header",
       "settings": {
         "menu": "main-menu",
-        "customer_account_menu": "customer-account-main-menu",
+        "customer_account_menu": "main-menu",
         "show_search": true
       },
       "blocks": {
