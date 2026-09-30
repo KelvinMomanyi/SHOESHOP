@@ -95,6 +95,11 @@
     }
   },
   "sections": {
+    "logo_marquee": {
+      "pause": "Pause logo animation",
+      "resume": "Resume logo animation",
+      "placeholder": "Brand {{ number }}"
+    },
     "image_comparison": {
       "control": "Adjust the image comparison divider",
       "value": "Left image: {{ value }}%",
