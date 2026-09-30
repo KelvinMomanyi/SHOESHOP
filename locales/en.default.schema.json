@@ -34,6 +34,32 @@
     "s032": "Used for navigation, buttons, labels, captions, and other compact interface text."
   },
   "sections": {
+    "image_comparison": {
+      "name": "Image comparison",
+      "heading": "Heading (optional)",
+      "image": "Original image",
+      "effect": "Comparison effect",
+      "grayscale": "Black and white to color",
+      "blur": "Blurred to clear",
+      "second_image": "Compare two images",
+      "comparison_image": "Second image",
+      "comparison_info": "Used for Compare two images. Choose the same dimensions and focal point as the original. Without a second image, black and white is used.",
+      "blur_amount": "Blur strength",
+      "start_position": "Starting divider position",
+      "handle_y": "Handle vertical position",
+      "desktop_height": "Desktop image height",
+      "mobile_height": "Mobile image height",
+      "max_width": "Maximum width",
+      "gutter": "Desktop side spacing",
+      "mobile_gutter": "Mobile side spacing",
+      "corner_radius": "Curved corners",
+      "handle_size": "Handle size",
+      "background": "Background",
+      "handle_color": "Handle color",
+      "icon_color": "Arrow color",
+      "padding_top": "Top spacing",
+      "padding_bottom": "Bottom spacing"
+    },
     "blog_editorial_guide": {
       "s001": "Blog editorial guide",
       "s002": "Kicker",

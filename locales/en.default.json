@@ -94,6 +94,13 @@
       "share_on_pinterest": "Share on Pinterest"
     }
   },
+  "sections": {
+    "image_comparison": {
+      "control": "Reveal the original image",
+      "value": "Original image: {{ value }}%",
+      "instructions": "Drag left or right to compare the images. Use the left and right arrow keys to adjust, or Home and End to reveal either image completely."
+    }
+  },
   "localization": {
     "country_label": "Country/region",
     "language_label": "Language"
