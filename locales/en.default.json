@@ -96,9 +96,9 @@
   },
   "sections": {
     "image_comparison": {
-      "control": "Reveal the original image",
-      "value": "Original image: {{ value }}%",
-      "instructions": "Drag left or right to compare the images. Use the left and right arrow keys to adjust, or Home and End to reveal either image completely."
+      "control": "Reveal the color version of the image",
+      "value": "Color version: {{ value }}%",
+      "instructions": "Drag right to reveal more color or left to reveal more black and white. Use the left and right arrow keys to adjust, Home for fully black and white, or End for full color."
     }
   },
   "localization": {

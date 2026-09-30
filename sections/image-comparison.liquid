@@ -1,19 +1,26 @@
 {%- liquid
   assign original_image = section.settings.image
-  assign comparison_image = original_image
-  assign comparison_effect = section.settings.effect
-  if comparison_effect == 'image'
-    if section.settings.comparison_image != blank
-      assign comparison_image = section.settings.comparison_image
-    else
-      assign comparison_effect = 'grayscale'
-    endif
-  endif
   assign image_loading = 'lazy'
   if section.index == 1
     assign image_loading = 'eager'
   endif
 -%}
+
+{%- capture image_markup -%}
+  {%- if original_image != blank -%}
+    {{
+      original_image
+      | image_url: width: 2400
+      | image_tag:
+        widths: '375, 550, 750, 1100, 1500, 2000, 2400',
+        sizes: '100vw',
+        loading: image_loading,
+        class: 'image-comparison__image'
+    }}
+  {%- else -%}
+    {{ 'lifestyle-1' | placeholder_svg_tag: 'image-comparison__image placeholder-svg' }}
+  {%- endif -%}
+{%- endcapture -%}
 
 {% style %}
   #shopify-section-{{ section.id }} .image-comparison {
@@ -27,7 +34,6 @@
     --compare-mobile-gutter: {{ section.settings.mobile_gutter }}px;
     --compare-handle-size: {{ section.settings.handle_size }}px;
     --compare-handle-y: {{ section.settings.handle_y }}%;
-    --compare-blur: {{ section.settings.blur_amount }}px;
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
   }
@@ -43,36 +49,11 @@
       style="--compare-position: {{ section.settings.start_position }}%;"
       data-value-text="{{ 'sections.image_comparison.value' | t: value: '__VALUE__' | escape }}"
     >
-      <div class="image-comparison__layer image-comparison__layer--effect image-comparison__layer--{{ comparison_effect }}" aria-hidden="true">
-        {%- if comparison_image != blank -%}
-          {{
-            comparison_image
-            | image_url: width: 2400
-            | image_tag:
-              widths: '375, 550, 750, 1100, 1500, 2000, 2400',
-              sizes: '(min-width: 750px) 100vw, 100vw',
-              loading: image_loading,
-              class: 'image-comparison__image',
-              alt: ''
-          }}
-        {%- else -%}
-          {{ 'lifestyle-1' | placeholder_svg_tag: 'image-comparison__image placeholder-svg' }}
-        {%- endif -%}
+      <div class="image-comparison__layer image-comparison__layer--grayscale" aria-hidden="true">
+        {{ image_markup }}
       </div>
       <div class="image-comparison__layer image-comparison__layer--original">
-        {%- if original_image != blank -%}
-          {{
-            original_image
-            | image_url: width: 2400
-            | image_tag:
-              widths: '375, 550, 750, 1100, 1500, 2000, 2400',
-              sizes: '(min-width: 750px) 100vw, 100vw',
-              loading: image_loading,
-              class: 'image-comparison__image'
-          }}
-        {%- else -%}
-          {{ 'lifestyle-1' | placeholder_svg_tag: 'image-comparison__image placeholder-svg' }}
-        {%- endif -%}
+        {{ image_markup }}
       </div>
       <div class="image-comparison__divider" aria-hidden="true"></div>
       <div class="image-comparison__handle" aria-hidden="true">
@@ -154,10 +135,6 @@
 
   .image-comparison__layer--grayscale .image-comparison__image {
     filter: grayscale(1);
-  }
-
-  .image-comparison__layer--blur .image-comparison__image {
-    filter: blur(var(--compare-blur));
   }
 
   .image-comparison__divider {
@@ -307,20 +284,7 @@
   "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
     { "type": "text", "id": "heading", "label": "t:sections.image_comparison.heading" },
-    { "type": "image_picker", "id": "image", "label": "t:sections.image_comparison.image" },
-    {
-      "type": "select",
-      "id": "effect",
-      "label": "t:sections.image_comparison.effect",
-      "options": [
-        { "value": "grayscale", "label": "t:sections.image_comparison.grayscale" },
-        { "value": "blur", "label": "t:sections.image_comparison.blur" },
-        { "value": "image", "label": "t:sections.image_comparison.second_image" }
-      ],
-      "default": "grayscale"
-    },
-    { "type": "image_picker", "id": "comparison_image", "label": "t:sections.image_comparison.comparison_image", "info": "t:sections.image_comparison.comparison_info" },
-    { "type": "range", "id": "blur_amount", "label": "t:sections.image_comparison.blur_amount", "min": 1, "max": 20, "step": 1, "unit": "px", "default": 8 },
+    { "type": "image_picker", "id": "image", "label": "t:sections.image_comparison.image", "info": "t:sections.image_comparison.image_info" },
     { "type": "range", "id": "start_position", "label": "t:sections.image_comparison.start_position", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
     { "type": "range", "id": "handle_y", "label": "t:sections.image_comparison.handle_y", "min": 10, "max": 90, "step": 5, "unit": "%", "default": 50 },
     { "type": "range", "id": "desktop_height", "label": "t:sections.image_comparison.desktop_height", "min": 300, "max": 900, "step": 20, "unit": "px", "default": 700 },
