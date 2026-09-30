@@ -25,7 +25,6 @@
     --compare-max-width: {{ section.settings.max_width }}px;
     --compare-gutter: {{ section.settings.gutter }}px;
     --compare-mobile-gutter: {{ section.settings.mobile_gutter }}px;
-    --compare-radius: {{ section.settings.corner_radius }}px;
     --compare-handle-size: {{ section.settings.handle_size }}px;
     --compare-handle-y: {{ section.settings.handle_y }}%;
     --compare-blur: {{ section.settings.blur_amount }}px;
@@ -125,7 +124,7 @@
     height: var(--compare-desktop-height);
     overflow: hidden;
     isolation: isolate;
-    border-radius: 0 min(var(--compare-radius), 32vw) 0 min(var(--compare-radius), 32vw);
+    border-radius: 0;
     background: #dedbd5;
     user-select: none;
     -webkit-user-select: none;
@@ -329,7 +328,6 @@
     { "type": "range", "id": "max_width", "label": "t:sections.image_comparison.max_width", "min": 800, "max": 2000, "step": 100, "unit": "px", "default": 1400 },
     { "type": "range", "id": "gutter", "label": "t:sections.image_comparison.gutter", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 64 },
     { "type": "range", "id": "mobile_gutter", "label": "t:sections.image_comparison.mobile_gutter", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 20 },
-    { "type": "range", "id": "corner_radius", "label": "t:sections.image_comparison.corner_radius", "min": 0, "max": 500, "step": 10, "unit": "px", "default": 360 },
     { "type": "range", "id": "handle_size", "label": "t:sections.image_comparison.handle_size", "min": 44, "max": 88, "step": 2, "unit": "px", "default": 64 },
     { "type": "color", "id": "background", "label": "t:sections.image_comparison.background", "default": "#f6f3ed" },
     { "type": "color", "id": "handle_color", "label": "t:sections.image_comparison.handle_color", "default": "#eebd8a" },

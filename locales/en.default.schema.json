@@ -52,7 +52,6 @@
       "max_width": "Maximum width",
       "gutter": "Desktop side spacing",
       "mobile_gutter": "Mobile side spacing",
-      "corner_radius": "Curved corners",
       "handle_size": "Handle size",
       "background": "Background",
       "handle_color": "Handle color",
