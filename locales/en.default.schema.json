@@ -37,8 +37,10 @@
     "image_comparison": {
       "name": "Image comparison",
       "heading": "Heading (optional)",
-      "image": "Original image",
-      "image_info": "Upload one color image. Its black and white version is created automatically. Drag right to reveal color or left to reveal black and white.",
+      "image": "Left image",
+      "image_info": "Upload the image revealed to the left of the divider. For aligned comparisons, use two images with matching dimensions and product placement.",
+      "comparison_image": "Right image (optional)",
+      "comparison_image_info": "Upload a second image to compare two photos in their original colors. Leave empty to use a black and white version of the left image. Drag right to reveal more of the left image, or left to reveal more of the right image.",
       "start_position": "Starting divider position",
       "handle_y": "Handle vertical position",
       "desktop_height": "Desktop image height",
