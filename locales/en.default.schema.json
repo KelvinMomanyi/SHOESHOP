@@ -220,7 +220,13 @@
       "s002": "Kicker",
       "s003": "Heading",
       "s004": "Text",
-      "s005": "Contact form"
+      "s005": "Contact form",
+      "default_kicker": "Get in touch",
+      "default_heading": "Contact",
+      "default_text": "Questions about your next pair, an order, or working together? We’re here to help.",
+      "form_heading": "Form heading",
+      "default_form_heading": "Let’s talk.",
+      "enable_motion": "Keep the introduction in view on desktop"
     },
     "custom_liquid": {
       "s001": "Custom liquid",
@@ -374,7 +380,9 @@
       "s005": "Show excerpts",
       "s006": "Excerpt words",
       "s007": "Stories introduction",
-      "s008": "Articles per page"
+      "s008": "Articles per page",
+      "default_intro": "Notes on movement, footwear, and the moments in between.",
+      "enable_motion": "Enable scroll motion"
     },
     "main_cart": {
       "s001": "Main cart",

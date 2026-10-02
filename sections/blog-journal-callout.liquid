@@ -26,11 +26,11 @@
         -%}
       {%- else -%}
         <div class="blog-journal-callout__placeholder" aria-hidden="true">
-          <span>{{ blog.title }}</span>
+          <span>{{ blog.title | escape }}</span>
         </div>
       {%- endif -%}
       <div class="blog-journal-callout__media-meta">
-        <span>{{ blog.title }}</span>
+        <span>{{ blog.title | escape }}</span>
         <span>{{ 'blog.articles.story_count' | t: count: blog.articles_count }}</span>
       </div>
     </div>
@@ -38,16 +38,16 @@
     <div class="blog-journal-callout__content reveal-item">
       <div>
         {%- if section.settings.kicker != blank -%}
-          <p class="eyebrow">{{ section.settings.kicker }}</p>
+          <p class="eyebrow">{{ section.settings.kicker | escape }}</p>
         {%- endif -%}
-        <h2>{{ section.settings.heading }}</h2>
+        <h2>{{ section.settings.heading | escape }}</h2>
       </div>
       {%- if section.settings.text != blank -%}
         <div class="rte">{{ section.settings.text }}</div>
       {%- endif -%}
       {%- if section.settings.button_label != blank -%}
-        <a class="button button--light" href="{{ callout_link }}">
-          {{ section.settings.button_label }}
+        <a class="button blog-journal-callout__button" href="{{ callout_link }}">
+          {{ section.settings.button_label | escape }}
           <span aria-hidden="true">&#8594;</span>
         </a>
       {%- endif -%}
@@ -57,20 +57,22 @@
 
 {% stylesheet %}
   .blog-journal-callout {
-    background: #e4e3e0;
+    background: var(--color-background);
   }
 
   .blog-journal-callout__inner {
     display: grid;
     grid-template-columns: minmax(0, 1.18fr) minmax(300px, 0.82fr);
     min-height: clamp(30rem, 49vw, 42rem);
+    overflow: hidden;
+    border-radius: 8px;
   }
 
   .blog-journal-callout__media {
     position: relative;
     min-width: 0;
     overflow: hidden;
-    background: #cbc6bc;
+    background: var(--color-border);
   }
 
   .blog-journal-callout__media::after {
@@ -139,8 +141,8 @@
     justify-content: space-between;
     gap: 30px;
     padding: clamp(32px, 5vw, 72px);
-    background: #111;
-    color: #fff;
+    background: var(--color-foreground);
+    color: var(--color-background);
   }
 
   .blog-journal-callout__content > div:first-child {
@@ -150,7 +152,7 @@
 
   .blog-journal-callout__content .eyebrow,
   .blog-journal-callout__content .rte {
-    color: rgba(255, 255, 255, 0.64);
+    color: color-mix(in srgb, var(--color-background) 76%, transparent);
   }
 
   .blog-journal-callout__content h2 {
@@ -158,7 +160,6 @@
     font-size: clamp(2.5rem, 5.3vw, 5.4rem);
     line-height: 0.88;
     letter-spacing: -0.055em;
-    text-transform: uppercase;
   }
 
   .blog-journal-callout__content .rte {
@@ -175,6 +176,17 @@
 
   .blog-journal-callout__content .button:hover span {
     transform: translateX(4px);
+  }
+
+  .blog-journal-callout__button {
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    border-color: var(--color-accent);
+  }
+
+  .no-js .blog-journal-callout .reveal-item {
+    opacity: 1;
+    transform: none;
   }
 
   @media (max-width: 989px) {

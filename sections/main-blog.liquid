@@ -1,183 +1,387 @@
-<section class="blog-page blog-newsroom">
+<section class="blog-journal" data-editorial-motion data-motion-enabled="{{ section.settings.enable_motion }}">
   {%- paginate blog.articles by section.settings.articles_per_page -%}
     {%- liquid
-      assign show_featured_article = false
       assign latest_offset = 0
-      if section.settings.show_featured_article and paginate.current_page == 1 and blog.articles_count > 0
-        assign show_featured_article = true
+      if section.settings.show_featured_article and paginate.current_page == 1 and blog.articles != blank
         assign featured_article = blog.articles.first
         assign latest_offset = 1
       endif
       assign article_count = blog.articles | size
       assign latest_count = article_count | minus: latest_offset
-      assign picks_offset = latest_offset | plus: 6
-      assign picks_count = article_count | minus: picks_offset
     -%}
-
-    {%- if show_featured_article -%}
-      <article class="blog-newsroom__hero reveal-item">
-        {%- if section.settings.show_images -%}
-          <a class="blog-newsroom__hero-media" href="{{ featured_article.url }}" aria-label="{{ 'accessibility.read_article' | t: title: featured_article.title | escape }}">
-            {%- render 'responsive-image',
-              image: featured_article.image,
-              class: 'blog-newsroom__hero-image',
-              sizes: '100vw',
-              loading: 'eager',
-              alt: featured_article.title
-            -%}
-          </a>
-        {%- endif -%}
-        <div class="blog-newsroom__hero-shade"></div>
-        <div class="page-width blog-newsroom__hero-content{% unless section.settings.show_images %} blog-newsroom__hero-content--no-image{% endunless %}">
-          <div class="blog-newsroom__hero-meta">
-            <span>{{ 'blog.articles.lead_story' | t }}</span>
-            {%- if featured_article.tags.first != blank -%}
-              <span>{{ featured_article.tags.first | escape }}</span>
-            {%- endif -%}
-            {%- if section.settings.show_date -%}
-              <span>{{ featured_article.published_at | date: format: 'abbreviated_date' }}</span>
-            {%- endif -%}
-          </div>
-          <h2><a href="{{ featured_article.url }}">{{ featured_article.title }}</a></h2>
-          {%- if section.settings.show_excerpt and featured_article.excerpt_or_content != blank -%}
-            <p>{{ featured_article.excerpt_or_content | strip_html | truncatewords: section.settings.excerpt_words }}</p>
+    <div class="page-width">
+      {%- if latest_offset == 1 -%}
+        <article class="blog-journal__hero{% unless section.settings.show_images %} blog-journal__hero--text{% endunless %}">
+          {%- if section.settings.show_images -%}
+            <a class="blog-journal__hero-media" data-editorial-media href="{{ featured_article.url }}" aria-label="{{ 'accessibility.read_article' | t: title: featured_article.title | escape }}">
+              {%- render 'responsive-image',
+                image: featured_article.image,
+                class: 'blog-journal__hero-image',
+                sizes: '(min-width: 990px) 55vw, 100vw',
+                loading: 'eager',
+                alt: featured_article.title
+              -%}
+              <span class="blog-journal__image-label" aria-hidden="true">01 / {{ 'blog.articles.lead_story' | t }}</span>
+            </a>
           {%- endif -%}
-          <a class="blog-newsroom__hero-link" href="{{ featured_article.url }}">{{ 'blog.articles.read_story' | t }} <span aria-hidden="true">&#8594;</span></a>
-        </div>
-      </article>
-    {%- endif -%}
+          <div class="blog-journal__hero-content">
+            <p class="blog-journal__meta">
+              <span>{{ 'blog.articles.lead_story' | t }}</span>
+              {%- if featured_article.tags.first != blank -%}
+                <span>{{ featured_article.tags.first | escape }}</span>
+              {%- endif -%}
+              {%- if section.settings.show_date -%}
+                <span>{{ featured_article.published_at | date: format: 'abbreviated_date' }}</span>
+              {%- endif -%}
+            </p>
+            <h2><a href="{{ featured_article.url }}">{{ featured_article.title | escape }}</a></h2>
+            {%- if section.settings.show_excerpt and featured_article.excerpt_or_content != blank -%}
+              <p class="blog-journal__hero-excerpt">{{ featured_article.excerpt_or_content | strip_html | truncatewords: section.settings.excerpt_words | escape }}</p>
+            {%- endif -%}
+            <a class="blog-journal__read" href="{{ featured_article.url }}">{{ 'blog.articles.read_story' | t }} <span aria-hidden="true">&nearr;</span></a>
+          </div>
+        </article>
+      {%- endif -%}
 
-    <div class="blog-newsroom__content">
       {%- if latest_count > 0 -%}
-        <section class="blog-newsroom__latest page-width" aria-labelledby="LatestNews-{{ section.id }}">
-          <header class="blog-newsroom__section-header reveal-item">
-            <h2 id="LatestNews-{{ section.id }}">{{ 'blog.articles.latest_news' | t }}</h2>
-            <p>{{ section.settings.stories_intro }}</p>
+        <section class="blog-journal__stories" id="JournalStories-{{ section.id }}" aria-labelledby="JournalHeading-{{ section.id }}">
+          <header class="blog-journal__stories-header reveal-item">
+            <h2 id="JournalHeading-{{ section.id }}">{{ 'blog.articles.latest_stories' | t }}</h2>
+            {%- if section.settings.stories_intro != blank -%}
+              <p>{{ section.settings.stories_intro | escape }}</p>
+            {%- endif -%}
           </header>
-
-          <div class="blog-newsroom__latest-grid">
-            {%- for article in blog.articles offset: latest_offset limit: 6 -%}
-              <article class="news-card reveal-item">
+          <div class="blog-journal__grid">
+            {%- for article in blog.articles offset: latest_offset -%}
+              {%- liquid
+                assign story_number = paginate.current_offset | plus: latest_offset | plus: forloop.index
+                assign reveal_delay = forloop.index0 | modulo: 2 | times: 90
+              -%}
+              <article class="journal-story reveal-item" style="transition-delay: {{ reveal_delay }}ms">
+                <div class="journal-story__topline">
+                  <span>{% if story_number < 10 %}0{% endif %}{{ story_number }}</span>
+                  {%- if article.tags.first != blank -%}
+                    <span>{{ article.tags.first | escape }}</span>
+                  {%- endif -%}
+                </div>
                 {%- if section.settings.show_images -%}
-                  <a class="news-card__media" href="{{ article.url }}" aria-label="{{ 'accessibility.read_article' | t: title: article.title | escape }}">
+                  <a class="journal-story__media" href="{{ article.url }}" aria-label="{{ 'accessibility.read_article' | t: title: article.title | escape }}">
                     {%- render 'responsive-image',
                       image: article.image,
-                      class: 'news-card__image',
-                      sizes: '(min-width: 990px) 33vw, 100vw',
+                      class: 'journal-story__image',
+                      sizes: '(min-width: 750px) 50vw, 100vw',
                       alt: article.title
                     -%}
+                    <span class="journal-story__arrow" aria-hidden="true">&nearr;</span>
                   </a>
                 {%- endif -%}
-                <div class="news-card__content">
-                  <p class="news-card__meta">
-                    <span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
-                    {%- if article.tags.first != blank -%}
-                      <span>{{ article.tags.first | escape }}</span>
-                    {%- endif -%}
-                    {%- if section.settings.show_date -%}
-                      <span>{{ article.published_at | date: format: 'abbreviated_date' }}</span>
-                    {%- endif -%}
-                  </p>
-                  <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
-                  {%- if section.settings.show_excerpt and article.excerpt_or_content != blank -%}
-                    <p class="news-card__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: section.settings.excerpt_words }}</p>
+                <div class="journal-story__content">
+                  {%- if section.settings.show_date -%}
+                    <p class="blog-journal__meta">{{ article.published_at | date: format: 'abbreviated_date' }}</p>
                   {%- endif -%}
-                  <a class="news-card__link" href="{{ article.url }}">{{ 'blog.articles.read_story' | t }} <span aria-hidden="true">&#8594;</span></a>
+                  <h3><a href="{{ article.url }}">{{ article.title | escape }}</a></h3>
+                  {%- if section.settings.show_excerpt and article.excerpt_or_content != blank -%}
+                    <p class="journal-story__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: section.settings.excerpt_words | escape }}</p>
+                  {%- endif -%}
+                  <a class="text-link journal-story__read" href="{{ article.url }}">{{ 'blog.articles.read_story' | t }} <span aria-hidden="true">&nearr;</span></a>
                 </div>
               </article>
             {%- endfor -%}
           </div>
         </section>
+      {%- elsif article_count == 0 -%}
+        <p class="blog-journal__empty">{{ 'blog.articles.empty' | t }}</p>
       {%- endif -%}
-
-      {%- if picks_count > 0 -%}
-        <section class="blog-newsroom__picks" aria-labelledby="EditorsPicks-{{ section.id }}">
-          <div class="page-width">
-            <header class="blog-newsroom__section-header blog-newsroom__section-header--picks reveal-item">
-              <h2 id="EditorsPicks-{{ section.id }}">{{ 'blog.articles.editors_picks' | t }}</h2>
-              <p>{{ 'blog.articles.selected_stories' | t: blog: blog.title }}</p>
-            </header>
-
-            <div class="blog-picks{% if picks_count == 1 %} blog-picks--single{% endif %}">
-              {%- for article in blog.articles offset: picks_offset limit: 1 -%}
-                <article class="blog-picks__lead reveal-item">
-                  {%- if section.settings.show_images -%}
-                    <a class="blog-picks__lead-media" href="{{ article.url }}" aria-label="{{ 'accessibility.read_article' | t: title: article.title | escape }}">
-                      {%- render 'responsive-image',
-                        image: article.image,
-                        class: 'blog-picks__lead-image',
-                        sizes: '(min-width: 990px) 55vw, 100vw',
-                        alt: article.title
-                      -%}
-                    </a>
-                  {%- endif -%}
-                  <div class="blog-picks__lead-content">
-                    {%- if article.tags.first != blank or section.settings.show_date -%}
-                      <p class="blog-picks__meta">
-                        {%- if article.tags.first != blank -%}
-                          <span>{{ article.tags.first | escape }}</span>
-                        {%- endif -%}
-                        {%- if section.settings.show_date -%}
-                          <span>{{ article.published_at | date: format: 'abbreviated_date' }}</span>
-                        {%- endif -%}
-                      </p>
-                    {%- endif -%}
-                    <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
-                    {%- if section.settings.show_excerpt and article.excerpt_or_content != blank -%}
-                      <p class="blog-picks__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: section.settings.excerpt_words }}</p>
-                    {%- endif -%}
-                    <a class="news-card__link" href="{{ article.url }}">{{ 'blog.articles.read_story' | t }} <span aria-hidden="true">&#8594;</span></a>
-                  </div>
-                </article>
-              {%- endfor -%}
-
-              {%- if picks_count > 1 -%}
-                <div class="blog-picks__list">
-                  {%- for article in blog.articles offset: picks_offset limit: 5 -%}
-                    {%- unless forloop.first -%}
-                      <article class="blog-pick-card reveal-item">
-                        {%- if section.settings.show_images -%}
-                          <a class="blog-pick-card__media" href="{{ article.url }}" aria-label="{{ 'accessibility.read_article' | t: title: article.title | escape }}">
-                            {%- render 'responsive-image',
-                              image: article.image,
-                              class: 'blog-pick-card__image',
-                              sizes: '(min-width: 990px) 25vw, 100vw',
-                              alt: article.title
-                            -%}
-                          </a>
-                        {%- endif -%}
-                        <div>
-                          {%- if article.tags.first != blank or section.settings.show_date -%}
-                            <p class="news-card__meta">
-                              {%- if article.tags.first != blank -%}
-                                <span>{{ article.tags.first | escape }}</span>
-                              {%- endif -%}
-                              {%- if section.settings.show_date -%}
-                                <span>{{ article.published_at | date: format: 'abbreviated_date' }}</span>
-                              {%- endif -%}
-                            </p>
-                          {%- endif -%}
-                          <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
-                        </div>
-                      </article>
-                    {%- endunless -%}
-                  {%- endfor -%}
-                </div>
-              {%- endif -%}
-            </div>
-          </div>
-        </section>
-      {%- endif -%}
-      {%- if article_count == 0 -%}
-        <div class="page-width"><p class="blog-newsroom__empty">{{ 'blog.articles.empty' | t }}</p></div>
-      {%- endif -%}
-
-      <div class="page-width">
-        {%- render 'pagination', paginate: paginate -%}
-      </div>
+      {%- render 'pagination', paginate: paginate -%}
     </div>
   {%- endpaginate -%}
 </section>
+
+{% stylesheet %}
+  .blog-journal {
+    padding-block: 24px clamp(64px, 8vw, 112px);
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .blog-journal__hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--color-foreground);
+    color: var(--color-background);
+  }
+
+  .blog-journal__hero--text {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-journal__hero-media {
+    position: relative;
+    display: block;
+    min-height: 100%;
+    overflow: hidden;
+    background: var(--color-border);
+  }
+
+  .blog-journal__hero-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 440px;
+    object-fit: cover;
+    transform: translateY(var(--editorial-image-y, 0px)) scale(var(--editorial-image-scale, 1));
+  }
+
+  .blog-journal__image-label {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-utility);
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+
+  .blog-journal__hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    padding: clamp(28px, 4vw, 64px);
+  }
+
+  .blog-journal__meta,
+  .journal-story__topline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    font-family: var(--font-utility);
+    font-size: 11px;
+    line-height: 1.5;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .blog-journal__hero-content .blog-journal__meta {
+    color: color-mix(in srgb, var(--color-background) 72%, transparent);
+  }
+
+  .blog-journal__hero h2 {
+    max-width: 15ch;
+    font-size: clamp(32px, 3.9vw, 60px);
+    line-height: 0.98;
+    letter-spacing: -0.05em;
+  }
+
+  .blog-journal__hero-excerpt {
+    max-width: 38ch;
+    color: color-mix(in srgb, var(--color-background) 78%, transparent);
+    line-height: 1.6;
+  }
+
+  .blog-journal__read {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 24px;
+    border-top: 1px solid color-mix(in srgb, var(--color-background) 30%, transparent);
+    font-family: var(--font-utility);
+    font-size: 12px;
+  }
+
+  .blog-journal__read span {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    font-size: 24px;
+    transition: transform 240ms ease;
+  }
+
+  .blog-journal__read:hover span,
+  .blog-journal__read:focus-visible span {
+    transform: rotate(45deg);
+  }
+
+  .blog-journal__stories {
+    padding-top: clamp(56px, 7vw, 104px);
+    scroll-margin-top: 130px;
+  }
+
+  .blog-journal__stories-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .blog-journal__stories-header h2 {
+    font-size: clamp(32px, 4.5vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.055em;
+  }
+
+  .blog-journal__stories-header > p {
+    max-width: 34ch;
+    color: var(--color-muted);
+  }
+
+  .blog-journal__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(40px, 6vw, 88px) clamp(24px, 5vw, 72px);
+    padding-top: 32px;
+    align-items: start;
+  }
+
+  .journal-story {
+    min-width: 0;
+  }
+
+  .journal-story:nth-child(even) {
+    margin-top: 64px;
+  }
+
+  .journal-story__topline {
+    justify-content: space-between;
+    margin-bottom: 14px;
+    color: var(--color-muted);
+  }
+
+  .journal-story__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--color-border);
+  }
+
+  .journal-story__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 650ms cubic-bezier(0.2, 0.72, 0.2, 1);
+  }
+
+  .journal-story__arrow {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-size: 22px;
+    transition: background 220ms ease, color 220ms ease;
+  }
+
+  .journal-story:hover .journal-story__image,
+  .journal-story:focus-within .journal-story__image {
+    transform: scale(1.04);
+  }
+
+  .journal-story:hover .journal-story__arrow,
+  .journal-story:focus-within .journal-story__arrow {
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+  }
+
+  .journal-story__content {
+    display: grid;
+    gap: 14px;
+    padding-top: 20px;
+  }
+
+  .journal-story__content .blog-journal__meta,
+  .journal-story__excerpt {
+    color: var(--color-muted);
+  }
+
+  .journal-story h3 {
+    max-width: 25ch;
+    font-size: clamp(26px, 3.1vw, 44px);
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+  }
+
+  .journal-story__read {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    justify-self: start;
+    margin-top: 4px;
+  }
+
+  .blog-journal__empty {
+    padding-block: 48px;
+    color: var(--color-muted);
+  }
+
+  .no-js .blog-journal .reveal-item {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 989px) {
+    .blog-journal__hero {
+      grid-template-columns: 1fr;
+    }
+
+    .blog-journal__hero-image {
+      min-height: 0;
+      aspect-ratio: 16 / 10;
+    }
+
+    .blog-journal__hero h2 {
+      max-width: 22ch;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .blog-journal__hero-content {
+      padding: 28px 24px;
+    }
+
+    .blog-journal__stories-header {
+      flex-direction: column;
+      align-items: start;
+    }
+
+    .blog-journal__grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .journal-story:nth-child(even) {
+      margin-top: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blog-journal__hero-image,
+    .journal-story__image {
+      transform: none;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
@@ -220,7 +424,7 @@
       "type": "textarea",
       "id": "stories_intro",
       "label": "t:sections.main_blog.s007",
-      "default": "Notes on movement, footwear, and the moments in between."
+      "default": "t:sections.main_blog.default_intro"
     },
     {
       "type": "range",
@@ -230,6 +434,12 @@
       "max": 24,
       "step": 3,
       "default": 9
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_motion",
+      "label": "t:sections.main_blog.enable_motion",
+      "default": true
     }
   ]
 }

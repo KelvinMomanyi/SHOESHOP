@@ -3,30 +3,33 @@
     <header class="blog-topic-navigation__masthead reveal-item">
       <div class="blog-topic-navigation__title">
         {%- if section.settings.kicker != blank -%}
-          <p class="eyebrow">{{ section.settings.kicker }}</p>
+          <p class="eyebrow">{{ section.settings.kicker | escape }}</p>
         {%- endif -%}
-        <h1>{{ blog.title }}</h1>
+        <h1>{{ blog.title | escape }}</h1>
       </div>
 
       <div class="blog-topic-navigation__summary">
         <p class="blog-topic-navigation__count">{{ 'blog.articles.story_count' | t: count: blog.articles_count }}</p>
-        {%- if blog.description != blank -%}
-          <div class="rte">{{ blog.description }}</div>
-        {%- elsif section.settings.intro != blank -%}
-          <p>{{ section.settings.intro }}</p>
+        {%- if section.settings.intro != blank -%}
+          <p>{{ section.settings.intro | escape }}</p>
         {%- endif -%}
       </div>
     </header>
 
     <div class="blog-topic-navigation__bar">
-      <h2>{{ section.settings.heading }}</h2>
+      <h2>{{ section.settings.heading | escape }}</h2>
       <nav class="blog-topic-navigation__links" aria-label="{{ section.settings.heading | escape }}">
         <span class="blog-topic-navigation__link{% if current_tags == blank %} is-active{% endif %}">
-          <a href="{{ blog.url }}">{{ section.settings.all_label }}</a>
+          <a href="{{ blog.url }}"{% if current_tags == blank %} aria-current="page"{% endif %}>{{ section.settings.all_label | escape }}</a>
         </span>
         {%- for tag in blog.all_tags limit: section.settings.tags_to_show -%}
           <span class="blog-topic-navigation__link{% if current_tags contains tag %} is-active{% endif %}">
-            {{- tag | link_to_tag: tag -}}
+            {%- assign topic_link = tag | link_to_tag: tag -%}
+            {%- if current_tags contains tag -%}
+              {{- topic_link | replace: '<a ', '<a aria-current="page" ' -}}
+            {%- else -%}
+              {{- topic_link -}}
+            {%- endif -%}
           </span>
         {%- endfor -%}
       </nav>
@@ -36,135 +39,121 @@
 
 {% stylesheet %}
   .blog-topic-navigation {
-    overflow: hidden;
-    background: #111;
-    color: #fff;
+    background: var(--color-background);
+    color: var(--color-foreground);
   }
 
   .blog-topic-navigation__masthead {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.46fr);
-    gap: clamp(24px, 4vw, 64px);
+    grid-template-columns: minmax(0, 1.3fr) minmax(240px, 0.5fr);
     align-items: end;
-    min-height: 0;
-    padding-block: clamp(38px, 4.5vw, 64px) clamp(28px, 3vw, 42px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    gap: clamp(24px, 5vw, 72px);
+    padding-block: clamp(36px, 5vw, 72px) clamp(40px, 5vw, 72px);
   }
 
   .blog-topic-navigation__title {
     display: grid;
-    gap: 18px;
+    gap: 22px;
     min-width: 0;
   }
 
-  .blog-topic-navigation__title .eyebrow {
-    color: rgba(255, 255, 255, 0.58);
-  }
-
   .blog-topic-navigation__title h1 {
-    max-width: 9ch;
-    font-size: clamp(3.5rem, 7.5vw, 7.75rem);
-    line-height: 0.84;
-    letter-spacing: -0.07em;
-    text-transform: uppercase;
-    overflow-wrap: anywhere;
+    max-width: 11ch;
+    font-size: clamp(64px, 12.5vw, 180px);
+    line-height: 0.9;
+    letter-spacing: -0.065em;
   }
 
   .blog-topic-navigation__summary {
     display: grid;
     gap: 18px;
-    padding-bottom: 4px;
-    color: rgba(255, 255, 255, 0.68);
-    font-size: clamp(1rem, 1.25vw, 1.12rem);
-    line-height: 1.55;
+    max-width: 34ch;
+    color: var(--color-muted);
+    font-size: clamp(16px, 1.35vw, 19px);
+    line-height: 1.6;
   }
 
   .blog-topic-navigation__count {
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 700;
+    color: var(--color-foreground);
+    font-family: var(--font-utility);
+    font-size: 11px;
     text-transform: uppercase;
   }
 
   .blog-topic-navigation__bar {
     display: grid;
-    grid-template-columns: minmax(180px, 0.35fr) minmax(0, 1fr);
-    gap: 24px;
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
-    padding-block: 17px;
+    gap: 24px;
+    padding-block: 18px;
+    border-block: 1px solid var(--color-border);
   }
 
   .blog-topic-navigation__bar h2 {
-    font-size: clamp(1.1rem, 1.7vw, 1.45rem);
-    line-height: 1;
+    font-family: var(--font-utility);
+    font-size: 12px;
+    font-weight: 500;
   }
 
   .blog-topic-navigation__links {
     display: flex;
-    gap: 8px;
+    flex-wrap: wrap;
     justify-content: flex-end;
+    gap: 8px;
     min-width: 0;
-    padding-block: 2px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .blog-topic-navigation__links::-webkit-scrollbar {
-    display: none;
+    padding: 4px;
   }
 
   .blog-topic-navigation__link {
     flex: 0 0 auto;
+    max-width: 100%;
   }
 
   .blog-topic-navigation__link a {
     display: inline-flex;
     align-items: center;
-    min-height: 40px;
-    padding: 8px 14px;
-    border: 1px solid rgba(255, 255, 255, 0.32);
-    border-radius: 0;
-    font-family: var(--font-body);
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 30px;
+    font-family: var(--font-utility);
+    font-size: 11px;
     transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
   }
 
   .blog-topic-navigation__link a:hover,
   .blog-topic-navigation__link a:focus-visible,
   .blog-topic-navigation__link.is-active a {
-    border-color: #fff;
-    background: #fff;
-    color: #111;
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+  }
+
+  .no-js .blog-topic-navigation .reveal-item {
+    opacity: 1;
+    transform: none;
   }
 
   @media (max-width: 749px) {
     .blog-topic-navigation__masthead {
       grid-template-columns: 1fr;
-      gap: 20px;
-      min-height: 0;
-      padding-block: 32px 24px;
+      gap: 28px;
+      padding-block: 36px 32px;
     }
 
     .blog-topic-navigation__title h1 {
-      font-size: clamp(3rem, 13.5vw, 4.5rem);
-    }
-
-    .blog-topic-navigation__summary {
-      max-width: 34rem;
+      font-size: clamp(56px, 16vw, 104px);
     }
 
     .blog-topic-navigation__bar {
       grid-template-columns: 1fr;
       gap: 14px;
-      padding-block: 16px;
+      padding-block: 18px;
     }
 
     .blog-topic-navigation__links {
       justify-content: flex-start;
-      margin-right: calc((100vw - 100%) / -2);
-      padding-right: 20px;
+      padding: 4px 0;
     }
   }
 {% endstylesheet %}

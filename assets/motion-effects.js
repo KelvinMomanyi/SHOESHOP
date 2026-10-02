@@ -711,6 +711,70 @@ const initCollectionEdits = () => {
   });
 };
 
+const initEditorialPages = () => {
+  const roots = document.querySelectorAll('[data-editorial-motion]:not([data-editorial-motion-ready])');
+  if (!roots.length) return;
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const states = Array.from(roots).map((root) => {
+    root.dataset.editorialMotionReady = 'true';
+    return {
+      root,
+      media: root.querySelector('[data-editorial-media]'),
+      sticky: root.querySelector('[data-editorial-sticky]'),
+      animate: false
+    };
+  });
+
+  const refresh = ({ width, height }) => {
+    let headerBottom = 0;
+    document.querySelectorAll('.site-header, .announcement-bar').forEach((header) => {
+      const position = getComputedStyle(header).position;
+      if (position === 'fixed' || position === 'sticky') {
+        headerBottom = Math.max(headerBottom, header.getBoundingClientRect().bottom);
+      }
+    });
+    const top = Math.max(24, headerBottom + 24);
+    states.forEach((state) => {
+      if (!state.root.isConnected) return;
+      state.animate = width >= 990 && height >= 480 && !motion.matches
+        && state.root.dataset.motionEnabled !== 'false';
+      setCustomProperty(state.root, '--editorial-top', `${top}px`);
+      toggleClass(state.root, 'has-sticky-intro', Boolean(state.animate && state.sticky
+        && state.sticky.getBoundingClientRect().height <= height - top - 24));
+      if (!state.animate) {
+        setCustomProperty(state.root, '--editorial-image-y', '0px');
+        setCustomProperty(state.root, '--editorial-image-scale', '1');
+      }
+    });
+  };
+
+  const update = ({ height }) => {
+    states.forEach((state) => {
+      if (!state.root.isConnected || !state.animate || !state.media) return;
+      const rect = state.media.getBoundingClientRect();
+      if (!isNearViewport(rect, height)) return;
+      const progress = clamp((height - rect.top) / (height + rect.height), 0, 1);
+      setCustomProperty(state.root, '--editorial-image-y', `${lerp(-12, 12, progress).toFixed(2)}px`);
+      setCustomProperty(state.root, '--editorial-image-scale', lerp(1.08, 1.04, progress).toFixed(4));
+    });
+  };
+
+  const observer = new ResizeObserver(requestResizeEffects);
+  states.forEach((state) => {
+    if (state.sticky) observer.observe(state.sticky);
+  });
+  motion.addEventListener('change', requestResizeEffects);
+  registerScrollEffect({
+    refresh,
+    update,
+    elements: states.map((state) => state.root),
+    destroy: () => {
+      motion.removeEventListener('change', requestResizeEffects);
+      observer.disconnect();
+    }
+  });
+};
+
 export const initializeMotionEffects = () => {
   initHoverPreviews();
   initTiltStacks();
@@ -720,6 +784,7 @@ export const initializeMotionEffects = () => {
   initFeaturedProductStacks();
   initCollectionDirectories();
   initCollectionEdits();
+  initEditorialPages();
 
   if (!lifecycleReady) {
     lifecycleReady = true;

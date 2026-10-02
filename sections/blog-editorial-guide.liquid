@@ -3,12 +3,12 @@
     <header class="blog-editorial-guide__header reveal-item">
       <div>
         {%- if section.settings.kicker != blank -%}
-          <p class="eyebrow">{{ section.settings.kicker }}</p>
+          <p class="eyebrow">{{ section.settings.kicker | escape }}</p>
         {%- endif -%}
-        <h2>{{ section.settings.heading }}</h2>
+        <h2>{{ section.settings.heading | escape }}</h2>
       </div>
       {%- if section.settings.text != blank -%}
-        <p>{{ section.settings.text }}</p>
+        <p>{{ section.settings.text | escape }}</p>
       {%- endif -%}
     </header>
 
@@ -17,14 +17,14 @@
         <article class="blog-editorial-guide__item reveal-item" {{ block.shopify_attributes }}>
           <span class="blog-editorial-guide__number">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
           <div>
-            <h3>{{ block.settings.heading }}</h3>
+            <h3>{{ block.settings.heading | escape }}</h3>
             {%- if block.settings.text != blank -%}
-              <p>{{ block.settings.text }}</p>
+              <p>{{ block.settings.text | escape }}</p>
             {%- endif -%}
           </div>
           {%- if block.settings.link != blank and block.settings.link_label != blank -%}
             <a href="{{ block.settings.link }}">
-              {{ block.settings.link_label }}
+              {{ block.settings.link_label | escape }}
               <span aria-hidden="true">&#8594;</span>
             </a>
           {%- endif -%}
@@ -36,8 +36,8 @@
 
 {% stylesheet %}
   .blog-editorial-guide {
-    background: #f0eee9;
-    color: #111;
+    background: color-mix(in srgb, var(--color-background) 92%, var(--color-foreground));
+    color: var(--color-foreground);
   }
 
   .blog-editorial-guide__header {
@@ -58,12 +58,11 @@
     font-size: clamp(3rem, 7vw, 7.4rem);
     line-height: 0.86;
     letter-spacing: -0.06em;
-    text-transform: uppercase;
   }
 
   .blog-editorial-guide__header > p {
     max-width: 33rem;
-    color: rgba(17, 17, 17, 0.64);
+    color: var(--color-muted);
     font-size: clamp(1rem, 1.35vw, 1.15rem);
     line-height: 1.55;
   }
@@ -71,8 +70,8 @@
   .blog-editorial-guide__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-top: 1px solid rgba(17, 17, 17, 0.34);
-    border-bottom: 1px solid rgba(17, 17, 17, 0.34);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
   }
 
   .blog-editorial-guide__item {
@@ -84,12 +83,13 @@
   }
 
   .blog-editorial-guide__item + .blog-editorial-guide__item {
-    border-left: 1px solid rgba(17, 17, 17, 0.34);
+    border-left: 1px solid var(--color-border);
   }
 
   .blog-editorial-guide__number {
     margin-bottom: auto;
-    color: rgba(17, 17, 17, 0.54);
+    color: var(--color-muted);
+    font-family: var(--font-utility);
     font-size: 0.75rem;
     font-weight: 700;
   }
@@ -109,7 +109,7 @@
 
   .blog-editorial-guide__item p {
     max-width: 28rem;
-    color: rgba(17, 17, 17, 0.64);
+    color: var(--color-muted);
     font-size: 0.96rem;
   }
 
@@ -132,6 +132,11 @@
     transform: translateX(4px);
   }
 
+  .no-js .blog-editorial-guide .reveal-item {
+    opacity: 1;
+    transform: none;
+  }
+
   @media (max-width: 749px) {
     .blog-editorial-guide__header {
       grid-template-columns: 1fr;
@@ -147,7 +152,7 @@
     }
 
     .blog-editorial-guide__item + .blog-editorial-guide__item {
-      border-top: 1px solid rgba(17, 17, 17, 0.34);
+      border-top: 1px solid var(--color-border);
       border-left: 0;
     }
   }

@@ -64,7 +64,15 @@
       "name": "Name",
       "email": "Email",
       "message": "Message",
-      "success": "Thanks for contacting us."
+      "success": "Thanks for contacting us.",
+      "here_to_help": "Here to help with",
+      "orders": "Orders and delivery",
+      "sizing": "Fit and sizing",
+      "partnerships": "Wholesale and partnerships",
+      "send_note": "Send a note",
+      "required_fields": "Fields marked * are required.",
+      "optional": "(optional)",
+      "send_message": "Send message"
     },
     "onboarding": {
       "collection_title": "Collection title",
@@ -235,6 +243,7 @@
       "read_story": "Read story",
       "lead_story": "Lead story",
       "latest_news": "Latest news",
+      "latest_stories": "Latest stories",
       "editors_picks": "Editor's picks",
       "selected_stories": "Selected stories from the {{ blog }} journal.",
       "empty": "There are no stories here yet. Check back soon."
