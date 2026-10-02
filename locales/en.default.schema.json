@@ -34,6 +34,26 @@
     "s032": "Used for navigation, buttons, labels, captions, and other compact interface text."
   },
   "sections": {
+    "scroll_highlight": {
+      "name": "Scroll text highlight",
+      "kicker": "Small label",
+      "default_kicker": "about us",
+      "text": "Text to highlight",
+      "default_text": "Treadora, thoughtfully crafted footwear for every pace, built for everyday movement and made to feel as good as it looks.",
+      "button_label": "Button label (optional)",
+      "default_button": "Learn more",
+      "button_link": "Button link",
+      "scroll_length": "Highlight scroll distance",
+      "scroll_info": "100vh equals one screen of scrolling. The section stays pinned until every letter is highlighted, then briefly holds before scrolling away. Scrolling up reverses the effect.",
+      "sticky_offset": "Minimum distance from top",
+      "offset_info": "The fixed theme header is detected automatically. Increase this value to leave extra space above the pinned text.",
+      "font_size": "Desktop text size",
+      "mobile_font_size": "Mobile text size",
+      "content_width": "Maximum text width",
+      "background": "Background",
+      "muted_color": "Unhighlighted text",
+      "highlight_color": "Highlighted text"
+    },
     "logo_marquee": {
       "name": "Scrolling logo bands",
       "heading": "Heading (optional)",

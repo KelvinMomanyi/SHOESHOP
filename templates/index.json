@@ -45,6 +45,14 @@
         "feature_4"
       ]
     },
+    "scroll_highlight": {
+      "type": "scroll-highlight",
+      "settings": {
+        "kicker": "about us",
+        "text": "Treadora, thoughtfully crafted footwear for every pace, built for everyday movement and made to feel as good as it looks.",
+        "button_label": "Learn more"
+      }
+    },
     "featured_products": {
       "type": "featured-products",
       "settings": {
@@ -299,6 +307,7 @@
   },
   "order": [
     "hero",
+    "scroll_highlight",
     "featured_products",
     "image_spread",
     "story",
