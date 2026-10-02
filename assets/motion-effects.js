@@ -778,6 +778,7 @@ const initEditorialPages = () => {
 const initArticleReaders = () => {
   const roots = document.querySelectorAll('[data-article-reader]:not([data-article-reader-ready])');
   if (!roots.length) return;
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const states = Array.from(roots).map((root) => {
     root.dataset.articleReaderReady = 'true';
     const content = root.querySelector('[data-reader-content]');
@@ -810,7 +811,33 @@ const initArticleReaders = () => {
       outline.hidden = nodes.length === 0;
     }
     if (progress && content) progress.hidden = false;
-    return { root, content, outline, progress, nodes, desktop: null, active: -1, top: 130 };
+    const reveals = new Set(content?.querySelectorAll('h2, h3, blockquote, figure') || []);
+    Array.from(content?.children || []).forEach((element, index) => {
+      if (element.tagName === 'P' && (index === 0 || element.querySelector('img'))) reveals.add(element);
+      if (element.tagName === 'IMG') reveals.add(element);
+    });
+    root.querySelectorAll('.article-editorial__next > header, .article-editorial__next-story').forEach((element) => reveals.add(element));
+    Array.from(reveals).forEach((element, index) => {
+      element.classList.add('reader-reveal');
+      if (element.classList.contains('article-editorial__next-story')) {
+        setCustomProperty(element, '--reader-reveal-delay', `${index % 2 * 90}ms`);
+      }
+    });
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-reader-visible');
+        revealObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -5% 0px' });
+    return {
+      root, content, outline, progress, nodes, reveals, revealObserver,
+      header: root.querySelector('.article-editorial__header'),
+      stage: root.querySelector('[data-reader-cover-stage]'),
+      cover: root.querySelector('[data-reader-cover]'),
+      desktop: null, active: -1, top: 130,
+      animate: null, drift: false, pinCover: false, coverHeight: 0
+    };
   });
 
   const refresh = ({ width, height }) => {
@@ -829,20 +856,80 @@ const initArticleReaders = () => {
         state.desktop = desktop;
         if (state.outline) state.outline.open = desktop;
       }
+      const animate = !motion.matches && state.root.dataset.motionEnabled !== 'false';
+      if (state.animate !== animate) {
+        state.animate = animate;
+        state.revealObserver.disconnect();
+        toggleClass(state.root, 'article-has-motion', animate);
+        if (animate) {
+          state.reveals.forEach((element) => {
+            if (element.classList.contains('is-reader-visible')) return;
+            if (element.getBoundingClientRect().top < height * 0.92) {
+              element.classList.add('is-reader-visible');
+            } else {
+              state.revealObserver.observe(element);
+            }
+          });
+        }
+      }
+      state.drift = animate && desktop && height >= 480;
+      state.pinCover = Boolean(animate && desktop && height >= 600 && state.stage && state.cover);
+      state.coverHeight = Math.min(680, Math.max(240, height - state.top - 24));
       setCustomProperty(state.root, '--reader-top', `${state.top}px`);
       setCustomProperty(state.root, '--reader-rail-height', `${Math.max(120, height - state.top - 24)}px`);
+      setCustomProperty(state.root, '--reader-cover-height', `${state.coverHeight}px`);
+      setCustomProperty(state.root, '--reader-cover-stage-height', `${Math.round(state.coverHeight * 1.65)}px`);
+      toggleClass(state.root, 'has-cover-pin', state.pinCover);
+      if (!state.drift) {
+        setCustomProperty(state.root, '--editorial-image-y', '0px');
+        setCustomProperty(state.root, '--editorial-image-scale', '1');
+        setCustomProperty(state.root, '--reader-title-y', '0px');
+        setCustomProperty(state.root, '--reader-caption-y', '0px');
+        setCustomProperty(state.root, '--reader-caption-opacity', '1');
+        setCustomProperty(state.root, '--reader-cover-inset', '0%');
+      }
     });
   };
 
   const update = ({ height }) => {
     states.forEach((state) => {
-      if (!state.root.isConnected || !state.content) return;
+      if (!state.root.isConnected) return;
+      if (state.drift && state.header) {
+        const headerRect = state.header.getBoundingClientRect();
+        if (isNearViewport(headerRect, height)) {
+          const progress = clamp((state.top - headerRect.top) / Math.max(1, headerRect.height), 0, 1);
+          setCustomProperty(state.root, '--reader-title-y', `${(-progress * 24).toFixed(2)}px`);
+        }
+      }
+      if (state.drift && state.stage && state.cover) {
+        const stageRect = state.stage.getBoundingClientRect();
+        if (isNearViewport(stageRect, height)) {
+          let progress;
+          let imageY;
+          let scale;
+          if (state.pinCover) {
+            progress = clamp((state.top - stageRect.top) / Math.max(1, stageRect.height - state.coverHeight), 0, 1);
+            const entry = clamp((height - stageRect.top) / Math.max(1, height - state.top), 0, 1);
+            imageY = lerp(18, 0, entry) - progress * 12;
+            scale = lerp(1.22, 1.16, entry) - progress * 0.1;
+          } else {
+            progress = clamp((height - stageRect.top) / (height + stageRect.height), 0, 1);
+            imageY = lerp(12, -12, progress);
+            scale = lerp(1.12, 1.06, progress);
+          }
+          setCustomProperty(state.root, '--editorial-image-y', `${imageY.toFixed(2)}px`);
+          setCustomProperty(state.root, '--editorial-image-scale', scale.toFixed(4));
+          setCustomProperty(state.root, '--reader-cover-inset', `${state.pinCover ? lerp(4, 0, progress).toFixed(3) : 0}%`);
+          setCustomProperty(state.root, '--reader-caption-y', `${lerp(8, 0, progress).toFixed(2)}px`);
+          setCustomProperty(state.root, '--reader-caption-opacity', lerp(0.7, 1, progress).toFixed(3));
+        }
+      }
+      if (!state.content) return;
       const rect = state.content.getBoundingClientRect();
       const distance = Math.max(1, rect.height - height + state.top + 24);
       const progress = rect.height > 0 ? clamp((state.top - rect.top) / distance, 0, 1) : 0;
       setCustomProperty(state.root, '--reading-progress', progress.toFixed(4));
-      if (!state.nodes.length) return;
-      if (rect.top > height * 1.35) return;
+      if (!state.nodes.length || rect.top > height * 1.35) return;
       let active = 0;
       state.nodes.forEach(({ heading }, index) => {
         if (heading.getBoundingClientRect().top <= state.top + 32) active = index;
@@ -859,12 +946,18 @@ const initArticleReaders = () => {
   const observer = new ResizeObserver(requestResizeEffects);
   states.forEach((state) => {
     if (state.content) observer.observe(state.content);
+    if (state.header) observer.observe(state.header);
   });
+  motion.addEventListener('change', requestResizeEffects);
   registerScrollEffect({
     refresh,
     update,
     elements: states.map((state) => state.root),
-    destroy: () => observer.disconnect()
+    destroy: () => {
+      observer.disconnect();
+      motion.removeEventListener('change', requestResizeEffects);
+      states.forEach((state) => state.revealObserver.disconnect());
+    }
   });
 };
 

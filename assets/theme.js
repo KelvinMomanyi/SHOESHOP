@@ -41,7 +41,7 @@
 
     loadScopedModule(
       scope,
-      '[data-hover-preview], [data-tilt-stack], [data-scroll-hero], [data-image-spread], [data-alexandra-loader], [data-featured-product-stack], [data-collection-directory], [data-collection-edit], [data-editorial-motion]',
+      '[data-hover-preview], [data-tilt-stack], [data-scroll-hero], [data-image-spread], [data-alexandra-loader], [data-featured-product-stack], [data-collection-directory], [data-collection-edit], [data-editorial-motion], [data-article-reader]',
       assets.motionEffects,
       'initializeMotionEffects'
     );

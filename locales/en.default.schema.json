@@ -373,7 +373,7 @@
       "s006": "Comments per page",
       "show_excerpt": "Show article introduction",
       "show_outline": "Show article heading navigation",
-      "enable_motion": "Enable cover image scroll motion"
+      "enable_motion": "Enable article scroll effects"
     },
     "main_blog": {
       "s001": "Main blog",
