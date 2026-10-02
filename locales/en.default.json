@@ -246,7 +246,15 @@
       "latest_stories": "Latest stories",
       "editors_picks": "Editor's picks",
       "selected_stories": "Selected stories from the {{ blog }} journal.",
-      "empty": "There are no stories here yet. Check back soon."
+      "empty": "There are no stories here yet. Check back soon.",
+      "by_author": "By {{ author }}",
+      "back_to_blog": "Back to {{ blog }}",
+      "on_this_page": "On this page",
+      "topics": "Topics",
+      "all_stories": "All stories",
+      "keep_reading": "Keep reading",
+      "newer_story": "Newer story",
+      "older_story": "Older story"
     },
     "comments": {
       "title": {
@@ -258,7 +266,11 @@
       "email": "Email",
       "comment": "Comment",
       "post": "Post comment",
-      "success": "Comment posted."
+      "success": "Comment posted.",
+      "join_conversation": "Join the conversation",
+      "required_fields": "All fields are required.",
+      "moderated_notice": "Comments are reviewed before they appear.",
+      "moderated_success": "Thanks for your comment. It will appear after it has been reviewed."
     }
   },
   "customer": {

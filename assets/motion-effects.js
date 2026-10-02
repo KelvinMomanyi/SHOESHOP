@@ -775,6 +775,99 @@ const initEditorialPages = () => {
   });
 };
 
+const initArticleReaders = () => {
+  const roots = document.querySelectorAll('[data-article-reader]:not([data-article-reader-ready])');
+  if (!roots.length) return;
+  const states = Array.from(roots).map((root) => {
+    root.dataset.articleReaderReady = 'true';
+    const content = root.querySelector('[data-reader-content]');
+    const outline = root.querySelector('[data-reader-outline]');
+    const list = root.querySelector('[data-reader-links]');
+    const progress = root.querySelector('[data-reader-progress]');
+    const nodes = [];
+    list?.replaceChildren();
+    if (content && outline && list && root.dataset.outlineEnabled !== 'false') {
+      content.querySelectorAll('h2, h3').forEach((heading, index) => {
+        const title = heading.textContent.trim().replace(/\s+/g, ' ');
+        if (!title) return;
+        if (!heading.id || document.getElementById(heading.id) !== heading) {
+          const prefix = root.id || 'ArticleReader';
+          let id = `${prefix}-heading-${index + 1}`;
+          let suffix = 1;
+          while (document.getElementById(id)) id = `${prefix}-heading-${index + 1}-${suffix++}`;
+          heading.id = id;
+        }
+        if (!heading.hasAttribute('tabindex')) heading.tabIndex = -1;
+        const item = document.createElement('li');
+        const link = document.createElement('a');
+        link.setAttribute('href', `#${encodeURIComponent(heading.id)}`);
+        link.textContent = title;
+        if (heading.tagName === 'H3') item.classList.add('is-subheading');
+        item.append(link);
+        list.append(item);
+        nodes.push({ heading, link });
+      });
+      outline.hidden = nodes.length === 0;
+    }
+    if (progress && content) progress.hidden = false;
+    return { root, content, outline, progress, nodes, desktop: null, active: -1, top: 130 };
+  });
+
+  const refresh = ({ width, height }) => {
+    let headerBottom = 0;
+    document.querySelectorAll('.site-header, .announcement-bar').forEach((header) => {
+      const position = getComputedStyle(header).position;
+      if (position === 'fixed' || position === 'sticky') {
+        headerBottom = Math.max(headerBottom, header.getBoundingClientRect().bottom);
+      }
+    });
+    states.forEach((state) => {
+      if (!state.root.isConnected) return;
+      state.top = Math.max(24, headerBottom + 24);
+      const desktop = width >= 990;
+      if (state.desktop !== desktop) {
+        state.desktop = desktop;
+        if (state.outline) state.outline.open = desktop;
+      }
+      setCustomProperty(state.root, '--reader-top', `${state.top}px`);
+      setCustomProperty(state.root, '--reader-rail-height', `${Math.max(120, height - state.top - 24)}px`);
+    });
+  };
+
+  const update = ({ height }) => {
+    states.forEach((state) => {
+      if (!state.root.isConnected || !state.content) return;
+      const rect = state.content.getBoundingClientRect();
+      const distance = Math.max(1, rect.height - height + state.top + 24);
+      const progress = rect.height > 0 ? clamp((state.top - rect.top) / distance, 0, 1) : 0;
+      setCustomProperty(state.root, '--reading-progress', progress.toFixed(4));
+      if (!state.nodes.length) return;
+      if (rect.top > height * 1.35) return;
+      let active = 0;
+      state.nodes.forEach(({ heading }, index) => {
+        if (heading.getBoundingClientRect().top <= state.top + 32) active = index;
+      });
+      if (active === state.active) return;
+      state.active = active;
+      state.nodes.forEach(({ link }, index) => {
+        if (index === active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    });
+  };
+
+  const observer = new ResizeObserver(requestResizeEffects);
+  states.forEach((state) => {
+    if (state.content) observer.observe(state.content);
+  });
+  registerScrollEffect({
+    refresh,
+    update,
+    elements: states.map((state) => state.root),
+    destroy: () => observer.disconnect()
+  });
+};
+
 export const initializeMotionEffects = () => {
   initHoverPreviews();
   initTiltStacks();
@@ -785,6 +878,7 @@ export const initializeMotionEffects = () => {
   initCollectionDirectories();
   initCollectionEdits();
   initEditorialPages();
+  initArticleReaders();
 
   if (!lifecycleReady) {
     lifecycleReady = true;

@@ -370,7 +370,10 @@
       "s003": "Show author",
       "s004": "Show article image",
       "s005": "Show comments",
-      "s006": "Comments per page"
+      "s006": "Comments per page",
+      "show_excerpt": "Show article introduction",
+      "show_outline": "Show article heading navigation",
+      "enable_motion": "Enable cover image scroll motion"
     },
     "main_blog": {
       "s001": "Main blog",
