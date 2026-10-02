@@ -636,6 +636,81 @@ const initCollectionDirectories = () => {
   });
 };
 
+const initCollectionEdits = () => {
+  const roots = document.querySelectorAll('[data-collection-edit]:not([data-collection-edit-ready])');
+  if (!roots.length) return;
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const states = Array.from(roots).map((root) => {
+    root.dataset.collectionEditReady = 'true';
+    root.classList.add('is-edit-ready');
+    const state = {
+      root,
+      refine: root.querySelector('[data-edit-refine]'),
+      masthead: root.querySelector('[data-edit-masthead]'),
+      image: root.querySelector('.collection-edit__hero-image'),
+      desktop: null,
+      animate: false
+    };
+    const viewButtons = Array.from(root.querySelectorAll('[data-edit-view]'));
+    viewButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const density = button.dataset.editView === 'large' ? 'large' : 'standard';
+        root.dataset.gridDensity = density;
+        setCustomProperty(root, '--edit-columns', density === 'large' ? '2' : '3');
+        viewButtons.forEach((view) => view.setAttribute('aria-pressed', String(view === button)));
+        requestResizeEffects();
+      });
+    });
+    return state;
+  });
+
+  const refresh = ({ width, height }) => {
+    let headerBottom = 0;
+    document.querySelectorAll('.site-header, .announcement-bar').forEach((header) => {
+      const position = getComputedStyle(header).position;
+      if (position === 'fixed' || position === 'sticky') {
+        headerBottom = Math.max(headerBottom, header.getBoundingClientRect().bottom);
+      }
+    });
+    states.forEach((state) => {
+      if (!state.root.isConnected) return;
+      const desktop = width >= 990;
+      if (state.desktop !== desktop) {
+        state.desktop = desktop;
+        if (state.refine) state.refine.open = desktop;
+      }
+      state.animate = desktop && height >= 480 && !motion.matches
+        && state.root.dataset.motionEnabled !== 'false';
+      const top = Math.max(24, headerBottom + 24);
+      setCustomProperty(state.root, '--edit-top', `${top}px`);
+      setCustomProperty(state.root, '--edit-rail-height', `${Math.max(160, height - top - 24)}px`);
+      if (!state.animate) {
+        setCustomProperty(state.root, '--edit-image-y', '0px');
+        setCustomProperty(state.root, '--edit-image-scale', '1');
+      }
+    });
+  };
+
+  const update = ({ height }) => {
+    states.forEach((state) => {
+      if (!state.root.isConnected || !state.animate || !state.image || !state.masthead) return;
+      const rect = state.masthead.getBoundingClientRect();
+      if (!isNearViewport(rect, height, 0.35)) return;
+      const progress = clamp((height - rect.top) / (height + rect.height), 0, 1);
+      setCustomProperty(state.root, '--edit-image-y', `${lerp(-12, 12, progress).toFixed(2)}px`);
+      setCustomProperty(state.root, '--edit-image-scale', lerp(1.1, 1.06, progress).toFixed(4));
+    });
+  };
+
+  motion.addEventListener('change', requestResizeEffects);
+  registerScrollEffect({
+    refresh,
+    update,
+    elements: states.map((state) => state.root),
+    destroy: () => motion.removeEventListener('change', requestResizeEffects)
+  });
+};
+
 export const initializeMotionEffects = () => {
   initHoverPreviews();
   initTiltStacks();
@@ -644,6 +719,7 @@ export const initializeMotionEffects = () => {
   initAlexandraLoader();
   initFeaturedProductStacks();
   initCollectionDirectories();
+  initCollectionEdits();
 
   if (!lifecycleReady) {
     lifecycleReady = true;

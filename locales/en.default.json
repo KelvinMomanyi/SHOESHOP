@@ -95,6 +95,15 @@
     }
   },
   "sections": {
+    "collection_edit": {
+      "collections": "Collections",
+      "browse": "Explore the edit",
+      "edit": "The product edit",
+      "range": "Showing {{ first }}–{{ last }} of {{ total }}",
+      "view_label": "Product gallery layout",
+      "standard_view": "Standard product grid",
+      "large_view": "Larger product images"
+    },
     "collection_directory": {
       "browse": "Explore the collections",
       "empty": "There are no collections to explore yet.",

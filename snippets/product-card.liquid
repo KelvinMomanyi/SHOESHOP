@@ -4,6 +4,7 @@ Renders a product card.
 @param {product} product - Product displayed by the card.
 @param {collection} [collection] - Collection used to preserve product navigation context.
 @param {string} [loading] - Image loading behavior.
+@param {string} [image_sizes] - Responsive image sizes for the card's gallery layout.
 @param {boolean} [show_quick_add] - Whether the card displays its add-to-cart action.
 {% enddoc %}
 
@@ -11,6 +12,7 @@ Renders a product card.
   assign card_product = product
   assign card_collection = collection
   assign image = card_product.featured_media.preview_image | default: card_product.featured_image
+  assign card_image_sizes = image_sizes | default: '(min-width: 990px) 25vw, (min-width: 700px) 50vw, 100vw'
 -%}
 
 {%- if card_product != blank -%}
@@ -19,7 +21,7 @@ Renders a product card.
       {%- render 'responsive-image',
         image: image,
         class: 'product-card__image media-frame__image',
-        sizes: '(min-width: 990px) 25vw, (min-width: 700px) 50vw, 100vw',
+        sizes: card_image_sizes,
         loading: loading
       -%}
       {%- if card_product.compare_at_price > card_product.price and card_product.available -%}

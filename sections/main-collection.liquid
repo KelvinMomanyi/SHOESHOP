@@ -1,49 +1,372 @@
-<section class="collection-page section-band">
+{%- liquid
+  assign hero_image = section.settings.image | default: collection.image | default: collection.products.first.featured_image
+  assign has_refinements = false
+  if section.settings.show_filters and collection.filters != blank
+    assign has_refinements = true
+  elsif section.settings.show_sorting and collection.sort_options != blank
+    assign has_refinements = true
+  endif
+  assign active_filter_count = 0
+  if section.settings.show_filters
+    for filter in collection.filters
+      assign active_filter_count = active_filter_count | plus: filter.active_values.size
+      if filter.type == 'price_range'
+        if filter.min_value.value or filter.max_value.value
+          assign active_filter_count = active_filter_count | plus: 1
+        endif
+      endif
+    endfor
+  endif
+  assign current_sort = collection.sort_by | default: collection.default_sort_by | url_encode
+  assign reset_url = collection.url | append: '?sort_by=' | append: current_sort
+-%}
+
+<section class="collection-page collection-edit" data-collection-edit data-motion-enabled="{{ section.settings.enable_motion }}" data-grid-density="standard">
   <div class="page-width">
-    <header class="collection-hero">
-      <div>
+    <header class="collection-edit__intro">
+      <div class="collection-edit__topline">
+        <nav class="collection-edit__breadcrumbs" aria-label="{{ 'accessibility.breadcrumbs' | t }}">
+          <a href="{{ routes.root_url }}">{{ 'general.navigation.home' | t }}</a>
+          <span aria-hidden="true">/</span>
+          <a href="{{ routes.collections_url }}">{{ 'sections.collection_edit.collections' | t }}</a>
+        </nav>
         {%- if section.settings.show_product_count -%}
-          <p class="eyebrow">{{ 'products.collection.product_count' | t: count: collection.products_count }}</p>
-        {%- elsif section.settings.kicker != blank -%}
-          <p class="eyebrow">{{ section.settings.kicker }}</p>
-        {%- endif -%}
-        <h1>{{ collection.title }}</h1>
-        {%- if section.settings.show_description and collection.description != blank -%}
-          <div class="rte">{{ collection.description }}</div>
+          <span class="eyebrow">{{ 'products.collection.product_count' | t: count: collection.products_count }}</span>
         {%- endif -%}
       </div>
-      {%- if section.settings.show_image and collection.image != blank -%}
-        <div class="collection-hero__image media-frame">
-          {%- render 'responsive-image',
-            image: collection.image,
-            class: 'media-frame__image',
-            sizes: '(min-width: 990px) 35vw, 100vw',
-            loading: 'eager'
-          -%}
+      <div class="collection-edit__masthead{% if section.settings.show_image and hero_image != blank %} collection-edit__masthead--with-image{% endif %}" data-edit-masthead>
+        <div class="collection-edit__heading">
+          {%- if section.settings.kicker != blank -%}
+            <p class="eyebrow">{{ section.settings.kicker | escape }}</p>
+          {%- endif -%}
+          <h1 class="collection-edit__title reveal-item">{{ collection.title | escape }}</h1>
+          {%- if section.settings.show_description -%}
+            {%- if collection.description != blank -%}
+              <div class="rte collection-edit__description">{{ collection.description }}</div>
+            {%- elsif section.settings.text != blank -%}
+              <p class="collection-edit__description">{{ section.settings.text | escape }}</p>
+            {%- endif -%}
+          {%- endif -%}
+          <a class="text-link collection-edit__browse" href="#CollectionProducts-{{ section.id }}">{{ 'sections.collection_edit.browse' | t }} <span aria-hidden="true">&darr;</span></a>
         </div>
-      {%- endif -%}
+        {%- if section.settings.show_image and hero_image != blank -%}
+          <div class="collection-edit__hero-media">
+            {%- render 'responsive-image',
+              image: hero_image,
+              class: 'collection-edit__hero-image',
+              sizes: '(min-width: 990px) 38vw, 100vw',
+              loading: 'eager',
+              alt: collection.title
+            -%}
+          </div>
+        {%- endif -%}
+      </div>
     </header>
 
-    {%- render 'facets',
-      results: collection,
-      show_filters: section.settings.show_filters,
-      show_sorting: section.settings.show_sorting
-    -%}
+    <div class="collection-edit__layout{% if has_refinements %} collection-edit__layout--with-filters{% endif %}">
+      {%- if has_refinements -%}
+        <aside class="collection-edit__sidebar">
+          <details class="collection-edit__refine" data-edit-refine open>
+            <summary class="collection-edit__refine-toggle">
+              {{ 'products.facets.filter_and_sort' | t }}
+              {%- if active_filter_count > 0 -%}<span class="collection-edit__filter-count">{{ active_filter_count }}</span>{%- endif -%}
+              <span class="collection-edit__refine-icon" aria-hidden="true">+</span>
+            </summary>
+            <div class="collection-edit__refine-body">
+              {%- render 'facets',
+                results: collection,
+                show_filters: section.settings.show_filters,
+                show_sorting: section.settings.show_sorting
+              -%}
+              {%- if active_filter_count > 0 -%}
+                <a class="text-link collection-edit__reset" href="{{ reset_url }}">{{ 'products.facets.clear_all' | t }}</a>
+              {%- endif -%}
+            </div>
+          </details>
+        </aside>
+      {%- endif -%}
 
-    {%- paginate collection.products by section.settings.products_per_page -%}
-      <div class="product-grid">
-        {%- for product in collection.products -%}
-          {%- render 'product-card', product: product, collection: collection, loading: 'lazy' -%}
-        {%- else -%}
-          <div class="empty-state">
-            <p>{{ 'products.collection.no_products' | t }}</p>
+      <div class="collection-edit__gallery" id="CollectionProducts-{{ section.id }}">
+        {%- paginate collection.products by section.settings.products_per_page -%}
+          {%- liquid
+            assign first_product = paginate.current_offset | plus: 1
+            assign last_product = paginate.current_offset | plus: collection.products.size
+            if collection.products.size == 0
+              assign first_product = 0
+            endif
+          -%}
+          <div class="collection-edit__gallery-bar">
+            <div>
+              <h2 id="ProductGridHeading-{{ section.id }}">{{ 'sections.collection_edit.edit' | t }}</h2>
+              {%- if section.settings.show_product_count -%}
+                <p>{{ 'sections.collection_edit.range' | t: first: first_product, last: last_product, total: paginate.items }}</p>
+              {%- endif -%}
+            </div>
+            {%- if collection.products.size > 0 -%}
+            <div class="collection-edit__views" role="group" aria-label="{{ 'sections.collection_edit.view_label' | t }}" data-edit-views>
+              <button class="collection-edit__view" type="button" data-edit-view="standard" aria-pressed="true" aria-label="{{ 'sections.collection_edit.standard_view' | t }}" title="{{ 'sections.collection_edit.standard_view' | t }}">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><path d="M1 2h4v6H1zm6 0h4v6H7zm6 0h4v6h-4zM1 10h4v6H1zm6 0h4v6H7zm6 0h4v6h-4z"/></svg>
+              </button>
+              <button class="collection-edit__view" type="button" data-edit-view="large" aria-pressed="false" aria-label="{{ 'sections.collection_edit.large_view' | t }}" title="{{ 'sections.collection_edit.large_view' | t }}">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><path d="M1 2h7v14H1zm9 0h7v14h-7z"/></svg>
+              </button>
+            </div>
+            {%- endif -%}
           </div>
-        {%- endfor -%}
+          <div class="product-grid collection-edit__grid" aria-labelledby="ProductGridHeading-{{ section.id }}">
+            {%- for product in collection.products -%}
+              {%- liquid
+                assign product_number = paginate.current_offset | plus: forloop.index
+                assign reveal_delay = forloop.index0 | modulo: 3 | times: 70
+              -%}
+              <div class="collection-edit__product" style="--edit-reveal-delay: {{ reveal_delay }}ms;">
+                <span class="collection-edit__number" aria-hidden="true">{% if product_number < 10 %}0{% endif %}{{ product_number }}</span>
+                {%- render 'product-card', product: product, collection: collection, loading: 'lazy', image_sizes: '(min-width: 990px) 38vw, 50vw' -%}
+              </div>
+            {%- else -%}
+              <div class="empty-state collection-edit__empty">
+                <p>{{ 'products.collection.no_products' | t }}</p>
+                {%- if active_filter_count > 0 -%}
+                  <a class="button button--ghost" href="{{ reset_url }}">{{ 'products.facets.clear_all' | t }}</a>
+                {%- else -%}
+                  <a class="text-link" href="{{ routes.collections_url }}">{{ 'sections.collection_edit.collections' | t }}</a>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          </div>
+          {%- render 'pagination', paginate: paginate -%}
+        {%- endpaginate -%}
       </div>
-      {%- render 'pagination', paginate: paginate -%}
-    {%- endpaginate -%}
+    </div>
   </div>
 </section>
+
+{% stylesheet %}
+  .collection-edit {
+    padding-block: clamp(40px, 5vw, 72px) clamp(64px, 8vw, 110px);
+    background: var(--color-background);
+    color: var(--color-foreground);
+    --edit-top: 130px;
+    --edit-rail-height: calc(100svh - 154px);
+    --edit-columns: 3;
+  }
+  .collection-edit__intro { margin-bottom: clamp(40px, 5vw, 72px); }
+  .collection-edit__topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+  .collection-edit__breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: var(--font-utility);
+    font-size: 12px;
+    color: var(--color-muted);
+  }
+  .collection-edit__breadcrumbs a:hover { color: var(--color-foreground); }
+  .collection-edit__masthead { display: grid; align-items: center; gap: 48px; }
+  .collection-edit__heading { display: grid; justify-items: start; gap: 24px; min-width: 0; }
+  .collection-edit__title {
+    max-width: 12ch;
+    font-size: clamp(56px, 9.3vw, 140px);
+    line-height: 0.94;
+    letter-spacing: -0.065em;
+    text-wrap: balance;
+  }
+  .collection-edit__description {
+    max-width: 540px;
+    font-size: clamp(16px, 1.2vw, 18px);
+    color: var(--color-muted);
+  }
+  .collection-edit__description p { margin: 0; }
+  .collection-edit__browse { display: inline-flex; align-items: center; gap: 36px; }
+  .collection-edit__hero-media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border-radius: 8px;
+    background: var(--color-surface);
+  }
+  .collection-edit__hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translate3d(0, var(--edit-image-y, 0px), 0) scale(var(--edit-image-scale, 1));
+  }
+  .collection-edit__layout { display: grid; gap: 32px; align-items: start; }
+  .collection-edit__gallery { min-width: 0; scroll-margin-top: var(--edit-top); }
+  .collection-edit__refine { border-block: 1px solid var(--color-border); }
+  .collection-edit__refine-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 56px;
+    padding-block: 12px;
+    list-style: none;
+    font-family: var(--font-utility);
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .collection-edit__refine-toggle::-webkit-details-marker { display: none; }
+  .collection-edit__refine-icon { margin-left: auto; font-size: 24px; }
+  .collection-edit__refine[open] .collection-edit__refine-icon { transform: rotate(45deg); }
+  .collection-edit__filter-count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-foreground);
+    color: var(--color-background);
+    font-size: 11px;
+  }
+  .collection-edit__refine-body { padding-block: 20px; }
+  .collection-edit .facets { z-index: auto; padding: 0; border: 0; margin: 0; gap: 20px; }
+  .collection-edit .facets__toolbar, .collection-edit .facets__main {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+  }
+  .collection-edit .facets__groups { display: grid; grid-template-columns: 1fr; gap: 0; }
+  .collection-edit .facets__group { border-top: 1px solid var(--color-border); }
+  .collection-edit .facets__group summary {
+    justify-content: space-between;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 8px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--color-foreground);
+    font-family: var(--font-utility);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .collection-edit .facets__group[open] summary { background: var(--color-foreground); color: var(--color-background); }
+  .collection-edit .facets__panel {
+    position: static;
+    width: 100%;
+    padding: 16px 8px;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--color-foreground);
+  }
+  .collection-edit .facets__list { max-height: 220px; }
+  .collection-edit .facets__panel-actions { flex-wrap: wrap; gap: 8px; }
+  .collection-edit .facets__panel-actions .button { min-height: 40px; padding: 8px 18px; border-radius: 999px; }
+  .collection-edit .facets__sort { min-width: 0; width: 100%; }
+  .collection-edit .facets__sort .field__input { width: 100%; border-radius: 0; min-height: 44px; }
+  .collection-edit .active-filter { font-weight: 400; background: transparent; color: var(--color-foreground); }
+  .collection-edit__reset { display: inline-block; margin-top: 18px; font-size: 12px; }
+  .collection-edit__gallery-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 26px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .collection-edit__gallery-bar h2 {
+    font-family: var(--font-utility);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+  .collection-edit__gallery-bar p { margin-top: 6px; color: var(--color-muted); font-size: 12px; }
+  .collection-edit__views { display: none; gap: 6px; }
+  .collection-edit__view {
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--color-muted);
+    cursor: pointer;
+  }
+  .collection-edit__view[aria-pressed="true"] { background: var(--color-foreground); color: var(--color-background); border-color: var(--color-foreground); }
+  .collection-edit__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 20px; align-items: start; }
+  .collection-edit__product { min-width: 0; }
+  .collection-edit__number {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--color-muted);
+    font-family: var(--font-utility);
+    font-size: 11px;
+  }
+  .collection-edit .product-card {
+    padding: 12px;
+    border: 1px solid color-mix(in srgb, var(--color-border) 65%, transparent);
+    border-radius: 8px;
+    background: var(--color-surface);
+  }
+  .collection-edit .product-card__media {
+    border-radius: 5px;
+    background: color-mix(in srgb, var(--color-background) 75%, var(--color-surface));
+  }
+  .collection-edit .product-card__content { padding: 4px; gap: 9px; }
+  .collection-edit .product-card__title { font-size: 17px; line-height: 1.25; }
+  .collection-edit .product-card__vendor { font-size: 10px; }
+  .collection-edit .price { font-size: 15px; font-weight: 700; }
+  .collection-edit .product-card .button--ghost {
+    width: 100%;
+    min-height: 42px;
+    border-radius: 999px;
+    font-size: 12px;
+  }
+  .collection-edit .product-card:focus-within .product-card__image { transform: scale(1.04); }
+  .collection-edit__empty { grid-column: 1 / -1; display: grid; justify-items: start; gap: 24px; padding-block: 48px; }
+  .collection-edit .pagination { margin-top: 48px; }
+  .no-js .collection-edit .reveal-item { opacity: 1; transform: none; }
+  @media (min-width: 990px) {
+    .collection-edit__masthead--with-image { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); }
+    .collection-edit__layout--with-filters { grid-template-columns: 220px minmax(0, 1fr); gap: clamp(32px, 4vw, 56px); }
+    .collection-edit__refine {
+      position: sticky;
+      top: var(--edit-top);
+      max-height: var(--edit-rail-height);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+    .collection-edit__sidebar { align-self: stretch; min-width: 0; }
+    .collection-edit__refine-toggle { display: none; }
+    .collection-edit__refine-body { padding-top: 24px; }
+    .collection-edit__grid { grid-template-columns: repeat(var(--edit-columns), minmax(0, 1fr)); gap: 40px 24px; }
+    .collection-edit[data-grid-density="standard"] .collection-edit__product:nth-child(3n + 2) { margin-top: 32px; }
+    .collection-edit.is-edit-ready .collection-edit__views { display: flex; }
+    .scroll-reveal-enabled .collection-edit .product-card.reveal-item { transition-delay: var(--edit-reveal-delay, 0ms); }
+  }
+  @media (max-width: 749px) {
+    .collection-edit__masthead { gap: 28px; }
+    .collection-edit__topline { gap: 12px; margin-bottom: 28px; }
+    .collection-edit__topline > .eyebrow { font-size: 10px; }
+    .collection-edit__title { font-size: clamp(56px, 13vw, 88px); }
+    .collection-edit__heading { gap: 20px; }
+    .collection-edit__grid { gap: 24px 12px; }
+    .collection-edit .product-card { padding: 8px; gap: 10px; }
+    .collection-edit .product-card__content { padding: 2px; gap: 6px; }
+    .collection-edit .product-card__title { font-size: 14px; }
+    .collection-edit .price, .collection-edit .price__compare { font-size: 12px; }
+    .collection-edit .product-card .button--ghost { padding: 8px; font-size: 11px; }
+    .collection-edit .product-card__badge { top: 6px; left: 6px; font-size: 10px; padding: 4px 6px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .collection-edit__hero-image { transform: none; }
+    .collection-edit .product-card:hover .product-card__image,
+    .collection-edit .product-card:focus-within .product-card__image { transform: none; }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
@@ -53,7 +376,13 @@
       "type": "text",
       "id": "kicker",
       "label": "t:sections.main_collection.s002",
-      "default": "Collection"
+      "default": "t:sections.main_collection.default_kicker"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "t:sections.main_collection.text",
+      "default": "t:sections.main_collection.default_text"
     },
     {
       "type": "checkbox",
@@ -74,6 +403,12 @@
       "default": true
     },
     {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.main_collection.image",
+      "info": "t:sections.main_collection.image_info"
+    },
+    {
       "type": "checkbox",
       "id": "show_filters",
       "label": "t:sections.main_collection.s006",
@@ -83,6 +418,12 @@
       "type": "checkbox",
       "id": "show_sorting",
       "label": "t:sections.main_collection.s007",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_motion",
+      "label": "t:sections.main_collection.enable_motion",
       "default": true
     },
     {

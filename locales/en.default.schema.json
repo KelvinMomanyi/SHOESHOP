@@ -392,7 +392,13 @@
       "s005": "Show image",
       "s006": "Show filters",
       "s007": "Show sorting",
-      "s008": "Products per page"
+      "s008": "Products per page",
+      "default_kicker": "The Treadora rotation",
+      "text": "Introduction when the collection has no description",
+      "default_text": "From daily miles to slower days. Discover thoughtfully chosen footwear for every pace and find your next favorite pair.",
+      "image": "Editorial hero image",
+      "image_info": "Overrides the collection image. If neither is set, the first product image is used.",
+      "enable_motion": "Enable subtle hero scroll motion"
     },
     "main_customers_account": {
       "s001": "Customer account"
