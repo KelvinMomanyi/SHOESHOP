@@ -1,0 +1,78 @@
+{% doc %}
+  Renders numbered collection links and an optional scroll preview.
+  @param {collection[]} collection_list - Collections on the current page or in the merchant's chosen order.
+  @param {boolean} show_images - Show collection imagery.
+  @param {boolean} show_product_count - Show collection product counts.
+  @param {string} section_id - Section ID for the directory anchor.
+  @param {number} start_index - Pagination offset for collection numbering.
+  @param {boolean} omit_frontpage - Exclude the automatic frontpage collection.
+{% enddoc %}
+
+{%- liquid
+  assign visible_count = 0
+  for directory_collection in collection_list
+    if omit_frontpage and directory_collection.handle == 'frontpage'
+      continue
+    endif
+    assign visible_count = visible_count | plus: 1
+  endfor
+-%}
+
+<div id="CollectionDirectory-{{ section_id }}" class="collection-directory">
+  {%- if visible_count > 0 -%}
+    <div class="collection-directory__layout">
+      <ol class="collection-directory__list" role="list">
+        {%- assign visible_index = start_index -%}
+        {%- for directory_collection in collection_list -%}
+          {%- if omit_frontpage and directory_collection.handle == 'frontpage' -%}
+            {%- continue -%}
+          {%- endif -%}
+          {%- liquid
+            assign visible_index = visible_index | plus: 1
+            assign directory_number = visible_index
+            if visible_index < 10
+              assign directory_number = visible_index | prepend: '0'
+            endif
+          -%}
+          <li class="collection-directory__item">
+            <a class="collection-directory__row reveal-item" href="{{ directory_collection.url }}" data-directory-row>
+              <span class="collection-directory__number" data-directory-number aria-hidden="true">{{ directory_number }}</span>
+              <div class="collection-directory__body">
+                <h2 class="collection-directory__title" data-directory-title>{{ directory_collection.title | escape }}</h2>
+                {%- if show_product_count -%}
+                  <span class="collection-directory__count">{{ 'products.collection.product_count' | t: count: directory_collection.products_count }}</span>
+                {%- endif -%}
+              </div>
+              <span class="collection-directory__arrow" aria-hidden="true">↗</span>
+              {%- if show_images -%}
+                <div class="collection-directory__media" data-directory-media aria-hidden="true">
+                  {%- render 'responsive-image',
+                    image: directory_collection.featured_image,
+                    class: 'collection-directory__image',
+                    sizes: '(min-width: 990px) 45vw, (min-width: 750px) 420px, 100vw',
+                    alt: directory_collection.title
+                  -%}
+                </div>
+              {%- endif -%}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ol>
+      {%- if show_images -%}
+        <figure class="collection-directory__stage" data-directory-stage aria-hidden="true">
+          <div data-directory-frames></div>
+          <figcaption class="collection-directory__caption">
+            <span class="collection-directory__caption-number" data-directory-caption-number></span>
+            <span class="collection-directory__caption-title" data-directory-caption-title></span>
+            <span class="collection-directory__progress"></span>
+          </figcaption>
+        </figure>
+      {%- endif -%}
+    </div>
+  {%- else -%}
+    <div class="collection-directory__empty">
+      <p>{{ 'sections.collection_directory.empty' | t }}</p>
+      <a class="text-link" href="{{ routes.all_products_collection_url }}">{{ 'sections.collection_directory.shop_all' | t }}</a>
+    </div>
+  {%- endif -%}
+</div>

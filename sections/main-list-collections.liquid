@@ -1,58 +1,229 @@
-<section class="list-collections section-band">
+<section class="list-collections collection-index" data-collection-directory data-motion-enabled="{{ section.settings.enable_motion }}">
   <div class="page-width">
-    <div class="section-heading">
-      <p class="eyebrow">{{ settings.brand_name | default: 'Treadora' }}</p>
-      <h1>{{ section.settings.heading }}</h1>
-    </div>
+    <header class="collection-index__intro">
+      <p class="eyebrow">{{ settings.brand_name | default: shop.name | escape }}</p>
+      <div class="collection-index__title-wrap">
+        <h1 class="collection-index__title reveal-item">{{ section.settings.heading | escape }}</h1>
+      </div>
+      <div class="collection-index__intro-bottom">
+        <p class="collection-index__description">{{ section.settings.text | escape }}</p>
+        <a class="text-link collection-index__browse" href="#CollectionDirectory-{{ section.id }}">
+          {{ 'sections.collection_directory.browse' | t }} <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </header>
 
     {%- if section.settings.collections != blank -%}
-      <div class="collection-grid">
-        {%- for collection in section.settings.collections -%}
-          <a class="collection-card reveal-item" href="{{ collection.url }}">
-            {%- if section.settings.show_images -%}
-              <div class="collection-card__media media-frame">
-                {%- render 'responsive-image',
-                  image: collection.featured_image,
-                  class: 'media-frame__image',
-                  sizes: '(min-width: 990px) 33vw, 100vw'
-                -%}
-              </div>
-            {%- endif -%}
-            <strong>{{ collection.title }}</strong>
-            {%- if section.settings.show_product_count -%}
-              <span>{{ 'products.collection.product_count' | t: count: collection.products_count }}</span>
-            {%- endif -%}
-          </a>
-        {%- endfor -%}
-      </div>
+      {%- render 'collection-directory',
+        collection_list: section.settings.collections,
+        show_images: section.settings.show_images,
+        show_product_count: section.settings.show_product_count,
+        section_id: section.id,
+        start_index: 0,
+        omit_frontpage: false
+      -%}
     {%- else -%}
       {%- paginate collections by section.settings.collections_per_page -%}
-        <div class="collection-grid">
-          {%- for collection in collections -%}
-            {%- unless collection.handle == 'frontpage' -%}
-              <a class="collection-card reveal-item" href="{{ collection.url }}">
-                {%- if section.settings.show_images -%}
-                  <div class="collection-card__media media-frame">
-                    {%- render 'responsive-image',
-                      image: collection.featured_image,
-                      class: 'media-frame__image',
-                      sizes: '(min-width: 990px) 33vw, 100vw'
-                    -%}
-                  </div>
-                {%- endif -%}
-                <strong>{{ collection.title }}</strong>
-                {%- if section.settings.show_product_count -%}
-                  <span>{{ 'products.collection.product_count' | t: count: collection.products_count }}</span>
-                {%- endif -%}
-              </a>
-            {%- endunless -%}
-          {%- endfor -%}
-        </div>
+        {%- render 'collection-directory',
+          collection_list: collections,
+          show_images: section.settings.show_images,
+          show_product_count: section.settings.show_product_count,
+          section_id: section.id,
+          start_index: paginate.current_offset,
+          omit_frontpage: true
+        -%}
         {%- render 'pagination', paginate: paginate -%}
       {%- endpaginate -%}
     {%- endif -%}
   </div>
 </section>
+
+{% stylesheet %}
+  .collection-index {
+    padding-block: clamp(48px, 7vw, 100px) clamp(64px, 8vw, 120px);
+    background: var(--color-background);
+    color: var(--color-foreground);
+    --directory-top: 130px;
+    --directory-height: calc(100svh - 154px);
+  }
+  .collection-index__intro {
+    display: grid;
+    gap: 28px;
+    margin-bottom: clamp(56px, 8vw, 110px);
+  }
+  .collection-index__title-wrap {
+    transform: translate3d(0, var(--directory-title-y, 0px), 0);
+  }
+  .collection-index__title {
+    max-width: 100%;
+    font-size: clamp(64px, 12.5vw, 180px);
+    line-height: 0.9;
+    letter-spacing: -0.065em;
+    text-wrap: balance;
+  }
+  .collection-index__intro-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 32px;
+    padding-top: 8px;
+  }
+  .collection-index__description {
+    max-width: 470px;
+    color: var(--color-muted);
+    font-size: clamp(16px, 1.3vw, 19px);
+  }
+  .collection-index__browse {
+    display: inline-flex;
+    align-items: center;
+    gap: 28px;
+    flex-shrink: 0;
+  }
+  .collection-directory { scroll-margin-top: var(--directory-top); }
+  .collection-directory__list { list-style: none; padding: 0; margin: 0; }
+  .collection-directory__item { border-top: 1px solid var(--color-border); }
+  .collection-directory__item:last-child { border-bottom: 1px solid var(--color-border); }
+  .collection-directory__row {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr) 24px;
+    align-items: center;
+    gap: 20px;
+    min-height: 176px;
+    padding: 28px 0;
+    transition: color 220ms ease;
+  }
+  .collection-directory__number {
+    align-self: start;
+    padding-top: 8px;
+    font-family: var(--font-utility);
+    font-size: 12px;
+    color: var(--color-muted);
+  }
+  .collection-directory__body { display: grid; gap: 12px; min-width: 0; }
+  .collection-directory__title {
+    font-size: clamp(30px, 3.1vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+  }
+  .collection-directory__count {
+    font-family: var(--font-utility);
+    font-size: 12px;
+    color: var(--color-muted);
+  }
+  .collection-directory__arrow { font-size: 24px; transition: transform 220ms ease; }
+  .collection-directory__row:hover .collection-directory__arrow,
+  .collection-directory__row:focus-visible .collection-directory__arrow { transform: translate(3px, -3px); }
+  .collection-directory__media {
+    grid-column: 2;
+    grid-row: 2;
+    width: min(100%, 420px);
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+  .collection-directory__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: var(--color-surface);
+  }
+  .collection-directory__stage { display: none; }
+  .collection-directory__empty {
+    display: grid;
+    justify-items: start;
+    gap: 24px;
+    padding-block: 40px;
+    border-top: 1px solid var(--color-border);
+    color: var(--color-muted);
+  }
+  .collection-index .pagination { margin-top: 48px; }
+  .no-js .collection-index .reveal-item { opacity: 1; transform: none; }
+  @media (min-width: 990px) {
+    .collection-index.is-directory-enhanced .collection-directory__layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: clamp(32px, 5vw, 80px);
+      align-items: start;
+    }
+    .is-directory-enhanced .collection-directory__row { color: var(--color-muted); }
+    .is-directory-enhanced .collection-directory__row.is-active,
+    .is-directory-enhanced .collection-directory__row:hover,
+    .is-directory-enhanced .collection-directory__row:focus-visible { color: var(--color-foreground); }
+    .is-directory-enhanced .collection-directory__row.is-active .collection-directory__number { color: var(--color-foreground); }
+    .is-directory-enhanced .collection-directory__media { display: none; }
+    .is-directory-enhanced .collection-directory__stage {
+      display: block;
+      position: sticky;
+      top: var(--directory-top);
+      height: var(--directory-height);
+      margin: 0;
+      overflow: hidden;
+      background: var(--color-surface);
+      isolation: isolate;
+    }
+    .collection-directory__preview-image {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      clip-path: inset(0 0 100% 0);
+      transition: opacity 380ms ease, clip-path 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .collection-directory__preview-image.is-active { opacity: 1; clip-path: inset(0); z-index: 1; }
+    .collection-directory__preview-image .collection-directory__image {
+      transform: translate3d(0, var(--directory-image-y, 0px), 0) scale(var(--directory-image-scale, 1.06));
+    }
+    .collection-directory__stage::after {
+      content: '';
+      position: absolute;
+      inset: 55% 0 0;
+      z-index: 2;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+      pointer-events: none;
+    }
+    .collection-directory__caption {
+      position: absolute;
+      inset: auto 28px 28px;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr);
+      align-items: baseline;
+      gap: 16px;
+      color: #fff;
+    }
+    .collection-directory__caption-number { font-family: var(--font-utility); font-size: 12px; }
+    .collection-directory__caption-title {
+      font-family: var(--font-heading);
+      font-size: clamp(22px, 2vw, 32px);
+      line-height: 1.1;
+      overflow-wrap: anywhere;
+    }
+    .collection-directory__progress { grid-column: 1 / -1; height: 1px; background: rgba(255, 255, 255, 0.3); }
+    .collection-directory__progress::before {
+      content: '';
+      display: block;
+      height: 100%;
+      background: #fff;
+      transform: scaleX(var(--directory-progress, 0));
+      transform-origin: left;
+      transition: transform 350ms ease;
+    }
+  }
+  @media (max-width: 749px) {
+    .collection-index__intro-bottom { display: grid; gap: 24px; }
+    .collection-directory__row {
+      grid-template-columns: 24px minmax(0, 1fr) 20px;
+      gap: 16px;
+      min-height: 130px;
+      padding-block: 24px;
+    }
+    .collection-directory__title { font-size: clamp(28px, 7vw, 36px); }
+    .collection-directory__media { grid-column: 1 / -1; width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .collection-index__title-wrap, .collection-directory__arrow { transform: none; }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
@@ -62,7 +233,13 @@
       "type": "text",
       "id": "heading",
       "label": "t:sections.main_list_collections.s002",
-      "default": "Collections"
+      "default": "t:sections.main_list_collections.default_heading"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "t:sections.main_list_collections.text",
+      "default": "t:sections.main_list_collections.default_text"
     },
     {
       "type": "collection_list",
@@ -80,6 +257,13 @@
       "type": "checkbox",
       "id": "show_product_count",
       "label": "t:sections.main_list_collections.s006",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_motion",
+      "label": "t:sections.main_list_collections.enable_motion",
+      "info": "t:sections.main_list_collections.motion_info",
       "default": true
     },
     {

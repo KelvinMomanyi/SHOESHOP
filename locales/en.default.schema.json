@@ -422,7 +422,12 @@
       "s004": "Leave empty to show all collections.",
       "s005": "Show images",
       "s006": "Show product count",
-      "s007": "Collections per page"
+      "s007": "Collections per page",
+      "default_heading": "Collections",
+      "text": "Introduction",
+      "default_text": "Find your pace. Explore running shoes, everyday sneakers, trail essentials, and the pairs made for your next move.",
+      "enable_motion": "Enable editorial scroll preview",
+      "motion_info": "On desktop, collection imagery stays pinned and changes with scrolling, hovering, or keyboard focus. Mobile and reduced-motion browsing show images alongside each collection."
     },
     "main_page": {
       "s001": "Main page",

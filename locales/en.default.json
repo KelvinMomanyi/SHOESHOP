@@ -95,6 +95,11 @@
     }
   },
   "sections": {
+    "collection_directory": {
+      "browse": "Explore the collections",
+      "empty": "There are no collections to explore yet.",
+      "shop_all": "Shop all footwear"
+    },
     "logo_marquee": {
       "pause": "Pause logo animation",
       "resume": "Resume logo animation",
