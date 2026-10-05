@@ -8,6 +8,8 @@
   @param {boolean} show_policies - Whether to show shipping and returns policies.
 {% enddoc %}
 
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
 {%- if show_description or show_specifications or show_policies -%}
   <product-detail-tabs class="product__details-area">
     <nav class="product__detail-nav" aria-label="{{ 'products.product.product_information' | t }}">
@@ -23,14 +25,52 @@
     {%- endif -%}
     {%- if show_specifications -%}
       <div id="ProductSpecs-{{ section.id }}" class="product__detail-panel" data-product-panel>
-        <div class="product__detail-intro"><p class="eyebrow">{{ 'products.product.product_information' | t }}</p><h2>{{ 'products.product.at_a_glance' | t }}</h2></div>
-        <dl class="product__fact-list">
-          {%- if product.vendor != blank -%}<div><dt>{{ 'products.product.vendor' | t }}</dt><dd>{{ product.vendor | escape }}</dd></div>{%- endif -%}
-          {%- if product.type != blank -%}<div><dt>{{ 'products.product.product_type' | t }}</dt><dd>{{ product.type | escape }}</dd></div>{%- endif -%}
+        <div class="product__detail-intro">
+          <p class="eyebrow">{{ 'products.product.product_information' | t }}</p>
+          <h2>{{ 'products.product.at_a_glance' | t }}</h2>
+          {%- if product.description != blank -%}
+            <p class="product__detail-summary">{{ product.description | replace: '</', ' </' | strip_html | strip | truncatewords: 40 }}</p>
+          {%- endif -%}
+        </div>
+        <div class="product__information">
+          <dl class="product__fact-list">
+            <div><dt>{{ 'products.product.product_name' | t }}</dt><dd>{{ product.title | escape }}</dd></div>
+            {%- if product.vendor != blank -%}<div><dt>{{ 'products.product.vendor' | t }}</dt><dd>{{ product.vendor | escape }}</dd></div>{%- endif -%}
+            {%- if product.type != blank -%}<div><dt>{{ 'products.product.product_type' | t }}</dt><dd>{{ product.type | escape }}</dd></div>{%- endif -%}
+            {%- if current_variant != blank -%}
+              {%- unless product.has_only_default_variant -%}
+                <div><dt>{{ 'products.product.selected_variant' | t }}</dt><dd>{{ current_variant.title | escape }}</dd></div>
+              {%- endunless -%}
+              {%- if current_variant.sku != blank -%}<div><dt>{{ 'products.product.sku' | t }}</dt><dd class="product__fact-sku">{{ current_variant.sku | escape }}</dd></div>{%- endif -%}
+              <div>
+                <dt>{{ 'products.product.availability' | t }}</dt>
+                <dd><span class="product__fact-availability{% unless current_variant.available %} is-unavailable{% endunless %}">{% if current_variant.available %}{{ 'products.product.available_to_order' | t }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}</span></dd>
+              </div>
+              {%- if current_variant.weight > 0 -%}<div><dt>{{ 'products.product.weight' | t }}</dt><dd>{{ current_variant.weight | weight_with_unit: current_variant.weight_unit }}</dd></div>{%- endif -%}
+              <div><dt>{{ 'products.product.delivery' | t }}</dt><dd>{% if current_variant.requires_shipping %}{{ 'products.product.shipping_required' | t }}{% else %}{{ 'products.product.shipping_not_required' | t }}{% endif %}</dd></div>
+            {%- endif -%}
+          </dl>
           {%- unless product.has_only_default_variant -%}
-            {%- for option in product.options_with_values -%}<div><dt>{{ option.name | escape }}</dt><dd>{{ option.values | join: ', ' | escape }}</dd></div>{%- endfor -%}
+            <div class="product__option-facts">
+              <h3 class="product__options-heading">{{ 'products.product.options' | t }}</h3>
+              <dl class="product__fact-list product__fact-list--options">
+                {%- for option in product.options_with_values -%}
+                  <div>
+                    <dt>{{ option.name | escape }}</dt>
+                    <dd class="product__fact-values">
+                      {%- for value in option.values -%}
+                        <span class="product__fact-value{% if value.selected or option.selected_value == value %} is-selected{% endif %}">
+                          {{ value | escape }}
+                          {%- if value.selected or option.selected_value == value -%}<span class="visually-hidden"> ({{ 'products.product.selected' | t }})</span>{%- endif -%}
+                        </span>
+                      {%- endfor -%}
+                    </dd>
+                  </div>
+                {%- endfor -%}
+              </dl>
+            </div>
           {%- endunless -%}
-        </dl>
+        </div>
       </div>
     {%- endif -%}
     {%- if show_policies -%}

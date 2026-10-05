@@ -11,7 +11,7 @@
     assign show_description = true
   endif
   assign show_specifications = false
-  if product.vendor != blank or product.type != blank or product.has_only_default_variant == false
+  if product != blank
     assign show_specifications = true
   endif
   assign show_policies = false
@@ -447,11 +447,17 @@
             </pickup-availability>
 
           {%- when 'share' -%}
+            {%- liquid
+              assign product_share_url = shop.url | append: product.url
+              assign product_share_image = featured_media.preview_image | default: product.featured_image
+            -%}
             <div class="product__share" {{ block.shopify_attributes }}>
               <span>{{ 'products.product.share' | t }}</span>
-              <a href="//www.facebook.com/sharer.php?u={{ shop.url | append: product.url | url_encode }}" target="_blank" rel="noopener nofollow">{{ 'general.social.share_on_facebook' | t }}</a>
-              <a href="//twitter.com/share?url={{ shop.url | append: product.url | url_encode }}&text={{ product.title | url_encode }}" target="_blank" rel="noopener nofollow">{{ 'general.social.share_on_x' | t }}</a>
-              <a href="//pinterest.com/pin/create/button/?url={{ shop.url | append: product.url | url_encode }}&media={{ product.featured_image | image_url: width: 1200 | url_encode }}&description={{ product.title | url_encode }}" target="_blank" rel="noopener nofollow">{{ 'general.social.share_on_pinterest' | t }}</a>
+              <a class="product__share-link" href="https://www.facebook.com/sharer.php?u={{ product_share_url | url_encode }}" target="_blank" rel="noopener nofollow" aria-label="{{ 'general.social.share_on_facebook' | t | escape }}" title="{{ 'general.social.share_on_facebook' | t | escape }}">{%- render 'icon-social', icon: 'facebook' -%}</a>
+              <a class="product__share-link" href="https://twitter.com/share?url={{ product_share_url | url_encode }}&amp;text={{ product.title | url_encode }}" target="_blank" rel="noopener nofollow" aria-label="{{ 'general.social.share_on_x' | t | escape }}" title="{{ 'general.social.share_on_x' | t | escape }}">{%- render 'icon-social', icon: 'x' -%}</a>
+              {%- if product_share_image != blank -%}
+                <a class="product__share-link" href="https://pinterest.com/pin/create/button/?url={{ product_share_url | url_encode }}&amp;media={{ product_share_image | image_url: width: 1200 | url_encode }}&amp;description={{ product.title | url_encode }}" target="_blank" rel="noopener nofollow" aria-label="{{ 'general.social.share_on_pinterest' | t | escape }}" title="{{ 'general.social.share_on_pinterest' | t | escape }}">{%- render 'icon-social', icon: 'pinterest' -%}</a>
+              {%- endif -%}
             </div>
 
           {%- when 'collapsible_tab' -%}
@@ -1054,14 +1060,36 @@
   }
 
   .product--main .product__share {
-    gap: 6px 16px;
+    gap: 10px;
     font-size: 0.75rem;
   }
 
-  .product--main .product__share a {
+  .product--main .product__share > span {
+    margin-inline-end: 8px;
+  }
+
+  .product--main .product__share .product__share-link {
     display: inline-flex;
     align-items: center;
-    min-height: 28px;
+    justify-content: center;
+    width: 44px;
+    min-height: 44px;
+    border: 1px solid var(--color-border);
+    border-radius: 0;
+    color: var(--color-foreground);
+    transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+  }
+
+  .product--main .product__share .product__share-link:hover {
+    background: var(--color-foreground);
+    color: var(--color-background);
+    border-color: var(--color-foreground);
+  }
+
+  .product--main .product__share-link svg {
+    width: 19px;
+    height: 19px;
+    fill: currentColor;
   }
 
   .product--main .product__policies {
@@ -1333,6 +1361,32 @@
   .product--main .product__fact-list {
     margin: 0;
     font-size: 0.9rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .product--main .product__detail-summary {
+    max-width: 38ch;
+    color: var(--color-muted);
+    font-size: 0.94rem;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+  }
+
+  .product--main .product__information {
+    display: grid;
+    align-content: start;
+    gap: 28px;
+    min-width: 0;
+  }
+
+  .product--main .product__options-heading {
+    margin-bottom: 14px;
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+    text-transform: uppercase;
+    letter-spacing: 0.035em;
   }
 
   .product--main .product__fact-list > div {
@@ -1354,6 +1408,53 @@
   .product--main .product__fact-list dd {
     margin: 0;
     overflow-wrap: anywhere;
+  }
+
+  .product--main .product__fact-sku {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+
+  .product--main .product__fact-availability {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .product--main .product__fact-availability::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    background: var(--color-accent);
+  }
+
+  .product--main .product__fact-availability.is-unavailable::before {
+    background: var(--color-muted);
+  }
+
+  .product--main .product__fact-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .product--main .product__fact-value {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    min-height: 30px;
+    padding: 5px 9px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-size: 0.78rem;
+    overflow-wrap: anywhere;
+  }
+
+  .product--main .product__fact-value.is-selected {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-accent-text);
   }
 
   .product--main .product__policy-summaries {
