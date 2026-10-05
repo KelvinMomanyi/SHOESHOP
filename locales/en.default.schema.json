@@ -492,7 +492,10 @@
       "s029": "Shown when automatic complementary products are unavailable.",
       "s030": "Show vendor",
       "s031": "Show price",
-      "s032": "Show product link"
+      "s032": "Show product link",
+      "s033": "Enable product scroll effects",
+      "s034": "Keep the product gallery visible while scrolling",
+      "s035": "Applies on desktop when the gallery fits below the header."
     },
     "main_search": {
       "s001": "Main search",

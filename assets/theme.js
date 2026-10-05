@@ -41,7 +41,7 @@
 
     loadScopedModule(
       scope,
-      '[data-hover-preview], [data-tilt-stack], [data-scroll-hero], [data-image-spread], [data-alexandra-loader], [data-featured-product-stack], [data-collection-directory], [data-collection-edit], [data-editorial-motion], [data-article-reader]',
+      '[data-hover-preview], [data-tilt-stack], [data-scroll-hero], [data-image-spread], [data-alexandra-loader], [data-featured-product-stack], [data-collection-directory], [data-collection-edit], [data-editorial-motion], [data-article-reader], [data-product-editorial]',
       assets.motionEffects,
       'initializeMotionEffects'
     );
@@ -57,7 +57,7 @@
   window.TreadoraTheme = { initialize: initializeTheme };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeTheme);
+    document.addEventListener('DOMContentLoaded', () => initializeTheme());
   } else {
     initializeTheme();
   }
