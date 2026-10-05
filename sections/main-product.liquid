@@ -35,6 +35,7 @@
     <span aria-current="page">{{ product.title | escape }}</span>
   </nav>
 
+  <div class="product__overview">
   <div class="product__media-gallery{% if product.media.size > 1 %} product__media-gallery--has-thumbnails{% endif %}">
     <div class="product__gallery-heading">
       <span>{{ 'products.product.gallery' | t }}</span>
@@ -494,6 +495,7 @@
       {{ product.variants | json }}
     </script>
   </div>
+  </div>
 
   {%- render 'product-details-tabs', product: product, section: section, show_description: show_description, show_specifications: show_specifications, show_policies: show_policies -%}
 </section>
@@ -502,10 +504,19 @@
   .product.product--main {
     position: relative;
     font-family: var(--font-body);
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 28px;
+    padding-block: 24px clamp(72px, 9vw, 132px);
+  }
+
+  .product--main .product__overview {
+    position: relative;
+    display: grid;
     grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
     column-gap: clamp(28px, 4vw, 64px);
     row-gap: 28px;
-    padding-block: 24px clamp(72px, 9vw, 132px);
+    align-items: start;
+    min-width: 0;
   }
 
   .product__complementary {
@@ -1417,7 +1428,8 @@
   }
 
   @media (max-width: 989px) {
-    .product.product--main {
+    .product.product--main,
+    .product--main .product__overview {
       grid-template-columns: minmax(0, 1fr);
       row-gap: 28px;
     }
@@ -1432,6 +1444,10 @@
     .product.product--main {
       width: min(100% - 32px, var(--page-width));
       padding-top: 14px;
+      row-gap: 22px;
+    }
+
+    .product--main .product__overview {
       row-gap: 22px;
     }
 
