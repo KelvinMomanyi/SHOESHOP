@@ -2096,11 +2096,8 @@ body.drawer-open .site-header {
 }
 
 .product-card__image {
-  transition: transform 400ms ease;
-}
-
-.product-card:hover .product-card__image {
-  transform: scale(1.04);
+  object-fit: contain;
+  transform: none;
 }
 
 .product-card__badge {
