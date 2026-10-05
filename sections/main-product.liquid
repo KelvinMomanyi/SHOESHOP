@@ -22,7 +22,7 @@
   assign review_count = product.metafields.reviews.rating_count.value | default: 0
 -%}
 
-<section class="product product--main page-width" data-section-id="{{ section.id }}" data-product-url="{{ product.url }}" data-product-editorial data-motion-enabled="{{ section.settings.enable_scroll_motion }}" data-sticky-gallery="{{ section.settings.enable_sticky_gallery }}">
+<section id="ProductMain-{{ product.id }}" class="product product--main page-width" data-section-id="{{ section.id }}" data-product-url="{{ product.url }}" data-product-editorial data-motion-enabled="{{ section.settings.enable_scroll_motion }}" data-sticky-gallery="{{ section.settings.enable_sticky_gallery }}">
   <nav class="product__breadcrumb" aria-label="{{ 'accessibility.breadcrumbs' | t }}">
     <a href="{{ routes.root_url }}">{{ 'general.navigation.home' | t }}</a>
     <span aria-hidden="true">/</span>
@@ -513,6 +513,7 @@
     grid-template-columns: minmax(0, 1fr);
     row-gap: 28px;
     padding-block: 24px clamp(72px, 9vw, 132px);
+    scroll-margin-top: var(--product-sticky-top, 130px);
   }
 
   .product--main .product__overview {

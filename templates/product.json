@@ -93,6 +93,15 @@
       ],
       "settings": {}
     },
+    "spotlight": {
+      "type": "product-spotlight",
+      "settings": {
+        "kicker": "The product edit",
+        "heading": "From another angle.",
+        "show_button": true,
+        "enable_scroll_reveal": true
+      }
+    },
     "related": {
       "type": "product-recommendations",
       "settings": {
@@ -103,6 +112,7 @@
   },
   "order": [
     "main",
+    "spotlight",
     "related"
   ]
 }

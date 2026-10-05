@@ -103,6 +103,12 @@
     }
   },
   "sections": {
+    "product_spotlight": {
+      "default_heading": "From another angle.",
+      "main_view": "The full picture",
+      "detail_view": "Another perspective",
+      "back_to_product": "Back to product"
+    },
     "collection_edit": {
       "collections": "Collections",
       "browse": "Explore the edit",

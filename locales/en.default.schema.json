@@ -34,6 +34,19 @@
     "s032": "Used for navigation, buttons, labels, captions, and other compact interface text."
   },
   "sections": {
+    "product_spotlight": {
+      "name": "Product spotlight",
+      "kicker": "Small label",
+      "heading": "Heading",
+      "text": "Description (optional)",
+      "text_info": "Uses a short excerpt from the product description when left blank.",
+      "image": "Main image",
+      "image_info": "Uses the product's second image, then its featured image, when no image is selected.",
+      "detail_image": "Second image",
+      "detail_image_info": "Uses the product's third image, then its featured image. Repeated images are hidden.",
+      "show_button": "Show back to product button",
+      "enable_scroll_reveal": "Enable scroll reveal"
+    },
     "scroll_highlight": {
       "name": "Scroll text highlight",
       "kicker": "Small label",

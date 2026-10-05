@@ -1,0 +1,307 @@
+{%- liquid
+  assign spotlight_image = section.settings.image | default: product.images[1] | default: product.featured_image | default: product.featured_media.preview_image
+  assign detail_image = section.settings.detail_image | default: product.images[2] | default: product.featured_image
+  assign show_detail_image = false
+  if detail_image != blank and spotlight_image != blank
+    if detail_image.id != spotlight_image.id
+      assign show_detail_image = true
+    endif
+  endif
+  assign spotlight_heading = section.settings.heading | default: product.title
+  if spotlight_heading == blank
+    assign spotlight_heading = 'sections.product_spotlight.default_heading' | t
+  endif
+  assign spotlight_text = section.settings.text
+  if spotlight_text == blank
+    assign spotlight_text = product.description | replace: '</', ' </' | strip_html | strip | truncatewords: 28
+  endif
+  assign spotlight_brand = product.vendor | default: shop.name
+  assign spotlight_alt = spotlight_image.alt | default: product.title
+  assign detail_alt = detail_image.alt | default: product.title
+  assign spotlight_sizes = '(min-width: 990px) 60vw, 100vw'
+  if show_detail_image
+    assign spotlight_sizes = '(min-width: 990px) 38vw, 70vw'
+  endif
+-%}
+
+{%- if spotlight_image != blank or request.design_mode -%}
+  <section class="product-spotlight{% unless show_detail_image %} product-spotlight--single{% endunless %}" aria-labelledby="ProductSpotlightHeading-{{ section.id }}">
+    <div class="product-spotlight__inner page-width">
+      <div class="product-spotlight__masthead">
+        {%- if section.settings.kicker != blank -%}<p class="eyebrow">{{ section.settings.kicker | escape }}</p>{%- endif -%}
+        {%- if spotlight_brand != blank -%}<span>{{ spotlight_brand | escape }}</span>{%- endif -%}
+      </div>
+
+      <div class="product-spotlight__layout">
+        <div class="product-spotlight__copy">
+          <h2 id="ProductSpotlightHeading-{{ section.id }}" class="product-spotlight__heading{% if section.settings.enable_scroll_reveal %} reveal-item{% endif %}">{{ spotlight_heading | escape }}</h2>
+          {%- if spotlight_text != blank -%}
+            <p class="product-spotlight__text{% if section.settings.enable_scroll_reveal %} reveal-item{% endif %}">{{ spotlight_text | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.show_button and product != blank -%}
+            <a class="button product-spotlight__button" href="#ProductMain-{{ product.id }}">
+              {{ 'sections.product_spotlight.back_to_product' | t }}
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M6 18 18 6M6 6h12v12" stroke="currentColor" stroke-width="1.5"/></svg>
+            </a>
+          {%- endif -%}
+        </div>
+
+        <div class="product-spotlight__visuals">
+          <figure class="product-spotlight__figure product-spotlight__figure--main{% if section.settings.enable_scroll_reveal %} reveal-item{% endif %}">
+            <div class="product-spotlight__image-frame">
+              {%- render 'responsive-image', image: spotlight_image, class: 'product-spotlight__image', sizes: spotlight_sizes, loading: 'lazy', alt: spotlight_alt -%}
+            </div>
+            <figcaption><span aria-hidden="true">01</span><span>{{ 'sections.product_spotlight.main_view' | t }}</span></figcaption>
+          </figure>
+
+          {%- if show_detail_image -%}
+            <div class="product-spotlight__side">
+              <div class="product-spotlight__mark" aria-hidden="true"><svg width="100" height="100" viewBox="0 0 100 100" fill="none" focusable="false"><path d="M18 82 82 18M18 18h64v64" stroke="currentColor" stroke-width="3"/></svg></div>
+              <figure class="product-spotlight__figure product-spotlight__figure--detail{% if section.settings.enable_scroll_reveal %} reveal-item{% endif %}">
+                <div class="product-spotlight__image-frame">
+                  {%- render 'responsive-image', image: detail_image, class: 'product-spotlight__image', sizes: '(min-width: 990px) 19vw, 30vw', loading: 'lazy', alt: detail_alt -%}
+                </div>
+                <figcaption><span aria-hidden="true">02</span><span>{{ 'sections.product_spotlight.detail_view' | t }}</span></figcaption>
+              </figure>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="product-spotlight__footer">
+        <p>{{ product.title | default: spotlight_heading | escape }}</p>
+        {%- if product.type != blank -%}<span>{{ product.type | escape }}</span>{%- endif -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-spotlight {
+    background: var(--color-foreground);
+    color: var(--color-background);
+    overflow: clip;
+  }
+
+  .product-spotlight__inner {
+    padding-block: clamp(40px, 5vw, 80px);
+  }
+
+  .product-spotlight__masthead,
+  .product-spotlight__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+  }
+
+  .product-spotlight__masthead {
+    padding-top: 18px;
+    margin-bottom: 48px;
+    border-top: 1px solid var(--color-accent);
+  }
+
+  .product-spotlight__masthead > span,
+  .product-spotlight__footer > span {
+    font-family: var(--font-utility);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.045em;
+    overflow-wrap: anywhere;
+  }
+
+  .product-spotlight__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.65fr);
+    align-items: center;
+    gap: clamp(28px, 4vw, 64px);
+  }
+
+  .product-spotlight__copy,
+  .product-spotlight__visuals,
+  .product-spotlight__side {
+    min-width: 0;
+  }
+
+  .product-spotlight__heading {
+    max-width: 9ch;
+    font-size: clamp(3rem, 6.3vw, 6.8rem);
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+    text-wrap: balance;
+  }
+
+  .product-spotlight__heading::after {
+    content: '';
+    display: block;
+    width: 64px;
+    height: 4px;
+    margin-top: 32px;
+    background: var(--color-accent);
+  }
+
+  .product-spotlight__text {
+    max-width: 32ch;
+    margin-top: 28px;
+    color: color-mix(in srgb, var(--color-background) 74%, transparent);
+    font-size: 0.94rem;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+  }
+
+  .product-spotlight .product-spotlight__button {
+    display: inline-flex;
+    gap: 24px;
+    margin-top: 32px;
+    border: 1px solid var(--color-accent);
+    border-radius: 0;
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+  }
+
+  .product-spotlight .product-spotlight__button:hover {
+    border-color: var(--color-background);
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .product-spotlight__visuals {
+    display: grid;
+    grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+    align-items: end;
+    gap: 20px;
+  }
+
+  .product-spotlight__figure {
+    min-width: 0;
+    margin: 0;
+  }
+
+  .product-spotlight__image-frame {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+
+  .product-spotlight__figure--detail .product-spotlight__image-frame {
+    aspect-ratio: 1;
+  }
+
+  .product-spotlight__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-spotlight__figure figcaption {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding-top: 14px;
+    font-family: var(--font-utility);
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+
+  .product-spotlight__figure figcaption > span:first-child {
+    color: var(--color-accent);
+    flex-shrink: 0;
+  }
+
+  .product-spotlight__side {
+    display: grid;
+    align-content: end;
+    gap: clamp(24px, 5vw, 80px);
+  }
+
+  .product-spotlight__mark {
+    display: grid;
+    place-items: center;
+    width: clamp(80px, 9vw, 136px);
+    aspect-ratio: 1;
+    margin-left: auto;
+    padding: 16px;
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+  }
+
+  .product-spotlight__footer {
+    padding-top: 24px;
+    margin-top: 48px;
+    border-top: 1px solid color-mix(in srgb, var(--color-background) 24%, transparent);
+  }
+
+  .product-spotlight__footer > p {
+    font-family: var(--font-heading);
+    font-size: clamp(1.25rem, 2vw, 1.9rem);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .product-spotlight--single .product-spotlight__visuals {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .product-spotlight--single .product-spotlight__image-frame {
+    aspect-ratio: 4 / 3;
+  }
+
+  .no-js .product-spotlight .reveal-item {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-reveal-enabled .product-spotlight .reveal-item {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 989px) {
+    .product-spotlight__layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+
+    .product-spotlight__heading {
+      max-width: 12ch;
+      font-size: clamp(3.2rem, 9vw, 6rem);
+    }
+
+    .product-spotlight__text {
+      max-width: 48ch;
+    }
+
+    .product-spotlight__visuals {
+      gap: 12px;
+    }
+
+    .product-spotlight__masthead {
+      margin-bottom: 36px;
+    }
+
+    .product-spotlight__footer {
+      margin-top: 32px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.product_spotlight.name",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "t:sections.product_spotlight.kicker", "default": "The product edit" },
+    { "type": "text", "id": "heading", "label": "t:sections.product_spotlight.heading", "default": "From another angle." },
+    { "type": "textarea", "id": "text", "label": "t:sections.product_spotlight.text", "info": "t:sections.product_spotlight.text_info" },
+    { "type": "image_picker", "id": "image", "label": "t:sections.product_spotlight.image", "info": "t:sections.product_spotlight.image_info" },
+    { "type": "image_picker", "id": "detail_image", "label": "t:sections.product_spotlight.detail_image", "info": "t:sections.product_spotlight.detail_image_info" },
+    { "type": "checkbox", "id": "show_button", "label": "t:sections.product_spotlight.show_button", "default": true },
+    { "type": "checkbox", "id": "enable_scroll_reveal", "label": "t:sections.product_spotlight.enable_scroll_reveal", "default": true }
+  ],
+  "presets": [{ "name": "t:sections.product_spotlight.name" }]
+}
+{% endschema %}
