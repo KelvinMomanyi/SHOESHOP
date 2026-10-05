@@ -6,6 +6,10 @@
     assign panel_count = 1
   endif
   assign panel_height = panel_count | times: 100
+  assign hero_priority = 'auto'
+  if section.index == 1 or section.index == blank
+    assign hero_priority = 'high'
+  endif
 -%}
 
 <section class="editorial-hero section-{{ section.id }}" data-scroll-hero style="--hero-height: {{ panel_height }}svh;">
@@ -33,7 +37,7 @@
           assign panel_priority = 'auto'
           if forloop.first
             assign panel_loading = 'eager'
-            assign panel_priority = 'high'
+            assign panel_priority = hero_priority
           endif
         -%}
 
@@ -85,7 +89,7 @@
               class: 'editorial-hero__image',
               sizes: '100vw',
               loading: 'eager',
-              fetchpriority: 'high',
+              fetchpriority: hero_priority,
               alt: section.settings.heading
             -%}
           {%- else -%}

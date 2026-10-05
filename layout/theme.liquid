@@ -31,7 +31,6 @@
       assign utility_font_url = utility_font | font_url
     -%}
 
-    <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
     {%- unless body_font.system? and heading_font.system? and utility_font.system? -%}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     {%- endunless -%}
@@ -81,7 +80,7 @@
       }
     </style>
 
-    {{ 'theme.css' | asset_url | stylesheet_tag }}
+    {{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}
     <script>
       document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
       window.Treadora = {
