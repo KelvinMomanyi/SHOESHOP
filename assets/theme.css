@@ -53,6 +53,14 @@ button {
   cursor: pointer;
 }
 
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"],
+[role="button"] {
+  border-radius: 0;
+}
+
 button:disabled {
   cursor: not-allowed;
   opacity: 0.55;
@@ -177,7 +185,7 @@ body:not(.template-index) .main-content {
   background: var(--color-foreground);
   color: var(--color-background);
   padding: 10px 14px;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
 .skip-link:focus {
@@ -221,7 +229,7 @@ body:not(.template-index) .main-content {
   min-height: 48px;
   padding: 13px 20px;
   border: 1px solid var(--color-button);
-  border-radius: 6px;
+  border-radius: 0;
   background: var(--color-button);
   color: var(--color-button-text);
   font-weight: 700;
@@ -4695,6 +4703,11 @@ button,
 
 .shopify-payment-button__button {
   border-radius: 0 !important;
+}
+
+shopify-accelerated-checkout,
+shopify-accelerated-checkout-cart {
+  --shopify-accelerated-checkout-button-border-radius: 0px;
 }
 
 small,
