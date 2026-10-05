@@ -144,7 +144,7 @@
   bottom: 50%;
   width: calc(var(--featured-stack-progress, 0) * 96px);
   height: 1px;
-  background: #12100e;
+  background: var(--color-accent);
   transform: translateY(50%);
 }
 
@@ -188,4 +188,3 @@
 .no-js .featured-products__stack-progress {
   display: none;
 }
-

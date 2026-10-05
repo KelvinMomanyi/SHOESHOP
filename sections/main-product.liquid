@@ -952,8 +952,8 @@
   }
 
   .product--main .option-values input:checked + .option-value {
-    background: var(--color-foreground);
-    color: var(--color-background);
+    background: var(--color-accent);
+    color: var(--color-accent-text);
   }
 
   .product--main .option-value--unavailable {
@@ -1081,10 +1081,11 @@
     transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
   }
 
-  .product--main .product__share .product__share-link:hover {
-    background: var(--color-foreground);
-    color: var(--color-background);
-    border-color: var(--color-foreground);
+  .product--main .product__share .product__share-link:hover,
+  .product--main .product__share .product__share-link:focus-visible {
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    border-color: var(--color-accent);
   }
 
   .product--main .product__share-link svg {
@@ -1241,13 +1242,23 @@
     transition: background 180ms ease;
   }
 
-  .product--main .product__gallery-arrow:hover {
+  .product--main .product__gallery-arrow:hover,
+  .product--main .product__gallery-arrow:focus-visible {
     background: var(--color-accent);
     color: var(--color-accent-text);
   }
 
   .product--main .product__media-thumbnail {
     position: relative;
+  }
+
+  .product--main .product__media-thumbnail.is-active::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 4px;
+    background: var(--color-accent);
+    pointer-events: none;
   }
 
   .product--main .product__quantity-control {
@@ -1271,8 +1282,10 @@
     font-size: 1.1rem;
   }
 
-  .product--main .product__quantity-control button:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--color-border) 35%, transparent);
+  .product--main .product__quantity-control button:hover:not(:disabled),
+  .product--main .product__quantity-control button:focus-visible:not(:disabled) {
+    background: var(--color-accent);
+    color: var(--color-accent-text);
   }
 
   .product--main .product__quantity-control:has(button:not([hidden])) .quantity-input {
@@ -1327,8 +1340,13 @@
   }
 
   .product--main .product__detail-nav a[aria-selected='true'],
-  .product--main .product__detail-nav a:hover {
-    border-bottom-color: var(--color-foreground);
+  .product--main .product__detail-nav a:hover,
+  .product--main .product__detail-nav a:focus-visible {
+    border-bottom-color: var(--color-accent);
+  }
+
+  .product--main .product__detail-nav a[aria-selected='true'] {
+    font-weight: 700;
   }
 
   .product--main .product__detail-panel {

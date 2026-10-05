@@ -124,13 +124,13 @@
         "type": "color",
         "id": "color_button",
         "label": "t:settings_schema.s021",
-        "default": "#111111"
+        "default": "#a6bd2f"
       },
       {
         "type": "color",
         "id": "color_button_text",
         "label": "t:settings_schema.s022",
-        "default": "#ffffff"
+        "default": "#111111"
       }
     ]
   },

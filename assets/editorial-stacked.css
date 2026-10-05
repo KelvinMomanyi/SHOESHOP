@@ -41,8 +41,8 @@
 }
 
 .editorial-hero__dots span.is-active {
-  background: #f0ebe4;
-  box-shadow: 0 0 16px rgba(240, 235, 228, 0.35);
+  background: var(--color-accent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--color-accent) 35%, transparent);
   transform: scale(1.9);
 }
 
@@ -250,4 +250,3 @@
     max-width: 100%;
   }
 }
-

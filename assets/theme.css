@@ -249,9 +249,30 @@ body:not(.template-index) .main-content {
 }
 
 .button--light {
-  background: #fff;
-  color: #111;
-  border-color: #fff;
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  border-color: var(--color-accent);
+}
+
+.button--secondary:hover:not(:disabled),
+.button--secondary:focus-visible,
+.button--ghost:hover:not(:disabled),
+.button--ghost:focus-visible {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  border-color: var(--color-accent);
+}
+
+.button--light:hover {
+  background: color-mix(in srgb, var(--color-accent) 88%, var(--color-foreground));
+  border-color: color-mix(in srgb, var(--color-accent) 88%, var(--color-foreground));
+}
+
+.button:disabled {
+  background: color-mix(in srgb, var(--color-border) 80%, var(--color-surface));
+  color: var(--color-muted);
+  border-color: var(--color-border);
+  transform: none;
 }
 
 .button--small {
@@ -723,8 +744,8 @@ body.drawer-open .site-header {
 
 .template-index .site-header__mark,
 .template-index .site-header__cart-count {
-  background: #fff;
-  color: #111;
+  background: var(--color-accent);
+  color: var(--color-accent-text);
 }
 
 .site-header__name {
@@ -795,7 +816,7 @@ body.drawer-open .site-header {
   bottom: calc(50% - 18px);
   left: 0;
   height: 1px;
-  background: currentColor;
+  background: var(--color-accent);
   opacity: 0;
   transform: scaleX(0.35);
   transform-origin: center;
@@ -1354,7 +1375,7 @@ body.drawer-open .site-header {
   bottom: 7px;
   left: 6px;
   height: 1px;
-  background: currentColor;
+  background: var(--color-accent);
   opacity: 0;
   transform: scaleX(0.4);
   transition: opacity 180ms ease, transform 180ms ease;
@@ -1444,8 +1465,8 @@ body.drawer-open .site-header {
   padding-inline: 4px;
   border: 1px solid var(--color-background);
   border-radius: 0;
-  background: var(--color-foreground);
-  color: var(--color-background);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
   font-size: 0.68rem;
   font-weight: 800;
   line-height: 1;
@@ -1843,8 +1864,8 @@ body.drawer-open .site-header {
   height: 28px;
   padding-inline: 8px;
   border-radius: 0;
-  background: var(--color-foreground);
-  color: var(--color-background);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
   font-size: 0.8rem;
 }
 
@@ -2144,8 +2165,11 @@ body.drawer-open .site-header {
 }
 
 .collection-row:hover,
-.hover-row:hover {
-  opacity: 0.72;
+.collection-row:focus-visible,
+.hover-row:hover,
+.hover-row:focus-visible {
+  opacity: 1;
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
   transform: translateX(6px);
 }
 
@@ -2295,7 +2319,7 @@ body.drawer-open .site-header {
 }
 
 .hover-row:hover {
-  opacity: 0.5;
+  opacity: 1;
   transform: none;
 }
 
@@ -2743,8 +2767,8 @@ body.drawer-open .site-header {
 
 .option-values input:checked + .option-value {
   border-color: var(--color-foreground);
-  background: var(--color-foreground);
-  color: var(--color-background);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
   box-shadow: inset 0 0 0 1px var(--color-foreground);
 }
 
@@ -3007,8 +3031,8 @@ body.drawer-open .site-header {
   height: 19px;
   padding-inline: 5px;
   border-radius: 999px;
-  background: var(--color-foreground);
-  color: var(--color-background);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
   font-family: var(--font-body);
   font-size: 0.68rem;
   font-style: normal;
@@ -3062,8 +3086,8 @@ body.drawer-open .site-header {
 
 .facets__group[open] summary {
   border-color: var(--color-foreground);
-  background: var(--color-foreground);
-  color: var(--color-background);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
 }
 
 .facets__group[open] summary::after {
@@ -3127,6 +3151,11 @@ body.drawer-open .site-header {
 
 .facet-checkbox input:checked::before {
   transform: scale(1);
+}
+
+.facet-checkbox input:checked {
+  border-color: var(--color-foreground);
+  background: var(--color-accent);
 }
 
 .facet-checkbox span {
@@ -3199,10 +3228,10 @@ body.drawer-open .site-header {
   gap: 8px;
   min-height: 30px;
   padding: 5px 9px;
-  border: 1px solid var(--color-border);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 60%, var(--color-border));
   border-radius: 999px;
-  background: color-mix(in srgb, var(--color-surface) 72%, var(--color-background));
-  color: var(--color-muted);
+  background: color-mix(in srgb, var(--color-accent) 16%, var(--color-background));
+  color: var(--color-foreground);
   font-size: 0.82rem;
   font-weight: 700;
 }
@@ -4258,6 +4287,11 @@ body.drawer-open .site-header {
   margin-block: 10px 14px;
 }
 
+.newsletter-section .eyebrow {
+  color: var(--color-accent);
+  opacity: 1;
+}
+
 .newsletter-section p:not(.eyebrow) {
   color: rgba(255, 255, 255, 0.74);
   max-width: 520px;
@@ -4295,6 +4329,7 @@ body.drawer-open .site-header {
   position: sticky;
   bottom: 0;
   z-index: 0;
+  border-top: 1px solid var(--color-accent);
   background: #111;
   color: #fff;
 }
@@ -4312,6 +4347,7 @@ body.drawer-open .site-header {
   font-family: var(--font-heading);
   font-size: 3rem;
   line-height: 1;
+  color: var(--color-accent);
 }
 
 .site-footer__logo {
@@ -4348,6 +4384,19 @@ body.drawer-open .site-header {
   height: 38px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 6px;
+  transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.site-footer__nav a:hover,
+.site-footer__nav a:focus-visible {
+  color: var(--color-accent);
+}
+
+.site-footer__social a:hover,
+.site-footer__social a:focus-visible {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  border-color: var(--color-accent);
 }
 
 .site-footer__social svg {
@@ -4652,8 +4701,9 @@ body.drawer-open .site-header {
 }
 
 .pagination__item--current {
-  background: var(--color-foreground);
-  color: var(--color-background);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  border-color: var(--color-foreground);
 }
 
 /* Square-corner system for cards, media, and controls. */
