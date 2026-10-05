@@ -969,6 +969,8 @@ const initProductEditorials = () => {
     root.dataset.productEditorialReady = 'true';
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const headers = [...document.querySelectorAll('.site-header, .announcement-bar')];
+    const galleryChrome = [...gallery.children].filter((element) => !element.classList.contains('product__media-stage'));
+    const captions = [...gallery.querySelectorAll('.product-media__caption')];
     const reveals = [...root.querySelectorAll('.product__policies, .product__complementary, .product__detail-nav, .product__detail-intro, .product__detail-panel > .rte, .product__fact-list, .product__policy-summaries')];
     reveals.forEach((element) => element.classList.add('product-reveal'));
     const revealObserver = new IntersectionObserver((entries) => {
@@ -979,8 +981,8 @@ const initProductEditorials = () => {
       });
     }, { threshold: 0, rootMargin: '0px 0px -4% 0px' });
     let animate = null;
-    let drift = false;
     let top = 110;
+    let layoutKey = '';
 
     const refresh = ({ width, height }) => {
       let headerBottom = 0;
@@ -990,21 +992,23 @@ const initProductEditorials = () => {
           headerBottom = Math.max(headerBottom, header.getBoundingClientRect().bottom);
         }
       });
-      top = Math.max(18, headerBottom + 18);
+      top = Math.max(18, Math.ceil(headerBottom) + 18);
       const desktop = width >= 990 && height >= 600;
       const nextAnimate = !motion.matches && root.dataset.motionEnabled !== 'false';
-      setCustomProperty(root, '--product-sticky-top', `${top}px`);
-      if (!root.style.getPropertyValue('--product-media-height')) {
-        setCustomProperty(root, '--product-media-height', '400px');
+      const gap = parseFloat(getComputedStyle(gallery).rowGap) || 0;
+      const captionHeight = Math.max(0, ...captions.map((caption) => caption.offsetHeight));
+      const chromeHeight = galleryChrome.reduce((total, element) => total + element.offsetHeight, 0)
+        + captionHeight + gap * Math.max(0, gallery.children.length - 1) + 2;
+      const nextLayoutKey = `${width}:${Math.floor(height)}:${top}:${chromeHeight}:${root.dataset.stickyGallery}`;
+      if (layoutKey !== nextLayoutKey) {
+        layoutKey = nextLayoutKey;
+        const mediaHeight = Math.max(260, Math.min(740, Math.floor(height - top - chromeHeight - 24)));
+        setCustomProperty(root, '--product-sticky-top', `${top}px`);
+        setCustomProperty(root, '--product-media-height', `${mediaHeight}px`);
+        toggleClass(root, 'is-product-desktop', desktop);
+        toggleClass(root, 'is-product-sticky', desktop && root.dataset.stickyGallery !== 'false'
+          && mediaHeight + chromeHeight <= height - top - 18);
       }
-      toggleClass(root, 'is-product-desktop', desktop);
-      const content = gallery.querySelector('.product-media--active .product-media__content');
-      if (!content) return;
-      const galleryChrome = Math.max(0, gallery.getBoundingClientRect().height - content.getBoundingClientRect().height);
-      setCustomProperty(root, '--product-media-height', `${Math.max(260, Math.min(740, height - top - galleryChrome - 18))}px`);
-      toggleClass(root, 'is-product-sticky', desktop && root.dataset.stickyGallery !== 'false'
-        && gallery.getBoundingClientRect().height <= height - top - 18);
-      drift = desktop && nextAnimate;
       if (animate !== nextAnimate) {
         animate = nextAnimate;
         revealObserver.disconnect();
@@ -1020,10 +1024,6 @@ const initProductEditorials = () => {
           });
         }
       }
-      if (!drift) {
-        setCustomProperty(root, '--product-image-y', '0px');
-        setCustomProperty(root, '--product-image-scale', '1');
-      }
       if (!animate) setCustomProperty(root, '--product-scroll-progress', '0');
     };
 
@@ -1035,13 +1035,10 @@ const initProductEditorials = () => {
       const distance = Math.max(1, infoRect.height - (height - top - 18));
       const progress = clamp((top - infoRect.top) / distance, 0, 1);
       setCustomProperty(root, '--product-scroll-progress', progress.toFixed(4));
-      if (!drift) return;
-      setCustomProperty(root, '--product-image-y', `${(-progress * 12).toFixed(2)}px`);
-      setCustomProperty(root, '--product-image-scale', lerp(1, 1.025, progress).toFixed(4));
     };
 
     const observer = new ResizeObserver(requestResizeEffects);
-    [gallery, info, ...headers].forEach((element) => observer.observe(element));
+    [info, ...headers, ...galleryChrome, ...captions].forEach((element) => observer.observe(element));
     motion.addEventListener('change', requestResizeEffects);
     registerScrollEffect({
       refresh,
