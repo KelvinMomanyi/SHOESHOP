@@ -16,9 +16,9 @@
           <div class="contact-editorial__topics">
             <p>{{ 'general.contact.here_to_help' | t }}</p>
             <ul role="list">
-              <li><span aria-hidden="true">01</span>{{ 'general.contact.orders' | t }}</li>
-              <li><span aria-hidden="true">02</span>{{ 'general.contact.sizing' | t }}</li>
-              <li><span aria-hidden="true">03</span>{{ 'general.contact.partnerships' | t }}</li>
+              <li>{{ 'general.contact.orders' | t }}</li>
+              <li>{{ 'general.contact.sizing' | t }}</li>
+              <li>{{ 'general.contact.partnerships' | t }}</li>
             </ul>
           </div>
           <span class="contact-editorial__mark" aria-hidden="true">&searr;</span>
@@ -42,15 +42,15 @@
           {%- endif -%}
 
           <div class="contact-editorial__field">
-            <label for="ContactName-{{ section.id }}"><span aria-hidden="true">01</span>{{ 'general.contact.name' | t }} <span class="contact-editorial__optional">{{ 'general.contact.optional' | t }}</span></label>
+            <label for="ContactName-{{ section.id }}">{{ 'general.contact.name' | t }} <span class="contact-editorial__optional">{{ 'general.contact.optional' | t }}</span></label>
             <input id="ContactName-{{ section.id }}" class="field__input" type="text" name="contact[name]" value="{% if form.name %}{{ form.name | escape }}{% elsif customer %}{{ customer.name | escape }}{% endif %}" autocomplete="name">
           </div>
           <div class="contact-editorial__field">
-            <label for="ContactEmail-{{ section.id }}"><span aria-hidden="true">02</span>{{ 'general.contact.email' | t }} <span aria-hidden="true">*</span></label>
+            <label for="ContactEmail-{{ section.id }}">{{ 'general.contact.email' | t }} <span aria-hidden="true">*</span></label>
             <input id="ContactEmail-{{ section.id }}" class="field__input" type="email" name="contact[email]" value="{% if form.email %}{{ form.email | escape }}{% elsif customer %}{{ customer.email | escape }}{% endif %}" autocomplete="email" autocorrect="off" autocapitalize="off" required{% if form.errors contains 'email' %} aria-invalid="true" aria-describedby="ContactErrors-{{ section.id }}"{% endif %}>
           </div>
           <div class="contact-editorial__field">
-            <label for="ContactMessage-{{ section.id }}"><span aria-hidden="true">03</span>{{ 'general.contact.message' | t }} <span aria-hidden="true">*</span></label>
+            <label for="ContactMessage-{{ section.id }}">{{ 'general.contact.message' | t }} <span aria-hidden="true">*</span></label>
             <textarea id="ContactMessage-{{ section.id }}" class="field__input" name="contact[body]" rows="6" required{% if form.errors contains 'body' %} aria-invalid="true" aria-describedby="ContactErrors-{{ section.id }}"{% endif %}>{{ form.body | escape }}</textarea>
           </div>
           <button class="button contact-editorial__submit" type="submit">{{ 'general.contact.send_message' | t }} <span aria-hidden="true">&nearr;</span></button>
@@ -132,16 +132,8 @@
   }
 
   .contact-editorial__topics li {
-    display: flex;
-    align-items: center;
-    gap: 20px;
     padding-block: 14px;
     border-top: 1px solid var(--color-border);
-  }
-
-  .contact-editorial__topics li span {
-    color: var(--color-muted);
-    font-size: 10px;
   }
 
   .contact-editorial__mark {
@@ -191,16 +183,11 @@
   .contact-editorial__field label {
     display: flex;
     align-items: baseline;
-    gap: 12px;
+    gap: 6px;
     margin-bottom: 10px;
     font-family: var(--font-utility);
     font-size: 12px;
     font-weight: 500;
-  }
-
-  .contact-editorial__field label > span:first-child {
-    color: var(--color-muted);
-    font-size: 10px;
   }
 
   .contact-editorial__field .contact-editorial__optional {

@@ -10,6 +10,7 @@ html {
   background: var(--color-background);
   color: var(--color-foreground);
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -66,7 +67,7 @@ button:disabled {
   opacity: 0.55;
 }
 
-body.drawer-open {
+html.drawer-open {
   overflow: hidden;
 }
 

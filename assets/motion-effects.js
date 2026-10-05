@@ -8,7 +8,7 @@ let scrollTicking = false;
 let resizeTicking = false;
 
 const getViewport = () => ({
-  width: document.documentElement.clientWidth || window.innerWidth,
+  width: document.documentElement.getBoundingClientRect().width || window.innerWidth,
   height: window.visualViewport?.height || document.documentElement.clientHeight || window.innerHeight
 });
 

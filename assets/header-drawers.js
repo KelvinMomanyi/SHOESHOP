@@ -17,7 +17,9 @@ export const initializeHeaderDrawers = () => {
   };
 
   const syncDrawerState = () => {
-    document.body.classList.toggle('drawer-open', Boolean(document.querySelector('[data-modal-drawer][open]')));
+    const drawerOpen = Boolean(document.querySelector('[data-modal-drawer][open]'));
+    document.documentElement.classList.toggle('drawer-open', drawerOpen);
+    document.body.classList.toggle('drawer-open', drawerOpen);
   };
 
   const focusDrawer = (details) => {
@@ -134,10 +136,10 @@ export const initializeHeaderDrawers = () => {
 
       if (event.shiftKey && (document.activeElement === firstElement || focusIsOutside)) {
         event.preventDefault();
-        lastElement.focus();
+        lastElement.focus({ preventScroll: true });
       } else if (!event.shiftKey && (document.activeElement === lastElement || focusIsOutside)) {
         event.preventDefault();
-        firstElement.focus();
+        firstElement.focus({ preventScroll: true });
       }
     });
   }
@@ -151,4 +153,3 @@ export const initializeHeaderDrawers = () => {
     window.requestAnimationFrame(() => openSearch.querySelector('[data-search-input]')?.focus());
   }
 };
-
