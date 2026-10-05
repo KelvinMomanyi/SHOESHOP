@@ -1,0 +1,10 @@
+{
+  "name": "treadora-theme",
+  "private": true,
+  "scripts": {
+    "build:assets": "node scripts/build-theme-assets.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.1"
+  }
+}

@@ -307,7 +307,7 @@
 
       let drawersPromise;
       const loadDrawers = () => {
-        drawersPromise ||= import("{{ 'header-drawers.js' | asset_url }}")
+        drawersPromise ||= import("{{ 'header-drawers.min.js' | asset_url }}")
           .then(({ initializeHeaderDrawers }) => initializeHeaderDrawers())
           .catch(() => {
             drawersPromise = null;
@@ -326,7 +326,7 @@
       root.querySelectorAll('[data-predictive-search]').forEach((form) => {
         let predictivePromise;
         const loadPredictiveSearch = () => {
-          predictivePromise ||= import("{{ 'predictive-search.js' | asset_url }}")
+          predictivePromise ||= import("{{ 'predictive-search.min.js' | asset_url }}")
             .then(({ initializePredictiveSearch }) => initializePredictiveSearch(form))
             .catch(() => {
               predictivePromise = null;

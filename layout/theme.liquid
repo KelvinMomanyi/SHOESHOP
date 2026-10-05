@@ -28,17 +28,19 @@
       assign utility_font_bold_italic = utility_font_bold | font_modify: 'style', 'italic'
       assign body_font_url = body_font | font_url
       assign heading_font_url = heading_font | font_url
+      assign heading_preload_font = heading_font_bold | default: heading_font
+      assign heading_preload_url = heading_preload_font | font_url
       assign utility_font_url = utility_font | font_url
     -%}
 
-    {%- unless body_font.system? and heading_font.system? and utility_font.system? -%}
+    {%- if body_font_url contains 'fonts.shopifycdn.com' or heading_preload_url contains 'fonts.shopifycdn.com' or utility_font_url contains 'fonts.shopifycdn.com' -%}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
-    {%- endunless -%}
+    {%- endif -%}
     {%- unless body_font.system? -%}
       {{ body_font_url | preload_tag: as: 'font', type: 'font/woff2' }}
     {%- endunless -%}
-    {%- unless heading_font.system? or heading_font_url == body_font_url -%}
-      {{ heading_font_url | preload_tag: as: 'font', type: 'font/woff2' }}
+    {%- unless heading_preload_font.system? or heading_preload_url == body_font_url -%}
+      {{ heading_preload_url | preload_tag: as: 'font', type: 'font/woff2' }}
     {%- endunless -%}
 
     {{ content_for_header }}
@@ -103,13 +105,14 @@
           recommendations: {{ routes.product_recommendations_url | json }}
         },
         assets: {
-          motionEffects: {{ 'motion-effects.js' | asset_url | json }},
-          facets: {{ 'facets.js' | asset_url | json }},
-          productFeatures: {{ 'product-features.js' | asset_url | json }}
+          motionEffects: {{ 'motion-effects.min.js' | asset_url | json }},
+          collectionDirectory: {{ 'collection-directory.min.js' | asset_url | json }},
+          facets: {{ 'facets.min.js' | asset_url | json }},
+          productFeatures: {{ 'product-features.min.js' | asset_url | json }}
         }
       };
     </script>
-    <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'theme.min.js' | asset_url }}" defer="defer"></script>
   </head>
 
   <body class="template-{{ template.name | handle }}{% if settings.enable_scroll_reveal %} scroll-reveal-enabled{% endif %}">

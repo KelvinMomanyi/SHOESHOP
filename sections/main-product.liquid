@@ -1716,7 +1716,7 @@
 
 {%- if product.gift_card? -%}
   <script type="module">
-    import("{{ 'form-enhancements.js' | asset_url }}").then(({ initializeFormEnhancements }) => {
+    import("{{ 'form-enhancements.min.js' | asset_url }}").then(({ initializeFormEnhancements }) => {
       window.TreadoraFormEnhancements = { initialize: initializeFormEnhancements };
       initializeFormEnhancements(document);
     });
