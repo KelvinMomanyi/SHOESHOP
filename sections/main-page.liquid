@@ -14,7 +14,8 @@
           image: section.settings.image,
           class: 'media-frame__image',
           sizes: '(min-width: 990px) 80vw, 100vw',
-          loading: 'eager'
+          loading: 'eager',
+          fetchpriority: 'high'
         -%}
       </div>
     {%- endif -%}

@@ -39,6 +39,7 @@
             class: 'article-editorial__cover-image',
             sizes: '(min-width: 1400px) 1360px, 100vw',
             loading: 'eager',
+            fetchpriority: 'high',
             alt: cover_alt
           -%}
           <span class="article-editorial__cover-label" aria-hidden="true">{{ blog.title | escape }} / {{ article.tags.first | default: article.title | escape }}</span>

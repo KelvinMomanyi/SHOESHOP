@@ -6,6 +6,13 @@ const styleCache = new WeakMap();
 let scrollEffects = [];
 let scrollTicking = false;
 let resizeTicking = false;
+let cachedViewport;
+let frameMutations = null;
+
+const mutate = (callback) => {
+  if (frameMutations) frameMutations.push(callback);
+  else callback();
+};
 
 const getViewport = () => ({
   width: document.documentElement.getBoundingClientRect().width || window.innerWidth,
@@ -24,7 +31,7 @@ const setStyleValue = (element, property, value) => {
   }
 
   if (cache[property] === value) return;
-  element.style[property] = value;
+  mutate(() => { element.style[property] = value; });
   cache[property] = value;
 };
 
@@ -36,13 +43,13 @@ const setCustomProperty = (element, property, value) => {
   }
 
   if (cache[property] === value) return;
-  element.style.setProperty(property, value);
+  mutate(() => element.style.setProperty(property, value));
   cache[property] = value;
 };
 
 const toggleClass = (element, className, force) => {
   if (element.classList.contains(className) === force) return;
-  element.classList.toggle(className, force);
+  mutate(() => element.classList.toggle(className, force));
 };
 
 const pruneScrollEffects = () => {
@@ -55,9 +62,16 @@ const pruneScrollEffects = () => {
 
 const runScrollEffects = () => {
   pruneScrollEffects();
-  const viewport = getViewport();
-  scrollEffects.forEach((effect) => effect.update(viewport));
-  scrollTicking = false;
+  const viewport = cachedViewport || getViewport();
+  frameMutations = [];
+  try {
+    scrollEffects.forEach((effect) => effect.update(viewport));
+  } finally {
+    const mutations = frameMutations;
+    frameMutations = null;
+    mutations.forEach((mutation) => mutation());
+    scrollTicking = false;
+  }
 };
 
 const requestScrollEffects = () => {
@@ -73,6 +87,7 @@ const requestResizeEffects = () => {
   window.requestAnimationFrame(() => {
     pruneScrollEffects();
     const viewport = getViewport();
+    cachedViewport = viewport;
     scrollEffects.forEach((effect) => effect.refresh?.(viewport));
     resizeTicking = false;
     requestScrollEffects();
@@ -88,9 +103,7 @@ const registerScrollEffect = (effect) => {
     window.visualViewport?.addEventListener('resize', requestResizeEffects);
   }
 
-  const viewport = getViewport();
-  effect.refresh?.(viewport);
-  effect.update(viewport);
+  requestResizeEffects();
 };
 
 const initHoverPreviews = () => {
@@ -115,9 +128,14 @@ const initHoverPreviews = () => {
       const animate = () => {
         x += (targetX - x) * 0.18;
         y += (targetY - y) * 0.18;
+        const settled = Math.abs(targetX - x) < 0.2 && Math.abs(targetY - y) < 0.2;
+        if (settled) {
+          x = targetX;
+          y = targetY;
+        }
         setStyleValue(floatingPreview, 'transform', `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${visible ? 1 : 0})`);
 
-        if (!visible && Math.abs(targetX - x) < 0.2 && Math.abs(targetY - y) < 0.2) {
+        if (settled) {
           rafId = null;
           return;
         }
@@ -134,6 +152,7 @@ const initHoverPreviews = () => {
       root.addEventListener('mouseleave', () => {
         visible = false;
         floatingPreview.classList.remove('is-visible');
+        if (!rafId) animate();
       });
 
       triggers.forEach((trigger) => {
@@ -548,12 +567,12 @@ const initCollectionDirectories = () => {
         preview.removeAttribute('data-directory-media');
         const image = preview.querySelector('img');
         if (image) image.loading = 'eager';
-        state.frames.append(preview);
+        mutate(() => state.frames.append(preview));
         state.previews.set(index, preview);
       }
       state.previews.forEach((preview, previewIndex) => toggleClass(preview, 'is-active', previewIndex === index));
-      if (state.captionTitle) state.captionTitle.textContent = current.title;
-      if (state.captionNumber) state.captionNumber.textContent = current.number;
+      if (state.captionTitle) mutate(() => { state.captionTitle.textContent = current.title; });
+      if (state.captionNumber) mutate(() => { state.captionNumber.textContent = current.number; });
       setCustomProperty(root, '--directory-progress', ((index + 1) / rows.length).toFixed(4));
     };
 
@@ -937,8 +956,10 @@ const initArticleReaders = () => {
       if (active === state.active) return;
       state.active = active;
       state.nodes.forEach(({ link }, index) => {
-        if (index === active) link.setAttribute('aria-current', 'location');
-        else link.removeAttribute('aria-current');
+        mutate(() => {
+          if (index === active) link.setAttribute('aria-current', 'location');
+          else link.removeAttribute('aria-current');
+        });
       });
     });
   };

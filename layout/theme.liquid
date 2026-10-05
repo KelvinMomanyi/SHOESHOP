@@ -13,8 +13,6 @@
 
     {%- render 'meta-tags' -%}
 
-    {{ content_for_header }}
-
     {%- liquid
       assign body_font = settings.type_body_font
       assign body_font_bold = body_font | font_modify: 'weight', 'bold'
@@ -28,7 +26,23 @@
       assign utility_font_bold = utility_font | font_modify: 'weight', 'bold'
       assign utility_font_italic = utility_font | font_modify: 'style', 'italic'
       assign utility_font_bold_italic = utility_font_bold | font_modify: 'style', 'italic'
+      assign body_font_url = body_font | font_url
+      assign heading_font_url = heading_font | font_url
+      assign utility_font_url = utility_font | font_url
     -%}
+
+    <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
+    {%- unless body_font.system? and heading_font.system? and utility_font.system? -%}
+      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    {%- endunless -%}
+    {%- unless body_font.system? -%}
+      {{ body_font_url | preload_tag: as: 'font', type: 'font/woff2' }}
+    {%- endunless -%}
+    {%- unless heading_font.system? or heading_font_url == body_font_url -%}
+      {{ heading_font_url | preload_tag: as: 'font', type: 'font/woff2' }}
+    {%- endunless -%}
+
+    {{ content_for_header }}
 
     <style>
       {{ body_font | font_face: font_display: 'swap' }}
@@ -39,10 +53,12 @@
       {{ heading_font_bold | font_face: font_display: 'swap' }}
       {{ heading_font_italic | font_face: font_display: 'swap' }}
       {{ heading_font_bold_italic | font_face: font_display: 'swap' }}
-      {{ utility_font | font_face: font_display: 'swap' }}
-      {{ utility_font_bold | font_face: font_display: 'swap' }}
-      {{ utility_font_italic | font_face: font_display: 'swap' }}
-      {{ utility_font_bold_italic | font_face: font_display: 'swap' }}
+      {%- unless utility_font_url == body_font_url or utility_font_url == heading_font_url -%}
+        {{ utility_font | font_face: font_display: 'swap' }}
+        {{ utility_font_bold | font_face: font_display: 'swap' }}
+        {{ utility_font_italic | font_face: font_display: 'swap' }}
+        {{ utility_font_bold_italic | font_face: font_display: 'swap' }}
+      {%- endunless -%}
 
       :root {
         --font-body: {{ body_font.family }}, {{ body_font.fallback_families }};

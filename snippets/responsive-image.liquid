@@ -6,6 +6,7 @@
   @param {string} [sizes] - Responsive sizes attribute.
   @param {string} [widths] - Responsive source widths.
   @param {string} [loading] - Image loading behavior.
+  @param {string} [fetchpriority] - Image request priority.
   @param {string} [alt] - Alternative text override.
 {% enddoc %}
 
@@ -14,6 +15,7 @@
   assign image_sizes = sizes | default: '100vw'
   assign image_widths = widths | default: '165, 360, 533, 720, 940, 1200, 1600, 2000'
   assign image_loading = loading | default: 'lazy'
+  assign image_fetchpriority = fetchpriority | default: 'auto'
   assign image_alt = alt | default: image.alt | escape
   assign image_focal_point = image.presentation.focal_point | default: 'center'
   assign image_style = 'object-position: ' | append: image_focal_point | append: ';'
@@ -27,6 +29,7 @@
       widths: image_widths,
       sizes: image_sizes,
       loading: image_loading,
+      fetchpriority: image_fetchpriority,
       class: image_class,
       alt: image_alt,
       style: image_style

@@ -17,6 +17,24 @@ const formatMoney = (cents, format = moneyFormat) => {
 class ProductRecommendations extends HTMLElement {
   connectedCallback() {
     const url = this.dataset.url;
+    if (!url || this.dataset.loaded === 'true' || this.recommendationsObserver) return;
+
+    this.recommendationsObserver = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      this.recommendationsObserver.disconnect();
+      this.recommendationsObserver = null;
+      this.loadRecommendations();
+    }, { rootMargin: '400px 0px' });
+    this.recommendationsObserver.observe(this);
+  }
+
+  disconnectedCallback() {
+    this.recommendationsObserver?.disconnect();
+    this.recommendationsObserver = null;
+  }
+
+  loadRecommendations() {
+    const url = this.dataset.url;
     if (!url || this.dataset.loaded === 'true') return;
 
     this.dataset.loaded = 'true';

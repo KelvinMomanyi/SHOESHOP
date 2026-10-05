@@ -30,8 +30,10 @@
           assign panel_body = block.settings.text | default: panel_product.description | default: panel_collection.description | strip_html | truncatewords: 26 | default: section.settings.text
           assign panel_link = block.settings.link | default: panel_product.url | default: panel_collection.url | default: section.settings.button_link | default: routes.all_products_collection_url
           assign panel_loading = 'lazy'
+          assign panel_priority = 'auto'
           if forloop.first
             assign panel_loading = 'eager'
+            assign panel_priority = 'high'
           endif
         -%}
 
@@ -43,6 +45,7 @@
                 class: 'editorial-hero__image',
                 sizes: '100vw',
                 loading: panel_loading,
+                fetchpriority: panel_priority,
                 alt: panel_title
               -%}
             {%- else -%}
@@ -82,6 +85,7 @@
               class: 'editorial-hero__image',
               sizes: '100vw',
               loading: 'eager',
+              fetchpriority: 'high',
               alt: section.settings.heading
             -%}
           {%- else -%}

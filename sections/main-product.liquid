@@ -47,11 +47,13 @@
         {%- for media in product.media -%}
           {%- liquid
             assign media_loading = 'lazy'
+            assign media_priority = 'auto'
             assign media_alt = media.alt | default: product.title
             assign media_focal_point = media.preview_image.presentation.focal_point | default: 'center'
             assign media_image_style = 'object-position: ' | append: media_focal_point | append: ';'
             if media.id == featured_media.id
               assign media_loading = 'eager'
+              assign media_priority = 'high'
             endif
           -%}
           <div class="product-media media-frame{% if media.id == featured_media.id %} product-media--active{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}">
@@ -66,6 +68,7 @@
                     widths: '360, 533, 720, 940, 1200, 1500, 1800',
                     sizes: '(min-width: 990px) 50vw, 100vw',
                     loading: media_loading,
+                    fetchpriority: media_priority,
                     class: 'media-frame__image',
                     alt: media_alt,
                     style: media_image_style

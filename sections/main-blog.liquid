@@ -19,6 +19,7 @@
                 class: 'blog-journal__hero-image',
                 sizes: '(min-width: 990px) 55vw, 100vw',
                 loading: 'eager',
+                fetchpriority: 'high',
                 alt: featured_article.title
               -%}
               <span class="blog-journal__image-label" aria-hidden="true">01 / {{ 'blog.articles.lead_story' | t }}</span>
