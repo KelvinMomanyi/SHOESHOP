@@ -40,12 +40,14 @@
     initReveal(scope);
     const assets = window.Treadora?.assets || {};
 
-    const motionSelector = '[data-hover-preview], [data-tilt-stack], [data-scroll-hero], [data-image-spread], [data-alexandra-loader], [data-featured-product-stack], [data-collection-edit], [data-editorial-motion], [data-article-reader], [data-product-editorial]';
+    const motionSelector = '[data-hover-preview], [data-tilt-stack], [data-scroll-hero], [data-image-spread], [data-alexandra-loader], [data-featured-product-stack]';
     if (hasWithin(document, motionSelector)) {
-      loadScopedModule(scope, `${motionSelector}, [data-collection-directory]`, assets.motionEffects, 'initializeMotionEffects');
-    } else if (directoryViewport.matches) {
+      loadScopedModule(scope, motionSelector, assets.motionEffects, 'initializeMotionEffects');
+    }
+    if (directoryViewport.matches) {
       loadScopedModule(scope, '[data-collection-directory][data-motion-enabled="true"] [data-directory-stage]', assets.collectionDirectory, 'initializeCollectionDirectories');
     }
+    loadScopedModule(scope, '[data-collection-edit], [data-editorial-motion], [data-article-reader], [data-product-editorial]', assets.pageMotion, 'initializePageMotion');
     loadScopedModule(scope, '.facets', assets.facets, 'initializeFacets');
     loadScopedModule(
       scope,

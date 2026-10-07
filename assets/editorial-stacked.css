@@ -147,7 +147,7 @@
   line-height: 1.8;
 }
 
-.editorial-hero__panel-footer h1 {
+.editorial-hero__panel-footer .editorial-hero__title {
   grid-column: 2;
   max-width: 860px;
   margin-left: auto;
@@ -161,13 +161,13 @@
 }
 
 @media (min-width: 750px) {
-  .editorial-hero__panel-footer h1 {
+  .editorial-hero__panel-footer .editorial-hero__title {
     font-size: 7.4rem;
   }
 }
 
 @media (min-width: 1200px) {
-  .editorial-hero__panel-footer h1 {
+  .editorial-hero__panel-footer .editorial-hero__title {
     font-size: 10rem;
   }
 }
@@ -239,7 +239,7 @@
     gap: 24px;
   }
 
-  .editorial-hero__panel-footer h1 {
+  .editorial-hero__panel-footer .editorial-hero__title {
     grid-column: 1;
     margin-left: 0;
     text-align: left;

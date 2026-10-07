@@ -13,6 +13,14 @@
   assign visible_count = 0
   assign directory_image_sizes = '(min-width: 750px) 420px, calc(100vw - 24px)'
   assign directory_image_widths = '360, 420, 540, 720, 840, 1080, 1440'
+  capture directory_preview_sizes
+    echo 'calc((min(calc(100vw - 32px), '
+    echo settings.page_width
+    echo 'px) - clamp(32px, 5vw, 80px)) * 0.475)'
+  endcapture
+  if enable_motion
+    assign directory_image_sizes = '(min-width: 990px) ' | append: directory_preview_sizes | append: ', ' | append: directory_image_sizes
+  endif
   assign first_visible_index = start_index | plus: 1
   for directory_collection in collection_list
     if omit_frontpage and directory_collection.handle == 'frontpage'
@@ -39,16 +47,18 @@
             assign directory_number = visible_index
             assign directory_image_loading = 'lazy'
             assign directory_image_priority = 'auto'
+            assign directory_image_preload = false
             if visible_index == first_visible_index
               assign directory_image_loading = 'eager'
               assign directory_image_priority = 'high'
+              assign directory_image_preload = true
             endif
             if visible_index < 10
               assign directory_number = visible_index | prepend: '0'
             endif
           -%}
           <li class="collection-directory__item">
-            <a class="collection-directory__row reveal-item" href="{{ directory_collection.url }}" data-directory-row>
+            <a class="collection-directory__row{% unless visible_index == first_visible_index %} reveal-item{% endunless %}" href="{{ directory_collection.url }}" data-directory-row>
               <span class="collection-directory__number" data-directory-number aria-hidden="true">{{ directory_number }}</span>
               <div class="collection-directory__body">
                 <h2 class="collection-directory__title" data-directory-title>{{ directory_collection.title | escape }}</h2>
@@ -66,6 +76,7 @@
                     widths: directory_image_widths,
                     loading: directory_image_loading,
                     fetchpriority: directory_image_priority,
+                    preload: directory_image_preload,
                     alt: directory_collection.title
                   -%}
                 </div>
@@ -75,7 +86,6 @@
         {%- endfor -%}
       </ol>
       {%- if show_images and enable_motion -%}
-        {%- capture directory_preview_sizes -%}calc((min(calc(100vw - 32px), {{ settings.page_width }}px) - clamp(32px, 5vw, 80px)) * 0.475){%- endcapture -%}
         <figure class="collection-directory__stage" data-directory-stage aria-hidden="true">
           <div data-directory-frames>
             <div class="collection-directory__preview-image is-active" data-directory-initial-preview aria-hidden="true">

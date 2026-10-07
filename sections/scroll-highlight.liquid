@@ -18,6 +18,7 @@
       {%- if section.settings.button_label != blank -%}
         <a class="scroll-highlight__link" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
           {{ section.settings.button_label | escape }}
+          <span class="visually-hidden"> {{ 'accessibility.about_footwear' | t }}</span>
         </a>
       {%- endif -%}
     </div>

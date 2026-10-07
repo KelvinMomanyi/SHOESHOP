@@ -22,7 +22,7 @@
   if hidden_media != blank
     assign image_preload = false
   endif
-  assign image_alt = alt | default: image.alt | escape
+  assign image_alt = alt | default: image.alt
   assign image_focal_point = image.presentation.focal_point | default: 'center'
   assign image_style = 'object-position: ' | append: image_focal_point | append: ';'
 -%}

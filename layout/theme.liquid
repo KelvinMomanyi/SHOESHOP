@@ -9,6 +9,8 @@
 
     {%- if settings.favicon != blank -%}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- else -%}
+      <link rel="icon" href="data:,">
     {%- endif -%}
 
     {%- render 'meta-tags' -%}
@@ -28,6 +30,8 @@
       assign utility_font_bold_italic = utility_font_bold | font_modify: 'style', 'italic'
       assign body_font_url = body_font | font_url
       assign heading_font_url = heading_font | font_url
+      assign body_font_bold_url = body_font_bold | font_url
+      assign heading_font_bold_url = heading_font_bold | font_url
       assign heading_preload_font = heading_font_bold | default: heading_font
       assign heading_preload_url = heading_preload_font | font_url
       assign utility_font_url = utility_font | font_url
@@ -43,15 +47,19 @@
       {{ heading_preload_url | preload_tag: as: 'font', type: 'font/woff2' }}
     {%- endunless -%}
 
-    {{ content_for_header }}
-
     <style>
       {{ body_font | font_face: font_display: 'swap' }}
+      {%- unless body_font_bold_url == body_font_url -%}
       {{ body_font_bold | font_face: font_display: 'swap' }}
+      {%- endunless -%}
       {{ body_font_italic | font_face: font_display: 'swap' }}
       {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+      {%- unless heading_font_url == body_font_url or heading_font_url == body_font_bold_url -%}
       {{ heading_font | font_face: font_display: 'swap' }}
+      {%- endunless -%}
+      {%- unless heading_font_bold_url == heading_font_url or heading_font_bold_url == body_font_url or heading_font_bold_url == body_font_bold_url -%}
       {{ heading_font_bold | font_face: font_display: 'swap' }}
+      {%- endunless -%}
       {{ heading_font_italic | font_face: font_display: 'swap' }}
       {{ heading_font_bold_italic | font_face: font_display: 'swap' }}
       {%- unless utility_font_url == body_font_url or utility_font_url == heading_font_url -%}
@@ -82,7 +90,8 @@
       }
     </style>
 
-    {{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ 'theme.min.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ content_for_header }}
     <script>
       document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
       window.Treadora = {
@@ -106,6 +115,7 @@
         },
         assets: {
           motionEffects: {{ 'motion-effects.min.js' | asset_url | json }},
+          pageMotion: {{ 'page-motion.min.js' | asset_url | json }},
           collectionDirectory: {{ 'collection-directory.min.js' | asset_url | json }},
           facets: {{ 'facets.min.js' | asset_url | json }},
           productFeatures: {{ 'product-features.min.js' | asset_url | json }}

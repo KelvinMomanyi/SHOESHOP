@@ -4,12 +4,12 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const assets = fileURLToPath(new URL('../assets/', import.meta.url));
-const files = (await readdir(assets)).filter((file) => file.endsWith('.js')
-  && !file.endsWith('.min.js') && file !== 'motion-runtime.js');
+const files = (await readdir(assets)).filter((file) => /\.(js|css)$/.test(file)
+  && !/\.min\.(js|css)$/.test(file) && file !== 'motion-runtime.js');
 
 for (const file of files) {
   const entry = path.join(assets, file);
-  const output = path.join(assets, file.replace(/\.js$/, '.min.js'));
+  const output = path.join(assets, file.replace(/\.(js|css)$/, '.min.$1'));
   await build({
     entryPoints: [entry],
     outfile: output,

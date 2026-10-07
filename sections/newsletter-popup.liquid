@@ -454,7 +454,6 @@
       root.dataset.newsletterPopupInitialized = 'true';
       const closeButtons = root.querySelectorAll('[data-newsletter-popup-close]');
       const result = root.querySelector('[data-newsletter-popup-result]');
-      const email = root.querySelector('input[type="email"]');
       const designMode = root.dataset.designMode === 'true';
       const enabled = root.dataset.enabled === 'true';
       const delay = Math.max(0, Number(root.dataset.delay) || 0);
@@ -490,7 +489,7 @@
         }
         if (rememberVisit && !designMode) remember();
         setPageState();
-        window.setTimeout(() => (result || email)?.focus(), 50);
+        window.setTimeout(() => (result || closeButtons[0])?.focus({ preventScroll: true }), 50);
       };
 
       const hide = () => {

@@ -75,7 +75,11 @@
                 </div>
               </div>
 
-              <h1>{% if panel_title != blank %}{{ panel_title }}{% else %}{{ 'general.onboarding.featured_edit' | t }}{% endif %}</h1>
+              {%- if forloop.first and hero_priority == 'high' -%}
+                <h1 class="editorial-hero__title">{% if panel_title != blank %}{{ panel_title }}{% else %}{{ 'general.onboarding.featured_edit' | t }}{% endif %}</h1>
+              {%- else -%}
+                <h2 class="editorial-hero__title">{% if panel_title != blank %}{{ panel_title }}{% else %}{{ 'general.onboarding.featured_edit' | t }}{% endif %}</h2>
+              {%- endif -%}
             </div>
           </div>
         </article>
@@ -107,7 +111,11 @@
                 </a>
               </div>
             </div>
-            <h1>{{ section.settings.heading }}</h1>
+            {%- if hero_priority == 'high' -%}
+              <h1 class="editorial-hero__title">{{ section.settings.heading }}</h1>
+            {%- else -%}
+              <h2 class="editorial-hero__title">{{ section.settings.heading }}</h2>
+            {%- endif -%}
           </div>
         </div>
       </article>
@@ -222,4 +230,4 @@
   ]
 }
 {% endschema %}
-{{ 'editorial-stacked.css' | asset_url | stylesheet_tag }}
+<style>{{ 'editorial-stacked.min.css' | inline_asset_content }}</style>
