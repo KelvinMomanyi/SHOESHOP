@@ -3,7 +3,7 @@
     <header class="collection-index__intro">
       <p class="eyebrow">{{ settings.brand_name | default: shop.name | escape }}</p>
       <div class="collection-index__title-wrap">
-        <h1 class="collection-index__title reveal-item">{{ section.settings.heading | escape }}</h1>
+        <h1 class="collection-index__title">{{ section.settings.heading | escape }}</h1>
       </div>
       <div class="collection-index__intro-bottom">
         <p class="collection-index__description">{{ section.settings.text | escape }}</p>
@@ -18,6 +18,7 @@
         collection_list: section.settings.collections,
         show_images: section.settings.show_images,
         show_product_count: section.settings.show_product_count,
+        enable_motion: section.settings.enable_motion,
         section_id: section.id,
         start_index: 0,
         omit_frontpage: false
@@ -28,6 +29,7 @@
           collection_list: collections,
           show_images: section.settings.show_images,
           show_product_count: section.settings.show_product_count,
+          enable_motion: section.settings.enable_motion,
           section_id: section.id,
           start_index: paginate.current_offset,
           omit_frontpage: true
@@ -44,7 +46,7 @@
     background: var(--color-background);
     color: var(--color-foreground);
     --directory-top: 130px;
-    --directory-height: calc(100svh - 154px);
+    --directory-height: clamp(220px, calc(100svh - var(--directory-top) - 24px), 680px);
   }
   .collection-index__intro {
     display: grid;
@@ -139,20 +141,20 @@
   }
   .collection-index .pagination { margin-top: 48px; }
   .no-js .collection-index .reveal-item { opacity: 1; transform: none; }
-  @media (min-width: 990px) {
-    .collection-index.is-directory-enhanced .collection-directory__layout {
+  @media (min-width: 990px) and (min-height: 480px) and (prefers-reduced-motion: no-preference) {
+    :is(.collection-index.is-directory-enhanced, .js .collection-index[data-motion-enabled='true']) .collection-directory__layout {
       display: grid;
       grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
       gap: clamp(32px, 5vw, 80px);
       align-items: start;
     }
-    .is-directory-enhanced .collection-directory__row { color: var(--color-muted); }
-    .is-directory-enhanced .collection-directory__row.is-active,
-    .is-directory-enhanced .collection-directory__row:hover,
-    .is-directory-enhanced .collection-directory__row:focus-visible { color: var(--color-foreground); }
-    .is-directory-enhanced .collection-directory__row.is-active .collection-directory__number { color: var(--color-foreground); }
-    .is-directory-enhanced .collection-directory__media { display: none; }
-    .is-directory-enhanced .collection-directory__stage {
+    :is(.collection-index.is-directory-enhanced, .js .collection-index[data-motion-enabled='true']) .collection-directory__row { color: var(--color-muted); }
+    :is(.collection-index.is-directory-enhanced, .js .collection-index[data-motion-enabled='true']) .collection-directory__row.is-active,
+    :is(.collection-index.is-directory-enhanced, .js .collection-index[data-motion-enabled='true']) .collection-directory__row:hover,
+    :is(.collection-index.is-directory-enhanced, .js .collection-index[data-motion-enabled='true']) .collection-directory__row:focus-visible { color: var(--color-foreground); }
+    :is(.collection-index.is-directory-enhanced, .js .collection-index[data-motion-enabled='true']) .collection-directory__row.is-active .collection-directory__number { color: var(--color-foreground); }
+    :is(.collection-index.is-directory-enhanced, .js .collection-index[data-motion-enabled='true']) .collection-directory__media { display: none; }
+    :is(.collection-index.is-directory-enhanced, .js .collection-index[data-motion-enabled='true']) .collection-directory__stage {
       display: block;
       position: sticky;
       top: var(--directory-top);

@@ -7,6 +7,8 @@
   @param {string} [widths] - Responsive source widths.
   @param {string} [loading] - Image loading behavior.
   @param {string} [fetchpriority] - Image request priority.
+  @param {boolean} [preload] - Preload the image when it is the page's primary image.
+  @param {string} [hidden_media] - Media query where the image should not download.
   @param {string} [alt] - Alternative text override.
 {% enddoc %}
 
@@ -16,12 +18,20 @@
   assign image_widths = widths | default: '165, 360, 533, 720, 940, 1200, 1600, 2000'
   assign image_loading = loading | default: 'lazy'
   assign image_fetchpriority = fetchpriority | default: 'auto'
+  assign image_preload = preload | default: false
+  if hidden_media != blank
+    assign image_preload = false
+  endif
   assign image_alt = alt | default: image.alt | escape
   assign image_focal_point = image.presentation.focal_point | default: 'center'
   assign image_style = 'object-position: ' | append: image_focal_point | append: ';'
 -%}
 
 {%- if image != blank -%}
+  {%- if hidden_media != blank -%}
+    <picture>
+      <source media="{{ hidden_media | escape }}" srcset="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=">
+  {%- endif -%}
   {{
     image
     | image_url: width: 2000
@@ -30,10 +40,14 @@
       sizes: image_sizes,
       loading: image_loading,
       fetchpriority: image_fetchpriority,
+      preload: image_preload,
       class: image_class,
       alt: image_alt,
       style: image_style
   }}
+  {%- if hidden_media != blank -%}
+    </picture>
+  {%- endif -%}
 {%- else -%}
   {{ 'product-1' | placeholder_svg_tag: image_class }}
 {%- endif -%}

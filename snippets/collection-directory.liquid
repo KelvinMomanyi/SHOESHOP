@@ -3,6 +3,7 @@
   @param {collection[]} collection_list - Collections on the current page or in the merchant's chosen order.
   @param {boolean} show_images - Show collection imagery.
   @param {boolean} show_product_count - Show collection product counts.
+  @param {boolean} enable_motion - Enable the desktop scroll preview.
   @param {string} section_id - Section ID for the directory anchor.
   @param {number} start_index - Pagination offset for collection numbering.
   @param {boolean} omit_frontpage - Exclude the automatic frontpage collection.
@@ -10,10 +11,15 @@
 
 {%- liquid
   assign visible_count = 0
+  assign directory_image_sizes = '(min-width: 750px) 420px, calc(100vw - 24px)'
+  assign directory_image_widths = '360, 420, 540, 720, 840, 1080, 1440'
   assign first_visible_index = start_index | plus: 1
   for directory_collection in collection_list
     if omit_frontpage and directory_collection.handle == 'frontpage'
       continue
+    endif
+    if visible_count == 0
+      assign first_collection = directory_collection
     endif
     assign visible_count = visible_count | plus: 1
   endfor
@@ -56,7 +62,8 @@
                   {%- render 'responsive-image',
                     image: directory_collection.featured_image,
                     class: 'collection-directory__image',
-                    sizes: '(min-width: 990px) 45vw, (min-width: 750px) 420px, 100vw',
+                    sizes: directory_image_sizes,
+                    widths: directory_image_widths,
                     loading: directory_image_loading,
                     fetchpriority: directory_image_priority,
                     alt: directory_collection.title
@@ -67,13 +74,27 @@
           </li>
         {%- endfor -%}
       </ol>
-      {%- if show_images -%}
+      {%- if show_images and enable_motion -%}
+        {%- capture directory_preview_sizes -%}calc((min(calc(100vw - 32px), {{ settings.page_width }}px) - clamp(32px, 5vw, 80px)) * 0.475){%- endcapture -%}
         <figure class="collection-directory__stage" data-directory-stage aria-hidden="true">
-          <div data-directory-frames></div>
+          <div data-directory-frames>
+            <div class="collection-directory__preview-image is-active" data-directory-initial-preview aria-hidden="true">
+              {%- render 'responsive-image',
+                image: first_collection.featured_image,
+                class: 'collection-directory__image',
+                sizes: directory_preview_sizes,
+                widths: directory_image_widths,
+                hidden_media: '(max-width: 989px), (max-height: 479px), (prefers-reduced-motion: reduce)',
+                loading: 'eager',
+                fetchpriority: 'high',
+                alt: first_collection.title
+              -%}
+            </div>
+          </div>
           <figcaption class="collection-directory__caption">
-            <span class="collection-directory__caption-number" data-directory-caption-number></span>
-            <span class="collection-directory__caption-title" data-directory-caption-title></span>
-            <span class="collection-directory__progress"></span>
+            <span class="collection-directory__caption-number" data-directory-caption-number>{% if first_visible_index < 10 %}0{% endif %}{{ first_visible_index }}</span>
+            <span class="collection-directory__caption-title" data-directory-caption-title>{{ first_collection.title | escape }}</span>
+            <span class="collection-directory__progress" style="--directory-progress: {{ 1.0 | divided_by: visible_count }}"></span>
           </figcaption>
         </figure>
       {%- endif -%}

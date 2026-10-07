@@ -1,4 +1,5 @@
 (() => {
+  const directoryViewport = window.matchMedia('(min-width: 990px) and (min-height: 480px) and (prefers-reduced-motion: no-preference)');
   const findWithin = (scope, selector) => {
     const matches = scope.matches?.(selector) ? [scope] : [];
     return matches.concat(Array.from(scope.querySelectorAll?.(selector) || []));
@@ -42,8 +43,8 @@
     const motionSelector = '[data-hover-preview], [data-tilt-stack], [data-scroll-hero], [data-image-spread], [data-alexandra-loader], [data-featured-product-stack], [data-collection-edit], [data-editorial-motion], [data-article-reader], [data-product-editorial]';
     if (hasWithin(document, motionSelector)) {
       loadScopedModule(scope, `${motionSelector}, [data-collection-directory]`, assets.motionEffects, 'initializeMotionEffects');
-    } else {
-      loadScopedModule(scope, '[data-collection-directory]', assets.collectionDirectory, 'initializeCollectionDirectories');
+    } else if (directoryViewport.matches) {
+      loadScopedModule(scope, '[data-collection-directory][data-motion-enabled="true"] [data-directory-stage]', assets.collectionDirectory, 'initializeCollectionDirectories');
     }
     loadScopedModule(scope, '.facets', assets.facets, 'initializeFacets');
     loadScopedModule(
@@ -55,6 +56,10 @@
   };
 
   window.TreadoraTheme = { initialize: initializeTheme };
+
+  directoryViewport.addEventListener('change', () => {
+    if (directoryViewport.matches) initializeTheme();
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => initializeTheme());

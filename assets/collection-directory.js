@@ -1,9 +1,10 @@
 import { clamp, lerp, mutate, isNearViewport, setCustomProperty, toggleClass, registerScrollEffect, requestScrollEffects, requestResizeEffects, initializeMotionLifecycle } from './motion-runtime.js';
 
 export const initializeCollectionDirectories = () => {
+  const desktopViewport = window.matchMedia('(min-width: 990px) and (min-height: 480px) and (prefers-reduced-motion: no-preference)');
+  if (!desktopViewport.matches) return;
   const roots = document.querySelectorAll('[data-collection-directory]:not([data-collection-directory-ready])');
   if (!roots.length) return;
-  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   const states = Array.from(roots).map((root) => {
     root.dataset.collectionDirectoryReady = 'true';
@@ -25,6 +26,9 @@ export const initializeCollectionDirectories = () => {
       desktop: false,
       top: 130
     };
+    const initialPreview = root.querySelector('[data-directory-initial-preview]');
+    const initialProgress = root.querySelector('.collection-directory__progress');
+    if (initialPreview) state.previews.set(0, initialPreview);
 
     state.activate = (index) => {
       if (state.activeIndex === index && (!state.desktop || state.previews.has(index))) return;
@@ -36,7 +40,11 @@ export const initializeCollectionDirectories = () => {
         preview.className = 'collection-directory__preview-image';
         preview.removeAttribute('data-directory-media');
         const image = preview.querySelector('img');
-        if (image) image.loading = 'eager';
+        if (image) {
+          image.sizes = initialPreview?.querySelector('img')?.sizes || image.sizes;
+          image.fetchPriority = 'auto';
+          image.loading = 'eager';
+        }
         mutate(() => state.frames.append(preview));
         state.previews.set(index, preview);
       }
@@ -44,6 +52,9 @@ export const initializeCollectionDirectories = () => {
       if (state.captionTitle) mutate(() => { state.captionTitle.textContent = current.title; });
       if (state.captionNumber) mutate(() => { state.captionNumber.textContent = current.number; });
       setCustomProperty(root, '--directory-progress', ((index + 1) / rows.length).toFixed(4));
+      if (initialProgress?.style.getPropertyValue('--directory-progress')) {
+        mutate(() => initialProgress.style.removeProperty('--directory-progress'));
+      }
     };
 
     rows.forEach(({ row }, index) => {
@@ -63,7 +74,7 @@ export const initializeCollectionDirectories = () => {
   }).filter((state) => state.rows.length);
   if (!states.length) return;
 
-  const refresh = ({ width, height }) => {
+  const refresh = ({ height }) => {
     let headerBottom = 0;
     document.querySelectorAll('.site-header, .announcement-bar').forEach((header) => {
       const position = getComputedStyle(header).position;
@@ -74,7 +85,7 @@ export const initializeCollectionDirectories = () => {
     states.forEach((state) => {
       if (!state.root.isConnected) return;
       state.top = Math.max(24, headerBottom + 24);
-      state.desktop = width >= 990 && height >= 480 && !motion.matches
+      state.desktop = desktopViewport.matches
         && state.root.dataset.motionEnabled !== 'false' && Boolean(state.frames);
       toggleClass(state.root, 'is-directory-enhanced', state.desktop);
       setCustomProperty(state.root, '--directory-top', `${state.top}px`);
@@ -117,12 +128,11 @@ export const initializeCollectionDirectories = () => {
   };
 
   initializeMotionLifecycle();
-  motion.addEventListener('change', requestResizeEffects);
+  desktopViewport.addEventListener('change', requestResizeEffects);
   registerScrollEffect({
     refresh,
     update,
     elements: states.map((state) => state.root),
-    destroy: () => motion.removeEventListener('change', requestResizeEffects)
+    destroy: () => desktopViewport.removeEventListener('change', requestResizeEffects)
   });
 };
-
