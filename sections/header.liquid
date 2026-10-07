@@ -123,8 +123,20 @@
             endfor
           -%}
           <li class="{% if mega_block != blank %}has-mega-menu{% elsif link.links != blank %}has-submenu{% endif %}">
-            <a href="{{ link.url }}"{% if mega_block != blank %} aria-haspopup="true"{% endif %}>{{ link.title }}</a>
+            <a href="{{ link.url }}">{{ link.title }}</a>
             {%- if mega_block != blank -%}
+              <button
+                class="site-header__mega-toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="HeaderMegaMenu-{{ section.id }}-{{ mega_block.id }}"
+                aria-label="{{ 'accessibility.toggle_mega_menu' | t: title: link.title | escape }}"
+                data-mega-toggle
+              >
+                <svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true" focusable="false">
+                  <path d="m1.5 1.5 6.5 6.5 6.5-6.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
               {%- render 'header-mega-menu', block: mega_block, parent_link: link, section_id: section.id -%}
             {%- elsif link.links != blank -%}
               <ul class="site-header__submenu" role="list">
@@ -301,9 +313,39 @@
 
 <script>
   (() => {
+    const closeMegaMenus = (except = null) => {
+      document.querySelectorAll('[data-mega-toggle][aria-expanded="true"]').forEach((button) => {
+        if (button === except) return;
+        button.setAttribute('aria-expanded', 'false');
+        button.closest('.has-mega-menu')?.classList.remove('is-mega-open');
+      });
+    };
+
     const setup = (root) => {
       if (!root || root.dataset.headerLoadersReady === 'true') return;
       root.dataset.headerLoadersReady = 'true';
+
+      root.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-mega-toggle]');
+        if (!button) return;
+        const open = button.getAttribute('aria-expanded') !== 'true';
+        closeMegaMenus(button);
+        button.setAttribute('aria-expanded', String(open));
+        button.closest('.has-mega-menu')?.classList.toggle('is-mega-open', open);
+      });
+      root.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        const item = event.target.closest('.has-mega-menu.is-mega-open');
+        if (!item) return;
+        event.preventDefault();
+        event.stopPropagation();
+        closeMegaMenus();
+        item.querySelector('[data-mega-toggle]')?.focus({ preventScroll: true });
+      });
+      root.addEventListener('focusout', (event) => {
+        const item = event.target.closest('.has-mega-menu.is-mega-open');
+        if (item && !item.contains(event.relatedTarget)) closeMegaMenus();
+      });
 
       let drawersPromise;
       const loadDrawers = () => {
@@ -343,6 +385,17 @@
 
     if (!window.TreadoraHeaderLoaders) {
       window.TreadoraHeaderLoaders = { setup };
+      document.addEventListener('pointerdown', (event) => {
+        if (!event.target.closest('.has-mega-menu')) closeMegaMenus();
+      }, { passive: true });
+      window.matchMedia('(min-width: 1100px)').addEventListener('change', closeMegaMenus);
+      document.addEventListener('shopify:block:select', (event) => {
+        const panel = event.target.closest('.site-header__mega-menu')
+          || event.target.querySelector('.site-header__mega-menu');
+        const button = panel?.parentElement.querySelector('[data-mega-toggle]');
+        if (button?.getAttribute('aria-expanded') === 'false') button.click();
+      });
+      document.addEventListener('shopify:block:deselect', () => closeMegaMenus());
       document.addEventListener('shopify:section:load', (event) => {
         const root = event.target.matches?.('[data-header-loaders]')
           ? event.target

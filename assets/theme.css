@@ -834,6 +834,34 @@ body.drawer-open .site-header {
   position: relative;
 }
 
+.site-header__mega-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  min-height: 44px;
+  margin-inline-start: 4px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.site-header__mega-toggle svg {
+  width: 14px;
+  height: 9px;
+  transition: transform 180ms ease;
+}
+
+.site-header__mega-toggle[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+.no-js .site-header__mega-toggle {
+  display: none;
+}
+
 .site-header__submenu {
   position: absolute;
   top: 100%;
@@ -903,8 +931,9 @@ body.drawer-open .site-header {
     transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
   }
 
-  .has-mega-menu:hover > .site-header__mega-menu,
-  .has-mega-menu:focus-within > .site-header__mega-menu {
+  .has-mega-menu.is-mega-open > .site-header__mega-menu,
+  .no-js .has-mega-menu:hover > .site-header__mega-menu,
+  .no-js .has-mega-menu:focus-within > .site-header__mega-menu {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
