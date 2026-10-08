@@ -356,6 +356,83 @@
         "scroll_length": 400
       }
     },
+    "logo_marquee_c4QmdV": {
+      "type": "logo-marquee",
+      "blocks": {
+        "logo_NDCdRc": {
+          "type": "logo",
+          "settings": {
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "logo_MqtchP": {
+          "type": "logo",
+          "settings": {
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "logo_FDPzHz": {
+          "type": "logo",
+          "settings": {
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "logo_NCAgwg": {
+          "type": "logo",
+          "settings": {
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "logo_YBNezw": {
+          "type": "logo",
+          "settings": {
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "logo_NdPF94": {
+          "type": "logo",
+          "settings": {
+            "alt_text": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "logo_NDCdRc",
+        "logo_MqtchP",
+        "logo_FDPzHz",
+        "logo_NCAgwg",
+        "logo_YBNezw",
+        "logo_NdPF94"
+      ],
+      "name": "t:sections.logo_marquee.name",
+      "settings": {
+        "heading": "",
+        "speed": 40,
+        "top_direction": "left",
+        "angle": 3,
+        "logo_width": 240,
+        "mobile_logo_width": 140,
+        "logo_height": 80,
+        "mobile_logo_height": 48,
+        "band_height": 160,
+        "mobile_band_height": 96,
+        "logo_gap": 120,
+        "mobile_logo_gap": 40,
+        "background": "#ffffff",
+        "top_background": "#ffe88b",
+        "bottom_background": "#f7f7f7",
+        "bottom_opacity": 25,
+        "pause_on_hover": true,
+        "padding_top": 76,
+        "padding_bottom": 20
+      }
+    },
     "collections": {
       "type": "collection-showcase",
       "blocks": {
@@ -493,83 +570,6 @@
         "heading": "Build a footwear rotation",
         "text": "A compact perspective deck for daily trainers, trail shoes, recovery slides, and seasonal footwear."
       }
-    },
-    "logo_marquee_c4QmdV": {
-      "type": "logo-marquee",
-      "blocks": {
-        "logo_NDCdRc": {
-          "type": "logo",
-          "settings": {
-            "alt_text": "",
-            "link": ""
-          }
-        },
-        "logo_MqtchP": {
-          "type": "logo",
-          "settings": {
-            "alt_text": "",
-            "link": ""
-          }
-        },
-        "logo_FDPzHz": {
-          "type": "logo",
-          "settings": {
-            "alt_text": "",
-            "link": ""
-          }
-        },
-        "logo_NCAgwg": {
-          "type": "logo",
-          "settings": {
-            "alt_text": "",
-            "link": ""
-          }
-        },
-        "logo_YBNezw": {
-          "type": "logo",
-          "settings": {
-            "alt_text": "",
-            "link": ""
-          }
-        },
-        "logo_NdPF94": {
-          "type": "logo",
-          "settings": {
-            "alt_text": "",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "logo_NDCdRc",
-        "logo_MqtchP",
-        "logo_FDPzHz",
-        "logo_NCAgwg",
-        "logo_YBNezw",
-        "logo_NdPF94"
-      ],
-      "name": "t:sections.logo_marquee.name",
-      "settings": {
-        "heading": "",
-        "speed": 40,
-        "top_direction": "left",
-        "angle": 3,
-        "logo_width": 240,
-        "mobile_logo_width": 140,
-        "logo_height": 80,
-        "mobile_logo_height": 48,
-        "band_height": 160,
-        "mobile_band_height": 96,
-        "logo_gap": 120,
-        "mobile_logo_gap": 40,
-        "background": "#ffffff",
-        "top_background": "#ffe88b",
-        "bottom_background": "#f7f7f7",
-        "bottom_opacity": 25,
-        "pause_on_hover": true,
-        "padding_top": 76,
-        "padding_bottom": 20
-      }
     }
   },
   "order": [
@@ -580,8 +580,8 @@
     "story",
     "alexandra_loader",
     "collections",
+    "logo_marquee_c4QmdV",
     "hover_preview",
-    "stacked",
-    "logo_marquee_c4QmdV"
+    "stacked"
   ]
 }
