@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "header",
   "name": "t:section_groups.header_group.s001",
@@ -10,6 +19,10 @@
         "text_3": "Easy returns within 30 days",
         "link": "",
         "show_social_links": true,
+        "facebook_link": "",
+        "x_link": "",
+        "instagram_link": "",
+        "youtube_link": "",
         "show_localization": true,
         "color_background": "#080808",
         "color_text": "#ffffff"
@@ -17,30 +30,61 @@
     },
     "header": {
       "type": "header",
-      "settings": {
-        "menu": "main-menu",
-        "customer_account_menu": "main-menu",
-        "show_search": true
-      },
       "blocks": {
         "mega_menu_shop": {
           "type": "mega_menu",
           "settings": {
             "menu_item": "Shop",
-            "menu_layout": "columns",
+            "menu": "main-menu",
+            "menu_layout": "list",
             "menu_columns": 3,
             "panel_padding": 32,
             "image_ratio": "landscape",
             "promo_text_position": "center",
             "promo_heading_size": "medium",
             "promo_overlay_opacity": 20,
-            "promo_gap": 20
+            "promo_gap": 20,
+            "promo_image_1": "shopify://shop_images/mohammad-jakir-s-naETgXc7k-unsplash.jpg",
+            "promo_heading_1": "",
+            "promo_link_1": "",
+            "promo_label_1": "",
+            "promo_heading_2": "",
+            "promo_link_2": "",
+            "promo_label_2": "",
+            "promo_heading_3": "",
+            "promo_link_3": "",
+            "promo_label_3": ""
+          }
+        },
+        "mega_menu_pCBqdd": {
+          "type": "mega_menu",
+          "settings": {
+            "menu_item": "Shop",
+            "menu": "",
+            "menu_layout": "columns",
+            "menu_columns": 3,
+            "panel_padding": 32,
+            "image_ratio": "landscape",
+            "promo_text_position": "center",
+            "promo_heading_size": "medium",
+            "promo_overlay_opacity": 25,
+            "promo_gap": 20,
+            "promo_heading_1": "",
+            "promo_link_1": "",
+            "promo_label_1": "",
+            "promo_heading_2": "",
+            "promo_link_2": "",
+            "promo_label_2": "",
+            "promo_heading_3": "",
+            "promo_link_3": "",
+            "promo_label_3": ""
           }
         },
         "mega_menu_lookbooks": {
           "type": "mega_menu",
           "settings": {
             "menu_item": "Lookbooks",
+            "menu": "",
             "menu_layout": "list",
             "menu_columns": 3,
             "panel_padding": 28,
@@ -48,14 +92,29 @@
             "promo_text_position": "center",
             "promo_heading_size": "medium",
             "promo_overlay_opacity": 25,
-            "promo_gap": 24
+            "promo_gap": 24,
+            "promo_heading_1": "",
+            "promo_link_1": "",
+            "promo_label_1": "",
+            "promo_heading_2": "",
+            "promo_link_2": "",
+            "promo_label_2": "",
+            "promo_heading_3": "",
+            "promo_link_3": "",
+            "promo_label_3": ""
           }
         }
       },
       "block_order": [
         "mega_menu_shop",
+        "mega_menu_pCBqdd",
         "mega_menu_lookbooks"
-      ]
+      ],
+      "settings": {
+        "menu": "main-menu",
+        "customer_account_menu": "main-menu",
+        "show_search": true
+      }
     }
   },
   "order": [
