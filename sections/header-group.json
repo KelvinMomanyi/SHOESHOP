@@ -31,33 +31,6 @@
     "header": {
       "type": "header",
       "blocks": {
-        "mega_menu_shop": {
-          "type": "mega_menu",
-          "settings": {
-            "menu_item": "Shop",
-            "menu": "shop-link-menu",
-            "menu_layout": "list",
-            "menu_columns": 3,
-            "panel_padding": 20,
-            "image_ratio": "landscape",
-            "promo_text_position": "center",
-            "promo_heading_size": "medium",
-            "promo_overlay_opacity": 20,
-            "promo_gap": 20,
-            "promo_image_1": "shopify://shop_images/mojtaba-mosayebzadeh-CFYS5qMSuKo-unsplash.jpg",
-            "promo_heading_1": "",
-            "promo_link_1": "",
-            "promo_label_1": "",
-            "promo_image_2": "shopify://shop_images/maria-fernanda-pissioli-gFrvwodhSco-unsplash_1.jpg",
-            "promo_heading_2": "",
-            "promo_link_2": "",
-            "promo_label_2": "",
-            "promo_image_3": "shopify://shop_images/barry-a-QLYeO5C_k5c-unsplash.jpg",
-            "promo_heading_3": "",
-            "promo_link_3": "",
-            "promo_label_3": ""
-          }
-        },
         "mega_menu_pCBqdd": {
           "type": "mega_menu",
           "settings": {
@@ -77,6 +50,33 @@
             "promo_heading_2": "",
             "promo_link_2": "",
             "promo_label_2": "",
+            "promo_heading_3": "",
+            "promo_link_3": "",
+            "promo_label_3": ""
+          }
+        },
+        "mega_menu_shop": {
+          "type": "mega_menu",
+          "settings": {
+            "menu_item": "Brands",
+            "menu": "shop-link-menu",
+            "menu_layout": "list",
+            "menu_columns": 3,
+            "panel_padding": 20,
+            "image_ratio": "landscape",
+            "promo_text_position": "center",
+            "promo_heading_size": "medium",
+            "promo_overlay_opacity": 20,
+            "promo_gap": 20,
+            "promo_image_1": "shopify://shop_images/mojtaba-mosayebzadeh-CFYS5qMSuKo-unsplash.jpg",
+            "promo_heading_1": "",
+            "promo_link_1": "",
+            "promo_label_1": "",
+            "promo_image_2": "shopify://shop_images/maria-fernanda-pissioli-gFrvwodhSco-unsplash_1.jpg",
+            "promo_heading_2": "",
+            "promo_link_2": "",
+            "promo_label_2": "",
+            "promo_image_3": "shopify://shop_images/barry-a-QLYeO5C_k5c-unsplash.jpg",
             "promo_heading_3": "",
             "promo_link_3": "",
             "promo_label_3": ""
@@ -108,8 +108,8 @@
         }
       },
       "block_order": [
-        "mega_menu_shop",
         "mega_menu_pCBqdd",
+        "mega_menu_shop",
         "mega_menu_lookbooks"
       ],
       "settings": {
