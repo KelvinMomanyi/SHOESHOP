@@ -36,7 +36,7 @@
           "settings": {
             "menu_item": "Shop",
             "menu": "shop-link-menu",
-            "menu_layout": "columns",
+            "menu_layout": "list",
             "menu_columns": 3,
             "panel_padding": 20,
             "image_ratio": "landscape",
