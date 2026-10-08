@@ -94,26 +94,40 @@
     "featured_products": {
       "type": "featured-products",
       "blocks": {
+        "product_CT7EDN": {
+          "type": "product",
+          "settings": {
+            "product": "puma-easy-rider-vintage-sneakers"
+          }
+        },
+        "product_VLNz3H": {
+          "type": "product",
+          "settings": {
+            "product": "nike-tech-hera"
+          }
+        },
         "product_DDifNG": {
           "type": "product",
           "settings": {
-            "product": "adidas-advantage-2-0"
+            "product": "converse-run-star-trainer"
           }
         },
         "product_dwiEnB": {
           "type": "product",
           "settings": {
-            "product": "adidas-x_plr-path"
+            "product": "converse-chuck-70-leather"
           }
         },
         "product_HVG3CQ": {
           "type": "product",
           "settings": {
-            "product": "adidas-grand-court-2-0"
+            "product": "adidas-samba"
           }
         }
       },
       "block_order": [
+        "product_CT7EDN",
+        "product_VLNz3H",
         "product_DDifNG",
         "product_dwiEnB",
         "product_HVG3CQ"
