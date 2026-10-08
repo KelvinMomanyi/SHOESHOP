@@ -362,6 +362,7 @@
             "collection": "",
             "title": "New shoes",
             "caption": "Freshly landed",
+            "image": "shopify://shop_images/irene-kredenets-dwKiHoqqxk8-unsplash_07eb5ef2-d637-4089-9193-4a446408d3f6.jpg",
             "link": ""
           }
         },
@@ -371,6 +372,7 @@
             "collection": "",
             "title": "Bestsellers",
             "caption": "Most worn",
+            "image": "shopify://shop_images/xavier-cee-biQIK_Xrbxo-unsplash.jpg",
             "link": ""
           }
         },
@@ -380,6 +382,7 @@
             "collection": "",
             "title": "Slides and recovery",
             "caption": "After the run",
+            "image": "shopify://shop_images/karsten-winegeart--GRPBoVcY4w-unsplash.jpg",
             "link": ""
           }
         }
