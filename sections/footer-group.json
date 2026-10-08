@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "footer",
   "name": "t:section_groups.footer_group.s001",
@@ -12,25 +21,30 @@
         "heading": "Be first in line",
         "text": "<p>Get early access to new drops, restocks, and practical fit notes.</p>",
         "offer_text": "Fresh footwear stories, sent sparingly.",
+        "image": "shopify://shop_images/riyan-ong-j1PxAa2U-T4-unsplash.jpg",
         "image_position": "left",
         "button_label": "Join the list",
         "dismiss_label": "No thanks",
         "fine_print": "By subscribing, you agree to receive marketing emails. Unsubscribe at any time.",
         "background_color": "#f6f4ef",
         "text_color": "#111111",
-        "accent_color": "#a6bd2f"
+        "accent_color": "#a6bd2f",
+        "accent_text_color": "#111111"
       }
     },
     "newsletter": {
       "type": "newsletter",
       "settings": {
+        "kicker": "Stay with Treadora",
         "heading": "New drops, fit notes, and care tips",
-        "text": "Footwear launches, restocks, limited colorways, and practical notes for finding the right pair."
+        "text": "Footwear launches, restocks, limited colorways, and practical notes for finding the right pair.",
+        "button_label": "Subscribe"
       }
     },
     "footer": {
       "type": "footer",
       "settings": {
+        "text": "Performance shoes, everyday sneakers, and recovery essentials for every pace.",
         "menu": "footer",
         "show_localization": true,
         "show_follow_on_shop": true
