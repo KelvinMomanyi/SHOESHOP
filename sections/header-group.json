@@ -35,7 +35,7 @@
           "type": "mega_menu",
           "settings": {
             "menu_item": "Shop",
-            "menu": "customer-account-main-menu",
+            "menu": "shop-link-menu",
             "menu_layout": "columns",
             "menu_columns": 3,
             "panel_padding": 20,
