@@ -38,7 +38,7 @@
             "menu": "customer-account-main-menu",
             "menu_layout": "columns",
             "menu_columns": 3,
-            "panel_padding": 32,
+            "panel_padding": 20,
             "image_ratio": "landscape",
             "promo_text_position": "center",
             "promo_heading_size": "medium",
