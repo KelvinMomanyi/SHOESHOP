@@ -1,8 +1,26 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "main-collection",
       "settings": {
+        "kicker": "The Treadora rotation",
+        "text": "From daily miles to slower days. Discover thoughtfully chosen footwear for every pace and find your next favorite pair.",
+        "show_product_count": true,
+        "show_description": true,
+        "show_image": true,
+        "image": "shopify://shop_images/xavier-cee-biQIK_Xrbxo-unsplash_1.jpg",
+        "show_filters": true,
+        "show_sorting": true,
+        "enable_motion": true,
         "products_per_page": 16
       }
     }
