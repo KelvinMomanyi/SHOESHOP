@@ -534,6 +534,7 @@
           "settings": {
             "title": "Daily trainers",
             "caption": "Lightweight support",
+            "image": "shopify://shop_images/yucel-m-MU07_-RXlq8-unsplash.jpg",
             "link": ""
           }
         },
@@ -542,6 +543,7 @@
           "settings": {
             "title": "Road running",
             "caption": "Responsive cushioning",
+            "image": "shopify://shop_images/wengang-zhai-_fOL6ebfECQ-unsplash.jpg",
             "link": ""
           }
         },
@@ -550,6 +552,7 @@
           "settings": {
             "title": "Trail grip",
             "caption": "All-terrain traction",
+            "image": "shopify://shop_images/barry-a-QLYeO5C_k5c-unsplash.jpg",
             "link": ""
           }
         },
@@ -558,6 +561,7 @@
           "settings": {
             "title": "Recovery slides",
             "caption": "Post-run comfort",
+            "image": "shopify://shop_images/luis-felipe-lins-LG88A2XgIXY-unsplash.jpg",
             "link": ""
           }
         }
