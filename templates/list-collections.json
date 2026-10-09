@@ -55,14 +55,6 @@
     "clip_path_slider_jbDB9N": {
       "type": "clip-path-slider",
       "blocks": {
-        "slide_ER3wVg": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/converse3.2.jpg",
-            "title": "Featured footwear",
-            "link": ""
-          }
-        },
         "slide_4LXFMg": {
           "type": "slide",
           "settings": {
@@ -89,7 +81,6 @@
         }
       },
       "block_order": [
-        "slide_ER3wVg",
         "slide_4LXFMg",
         "slide_dzrNNb",
         "slide_rmd8WL"
