@@ -51,10 +51,68 @@
         "padding_top": 24,
         "padding_bottom": 24
       }
+    },
+    "clip_path_slider_jbDB9N": {
+      "type": "clip-path-slider",
+      "blocks": {
+        "slide_ER3wVg": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/converse3.2.jpg",
+            "title": "Featured footwear",
+            "link": ""
+          }
+        },
+        "slide_4LXFMg": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/the-dk-photography-7Uwh8QXYdXQ-unsplash.jpg",
+            "title": "Featured footwear",
+            "link": ""
+          }
+        },
+        "slide_dzrNNb": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/peri-stojnic-r3rbIwZ9DJc-unsplash.jpg",
+            "title": "Featured footwear",
+            "link": ""
+          }
+        },
+        "slide_rmd8WL": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/ervan-m-wirawan-642Z2aj6gS0-unsplash_cbd32b18-92fc-4923-8ec3-8512a9ab4825.jpg",
+            "title": "Featured footwear",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_ER3wVg",
+        "slide_4LXFMg",
+        "slide_dzrNNb",
+        "slide_rmd8WL"
+      ],
+      "name": "t:sections.clip_path_slider.s018",
+      "settings": {
+        "accessibility_label": "Featured image slideshow",
+        "show_brand": true,
+        "brand_label": "Treadora",
+        "show_counter": true,
+        "enable_wheel": true,
+        "loop_slides": true,
+        "section_height": 75,
+        "scroll_per_slide": 80,
+        "frame_width": 22,
+        "frame_ratio": 105,
+        "transition_duration": 1250
+      }
     }
   },
   "order": [
     "main",
-    "image_comparison_KCFbVc"
+    "image_comparison_KCFbVc",
+    "clip_path_slider_jbDB9N"
   ]
 }
