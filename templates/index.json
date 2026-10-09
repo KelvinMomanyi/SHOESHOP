@@ -356,83 +356,6 @@
         "scroll_length": 400
       }
     },
-    "logo_marquee_c4QmdV": {
-      "type": "logo-marquee",
-      "blocks": {
-        "logo_NDCdRc": {
-          "type": "logo",
-          "settings": {
-            "alt_text": "",
-            "link": ""
-          }
-        },
-        "logo_MqtchP": {
-          "type": "logo",
-          "settings": {
-            "alt_text": "",
-            "link": ""
-          }
-        },
-        "logo_FDPzHz": {
-          "type": "logo",
-          "settings": {
-            "alt_text": "",
-            "link": ""
-          }
-        },
-        "logo_NCAgwg": {
-          "type": "logo",
-          "settings": {
-            "alt_text": "",
-            "link": ""
-          }
-        },
-        "logo_YBNezw": {
-          "type": "logo",
-          "settings": {
-            "alt_text": "",
-            "link": ""
-          }
-        },
-        "logo_NdPF94": {
-          "type": "logo",
-          "settings": {
-            "alt_text": "",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "logo_NDCdRc",
-        "logo_MqtchP",
-        "logo_FDPzHz",
-        "logo_NCAgwg",
-        "logo_YBNezw",
-        "logo_NdPF94"
-      ],
-      "name": "t:sections.logo_marquee.name",
-      "settings": {
-        "heading": "",
-        "speed": 40,
-        "top_direction": "left",
-        "angle": 3,
-        "logo_width": 240,
-        "mobile_logo_width": 140,
-        "logo_height": 80,
-        "mobile_logo_height": 48,
-        "band_height": 160,
-        "mobile_band_height": 96,
-        "logo_gap": 120,
-        "mobile_logo_gap": 40,
-        "background": "#ffffff",
-        "top_background": "#ffe88b",
-        "bottom_background": "#f7f7f7",
-        "bottom_opacity": 25,
-        "pause_on_hover": true,
-        "padding_top": 76,
-        "padding_bottom": 20
-      }
-    },
     "collections": {
       "type": "collection-showcase",
       "blocks": {
@@ -476,6 +399,98 @@
         "kicker": "Shop by need",
         "heading": "Find the right pair",
         "text": ""
+      }
+    },
+    "logo_marquee_c4QmdV": {
+      "type": "logo-marquee",
+      "blocks": {
+        "logo_By7X9n": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/New_Balance_logo_svg.webp",
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "logo_NDCdRc": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/converse-logo3-logo-svgrepo-com.svg",
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "logo_MqtchP": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/puma-logo-logo-svgrepo-com.svg",
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "logo_FDPzHz": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/Skechers_svg.webp",
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "logo_NCAgwg": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/Adidas_Logo_svg.webp",
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "logo_YBNezw": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/asics-logo-png_seeklogo-305773.png",
+            "alt_text": "",
+            "link": ""
+          }
+        },
+        "logo_NdPF94": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/Nike_logo_1978_svg.webp",
+            "alt_text": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "logo_By7X9n",
+        "logo_NDCdRc",
+        "logo_MqtchP",
+        "logo_FDPzHz",
+        "logo_NCAgwg",
+        "logo_YBNezw",
+        "logo_NdPF94"
+      ],
+      "name": "t:sections.logo_marquee.name",
+      "settings": {
+        "heading": "",
+        "speed": 40,
+        "top_direction": "left",
+        "angle": 3,
+        "logo_width": 240,
+        "mobile_logo_width": 140,
+        "logo_height": 80,
+        "mobile_logo_height": 48,
+        "band_height": 160,
+        "mobile_band_height": 96,
+        "logo_gap": 120,
+        "mobile_logo_gap": 40,
+        "background": "#ffffff",
+        "top_background": "#ffe88b",
+        "bottom_background": "#f7f7f7",
+        "bottom_opacity": 25,
+        "pause_on_hover": true,
+        "padding_top": 76,
+        "padding_bottom": 20
       }
     },
     "hover_preview": {
