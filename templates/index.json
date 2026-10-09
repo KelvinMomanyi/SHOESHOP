@@ -143,6 +143,36 @@
     "image_spread": {
       "type": "image-spread",
       "blocks": {
+        "product_Bwqtcr": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "collection": "",
+            "image": "shopify://shop_images/usama-akram-g3CMh2nqj_w-unsplash.jpg",
+            "title": "",
+            "link": ""
+          }
+        },
+        "product_aFbP36": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "collection": "",
+            "image": "shopify://shop_images/usama-akram-s-gYAbQToXk-unsplash.jpg",
+            "title": "",
+            "link": ""
+          }
+        },
+        "product_gkhWFV": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "collection": "",
+            "image": "shopify://shop_images/idin-ebrahimi-_Nf-aj3c8Dc-unsplash.jpg",
+            "title": "",
+            "link": ""
+          }
+        },
         "spread_1": {
           "type": "product",
           "settings": {
@@ -215,6 +245,9 @@
         }
       },
       "block_order": [
+        "product_Bwqtcr",
+        "product_aFbP36",
+        "product_gkhWFV",
         "spread_1",
         "spread_2",
         "spread_3",
@@ -485,7 +518,7 @@
         "logo_gap": 120,
         "mobile_logo_gap": 40,
         "background": "#ffffff",
-        "top_background": "#A6BD2F",
+        "top_background": "#a6bd2f",
         "bottom_background": "#f7f7f7",
         "bottom_opacity": 25,
         "pause_on_hover": true,
