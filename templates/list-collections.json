@@ -33,9 +33,10 @@
       "name": "t:sections.image_comparison.name",
       "settings": {
         "heading": "",
-        "comparison_mode": "single",
-        "image": "shopify://shop_images/wengang-zhai-_fOL6ebfECQ-unsplash.jpg",
-        "grayscale_strength": 100,
+        "comparison_mode": "multiple",
+        "image": "shopify://shop_images/11_e9795450-8adb-4be1-a83d-904a370b34c9.png",
+        "comparison_image": "shopify://shop_images/12_9ec44bf9-4ac6-49cf-9efc-46171f650b3c.png",
+        "grayscale_strength": 55,
         "start_position": 50,
         "handle_y": 50,
         "desktop_height": 700,
