@@ -304,12 +304,25 @@
             "link": "",
             "link_label": ""
           }
+        },
+        "chapter_Jcb8ry": {
+          "type": "chapter",
+          "settings": {
+            "product": "",
+            "collection": "",
+            "image": "shopify://shop_images/martin-blaszkiewicz-6E3Cid5vXRI-unsplash.jpg",
+            "title": "",
+            "text": "",
+            "link": "",
+            "link_label": ""
+          }
         }
       },
       "block_order": [
         "chapter_1",
         "chapter_2",
-        "chapter_3"
+        "chapter_3",
+        "chapter_Jcb8ry"
       ],
       "settings": {
         "kicker": "Fit notes",
