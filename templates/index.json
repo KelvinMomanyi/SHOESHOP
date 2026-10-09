@@ -519,8 +519,8 @@
         "mobile_logo_gap": 40,
         "background": "#ffffff",
         "top_background": "#a6bd2f",
-        "bottom_background": "#f7f7f7",
-        "bottom_opacity": 25,
+        "bottom_background": "#F2EEED",
+        "bottom_opacity": 90,
         "pause_on_hover": true,
         "padding_top": 76,
         "padding_bottom": 20
