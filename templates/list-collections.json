@@ -102,10 +102,10 @@
         "show_counter": true,
         "enable_wheel": true,
         "loop_slides": true,
-        "section_height": 75,
+        "section_height": 100,
         "scroll_per_slide": 80,
-        "frame_width": 22,
-        "frame_ratio": 105,
+        "frame_width": 24,
+        "frame_ratio": 120,
         "transition_duration": 1250
       }
     }
