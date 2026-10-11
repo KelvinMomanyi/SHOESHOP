@@ -275,7 +275,7 @@
             "product": "",
             "collection": "",
             "image": "shopify://shop_images/connor-houtman-VxzlyJk-2to-unsplash.jpg",
-            "title": "The daily trainer",
+            "title": "Find Your Fit",
             "text": "Highlight cushion, support, and the road-ready details that make a shoe easy to choose.",
             "link": "",
             "link_label": ""
@@ -287,7 +287,7 @@
             "product": "",
             "collection": "",
             "image": "shopify://shop_images/branislav-belko-lJ7iAZxplpc-unsplash.jpg",
-            "title": "Materials that move",
+            "title": "Feel Every Step",
             "text": "Show breathable uppers, durable overlays, outsole grip, and the construction details shoppers compare.",
             "link": "",
             "link_label": ""
@@ -299,7 +299,7 @@
             "product": "",
             "collection": "",
             "image": "shopify://shop_images/danilo-capece-NoVnXXmDNi0-unsplash.jpg",
-            "title": "Complete the rotation",
+            "title": "Crafted For Comfort",
             "text": "Move customers from running shoes into slides, socks, care kits, and seasonal footwear pairings.",
             "link": "",
             "link_label": ""
@@ -311,7 +311,7 @@
             "product": "",
             "collection": "",
             "image": "shopify://shop_images/martin-blaszkiewicz-6E3Cid5vXRI-unsplash.jpg",
-            "title": "",
+            "title": "Made to Move",
             "text": "",
             "link": "",
             "link_label": ""
@@ -532,7 +532,7 @@
         "mobile_logo_gap": 40,
         "background": "#ffffff",
         "top_background": "#a6bd2f",
-        "bottom_background": "#F2EEED",
+        "bottom_background": "#f2eeed",
         "bottom_opacity": 90,
         "pause_on_hover": true,
         "padding_top": 76,
