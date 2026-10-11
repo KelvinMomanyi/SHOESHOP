@@ -85,22 +85,12 @@
         "button_label": "Browse every story",
         "button_link": ""
       }
-    },
-    "newsletter": {
-      "type": "newsletter",
-      "settings": {
-        "kicker": "From the journal",
-        "heading": "New stories, straight to your inbox",
-        "text": "Get fit notes, material guides, interviews, and new footwear stories as they land.",
-        "button_label": "Subscribe"
-      }
     }
   },
   "order": [
     "topics",
     "main",
     "guide",
-    "journal_note",
-    "newsletter"
+    "journal_note"
   ]
 }
